@@ -33,7 +33,7 @@ type ChannelsProps = {
   classes: any
 }
 
-const schema = {
+const channelSchema = {
   type: "object",
   properties: {
     id: {
@@ -141,7 +141,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
       <Dialog open={this.state.dialogOpen} aria-labelledby="form-dialog-title">
         <DialogTitle>Add Channel</DialogTitle>
         <DialogContent>
-          <Form schema={schema as JSONSchema7}>
+          <Form schema={channelSchema as JSONSchema7}>
            <></>
           </Form>
         </DialogContent>
@@ -161,7 +161,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
               <Typography className={classes.secondaryHeading}>name: {channel.name}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Form schema={schema as JSONSchema7}
+              <Form schema={channelSchema as JSONSchema7}
                     formData={channel}><></>
               </Form>
               <pre>{JSON.stringify(channel, undefined, 2)}</pre>

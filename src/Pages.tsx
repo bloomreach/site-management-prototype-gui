@@ -11,7 +11,7 @@ import {
   MenuItem,
   Select,
   Toolbar,
-  Typography
+  Typography, withStyles
 } from "@material-ui/core";
 import 'react-sortable-tree/style.css';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -34,9 +34,11 @@ type PagesState = {
   currentChannelId: string,
   dialogOpen: boolean
 }
-type PagesProps = {}
+type PagesProps = {
+  classes: any
+}
 
-const schema = {
+const pageSchema = {
   type: "object",
   properties: {
     type: {
@@ -68,6 +70,21 @@ const schema = {
       }
     }
   }
+};
+
+// @ts-ignore
+const styles = theme => {
+  return ({
+    heading: {
+      fontSize: theme.typography.pxToRem(15),
+      flexBasis: '33.33%',
+      flexShrink: 0,
+    },
+    secondaryHeading: {
+      fontSize: theme.typography.pxToRem(15),
+      color: theme.palette.text.secondary,
+    },
+  });
 };
 
 class Pages extends React.Component<PagesProps, PagesState> {
@@ -103,6 +120,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
 
 
   render () {
+    const {classes} = this.props;
     return <>
       <AppBar position="sticky" variant={'outlined'} color={'default'}>
         <Toolbar>
@@ -131,7 +149,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
       <Dialog open={this.state.dialogOpen} aria-labelledby="form-dialog-title">
         <DialogTitle>Add Page</DialogTitle>
         <DialogContent>
-          <Form schema={schema as JSONSchema7}>
+          <Form schema={pageSchema as JSONSchema7}>
            <></>
           </Form>
         </DialogContent>
@@ -147,7 +165,8 @@ class Pages extends React.Component<PagesProps, PagesState> {
             expandIcon={<ExpandMoreIcon/>}
             aria-controls="panel1c-content"
             id="panel1c-header">
-            <Typography>{page.name}</Typography>
+            <Typography className={classes.heading}>name: {page.name}</Typography>
+            <Typography className={classes.secondaryHeading}>type: {page.type}</Typography>
           </AccordionSummary>
           <AccordionDetails>
 
@@ -209,4 +228,4 @@ class Pages extends React.Component<PagesProps, PagesState> {
 
 }
 
-export default Pages;
+export default withStyles(styles)(Pages);
