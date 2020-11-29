@@ -8,7 +8,7 @@ function Fallback () {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo"/>
         <p>
-          This is an <code>Open UI Plugin</code> and should be added in the context of BRX
+          This is a test frontend project for the Site Dev API
         </p>
       </header>
     </div>

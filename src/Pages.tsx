@@ -36,6 +36,7 @@ type PagesState = {
 }
 type PagesProps = {
   classes: any
+  endpoint: string
 }
 
 const pageSchema = {
@@ -103,7 +104,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
   componentDidMount (): void {
     const api = new ChannelOperationsApi({
       // baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
-    }, 'https://fhpor9tqp6.execute-api.eu-central-1.amazonaws.com/production')
+    }, this.props.endpoint)
     api.getChannels().then(value => {
       this.setState({channels: value.data}, () => this.updatePagesByChannel(this.state.channels[0].id))
     });

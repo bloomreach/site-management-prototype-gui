@@ -30,7 +30,8 @@ type ChannelsState = {
   dialogOpen: boolean
 }
 type ChannelsProps = {
-  classes: any
+  classes: any,
+  endpoint: string
 }
 
 const channelSchema = {
@@ -108,7 +109,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
   componentDidMount (): void {
     const api = new ChannelOperationsApi({
       // baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
-    }, 'https://fhpor9tqp6.execute-api.eu-central-1.amazonaws.com/production')
+    }, this.props.endpoint)
     api.getChannels().then(value => {
       console.log(value);
       this.setState({channels: value.data})
