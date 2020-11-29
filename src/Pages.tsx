@@ -160,8 +160,8 @@ class Pages extends React.Component<PagesProps, PagesState> {
         </DialogActions>
       </Dialog>
       {this.state.currentChannelPages.map((page, index) => {
-        // @ts-ignore
-        return <Accordion key={index}>
+        return (
+          <Accordion key={index}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon/>}
             aria-controls="panel1c-content"
@@ -214,7 +214,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
               <SaveOutlinedIcon/>
             </IconButton>
           </AccordionActions>
-        </Accordion>
+        </Accordion>)
       })}
     </>
   }
