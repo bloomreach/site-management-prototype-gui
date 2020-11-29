@@ -23,7 +23,7 @@ export interface Channel {
    * @type {string}
    * @memberof Channel
    */
-  id?: string;
+  id: string;
   /**
    * identifying name of a channel
    * @type {string}

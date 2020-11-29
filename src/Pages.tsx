@@ -4,7 +4,7 @@ import {
   AccordionActions,
   AccordionDetails,
   AccordionSummary,
-  AppBar,
+  AppBar, Button, Dialog, DialogActions, DialogContent, DialogTitle,
   Divider,
   FormControl,
   IconButton,
@@ -18,17 +18,57 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 import {Channel, Page} from "./api/models";
-import {exampleChannels, examplePages} from "./samples/Example";
+import {examplePages} from "./samples/Example";
 import AddOutlinedIcon from "@material-ui/icons/Add";
-import SortableTree, {TreeItem, TreeNode} from 'react-sortable-tree';
+import SortableTree from 'react-sortable-tree';
 import {componentToNode} from "./util";
 import NodeRendererDefault from "./fork/NodeRendererDefault";
+import {ChannelOperationsApi} from "./api/apis/channel-operations-api";
+import {ChannelPageOperationsApi} from "./api";
+import Form from "@rjsf/material-ui";
+import {JSONSchema7} from "json-schema";
 
 type PagesState = {
   channels: Array<Channel>
-  pages: Array<Page>
+  currentChannelPages: Array<Page>
+  currentChannelId: string,
+  dialogOpen: boolean
 }
 type PagesProps = {}
+
+const schema = {
+  type: "object",
+  properties: {
+    type: {
+      type: "string",
+      "enum": [
+        "abstract",
+        "page",
+        "xpage",
+      ], "enumNames": [
+        "Abstract Page",
+        "Page",
+        "X Page",
+      ]
+    },
+    name: {
+      type: "string",
+      "ui:disabled": true
+    },
+    description: {
+      type: "string"
+    },
+    extends: {
+      type: "string"
+    },
+    parameters: {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  }
+};
 
 class Pages extends React.Component<PagesProps, PagesState> {
 
@@ -36,51 +76,71 @@ class Pages extends React.Component<PagesProps, PagesState> {
     super(props);
 
     this.state = {
-      channels: exampleChannels,
-      pages: examplePages
+      channels: [],
+      currentChannelId: '',
+      currentChannelPages: [],
+      dialogOpen: false
     }
   }
 
   componentDidMount (): void {
-    // const api = new ChannelOperationsApi({
-    //   baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
-    // }, 'http://localhost:8080/management/site/v1')
-    // api.getChannels().then(value => {
-    //   this.setState({channels: value.data})
-    // });
+    const api = new ChannelOperationsApi({
+      // baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
+    }, 'https://fhpor9tqp6.execute-api.eu-central-1.amazonaws.com/production')
+    api.getChannels().then(value => {
+      this.setState({channels: value.data}, () => this.updatePagesByChannel(this.state.channels[0].id))
+    });
   }
+
+  updatePagesByChannel (channelId: string) {
+    const api = new ChannelPageOperationsApi({
+      // baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
+    }, 'https://fhpor9tqp6.execute-api.eu-central-1.amazonaws.com/production')
+    api.getChannelPages(channelId).then(value => {
+      this.setState({currentChannelId: channelId, currentChannelPages: value.data})
+    });
+  }
+
 
   render () {
     return <>
       <AppBar position="sticky" variant={'outlined'} color={'default'}>
         <Toolbar>
-          <Typography variant="h6" noWrap>
-           Select Channel:
-          </Typography>
-          <FormControl fullWidth>
-          <Select
-            displayEmpty
-            inputProps={{'aria-label': 'Without label'}}
-          >
-           {this.state.channels.map(channel => {
-             return <MenuItem value={channel.id}>{channel.id}</MenuItem>
-           })}
-        </Select>
-            <Divider/>
-      </FormControl>
            <IconButton
              edge="start"
              color="inherit"
              aria-label="Add"
-             disabled={true}
-             // onClick={event => this.handleOpen()}
+             // disabled={true}
+             onClick={event => this.openAddDialog()}
            >
             <AddOutlinedIcon/>
           </IconButton>
+           <Divider/>
+          <FormControl>
+            <Select
+              value={this.state.currentChannelId}
+              // displayEmpty
+              inputProps={{'aria-label': 'Without label'}}>
+             {this.state.channels.map(channel => {
+               return <MenuItem key={channel.id} value={channel.id} onClick={() => this.updatePagesByChannel(channel.id)}>{channel.id}</MenuItem>
+             })}
+            </Select>
+          </FormControl>
         </Toolbar>
       </AppBar>
-
-      {this.state.pages.map((page, index) => {
+      <Dialog open={this.state.dialogOpen} aria-labelledby="form-dialog-title">
+        <DialogTitle>Add Page</DialogTitle>
+        <DialogContent>
+          <Form schema={schema as JSONSchema7}>
+           <></>
+          </Form>
+        </DialogContent>
+        <DialogActions>
+          <Button disabled color="primary">Add</Button>
+          <Button color="primary" onClick={() => this.closeAddDialog()}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
+      {this.state.currentChannelPages.map((page, index) => {
         // @ts-ignore
         return <Accordion key={index}>
           <AccordionSummary
@@ -137,6 +197,14 @@ class Pages extends React.Component<PagesProps, PagesState> {
         </Accordion>
       })}
     </>
+  }
+
+  closeAddDialog () {
+    this.setState({dialogOpen: false})
+  }
+
+  openAddDialog () {
+    this.setState({dialogOpen: true})
   }
 
 }

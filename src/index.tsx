@@ -11,8 +11,8 @@ ReactDOM.render(
     <React.Fragment>
       <HashRouter>
         <Switch>
-          <Route path="/navigation" render={() => <Navigation/>}/>
-          <Route exact path="/" render={() => <Fallback/>}/>
+          <Route exact path="/" render={() => <Navigation/>}/>
+          <Route path="/**" render={() => <Fallback/>}/>
         </Switch>
       </HashRouter>
     </React.Fragment>,

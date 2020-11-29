@@ -5,6 +5,7 @@ import Tab from "@material-ui/core/Tab";
 import TabPanel from "./TabPanel";
 import Channels from "./Channels";
 import Pages from "./Pages";
+import {Badge} from "@material-ui/core";
 
 type NavigationState = {
   tab: number
@@ -33,8 +34,66 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
           variant="scrollable"
           scrollButtons="auto"
           value={tab} onChange={(event, nextTab) => this.onTabChange(nextTab)}>
-          <Tab label="Channels"/>
-          <Tab label="Pages"/>
+          <Tab label="Channels" icon={
+            <Badge
+              style={{
+                right: '30px',
+                position: 'absolute',
+                top: '15px'
+              }}
+              badgeContent={'U/C'} color="primary">
+            </Badge>
+          }/>
+          <Tab label="Pages" icon={
+            <Badge
+              style={{
+                right: '30px',
+                position: 'absolute',
+                top: '15px'
+              }}
+              badgeContent={'U/C'} color="primary">
+            </Badge>
+          }/>
+          <Tab label="Sitemap" disabled icon={
+            <Badge
+              style={{
+                right: '30px',
+                position: 'absolute',
+                top: '15px'
+              }}
+              badgeContent={'U/C'} color="primary">
+            </Badge>
+          }/>
+          <Tab label="Sitemap" disabled icon={
+            <Badge
+              style={{
+                right: '30px',
+                position: 'absolute',
+                top: '15px'
+              }}
+              badgeContent={'U/C'} color="primary">
+            </Badge>
+          }/>
+          <Tab label="Catalog" disabled icon={
+            <Badge
+              style={{
+                right: '30px',
+                position: 'absolute',
+                top: '15px'
+              }}
+              badgeContent={'U/C'} color="primary">
+            </Badge>
+          }/>
+          <Tab label="Menus" disabled icon={
+            <Badge
+              style={{
+                right: '30px',
+                position: 'absolute',
+                top: '15px'
+              }}
+              badgeContent={'U/C'} color="primary">
+            </Badge>
+          }/>
         </Tabs>
       </AppBar>
       <TabPanel value={tab} index={0}>
