@@ -113,7 +113,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
   updatePagesByChannel (channelId: string) {
     const api = new ChannelPageOperationsApi({
       // baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
-    }, 'https://fhpor9tqp6.execute-api.eu-central-1.amazonaws.com/production')
+    }, this.props.endpoint)
     api.getChannelPages(channelId).then(value => {
       this.setState({currentChannelId: channelId, currentChannelPages: value.data})
     });
