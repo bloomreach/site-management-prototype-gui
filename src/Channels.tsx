@@ -34,12 +34,17 @@ type ChannelsProps = {
   endpoint: string
 }
 
+const channelUiSchema = {
+  id: {
+    "ui:disabled": true
+  }
+}
+
 const channelSchema = {
   type: "object",
   properties: {
     id: {
       type: "string",
-      "ui:disabled": true
     },
     name: {
       type: "string"
@@ -162,7 +167,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
               <Typography className={classes.secondaryHeading}>name: {channel.name}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Form schema={channelSchema as JSONSchema7}
+              <Form uiSchema={channelUiSchema} schema={channelSchema as JSONSchema7}
                     formData={channel}><></>
               </Form>
               <pre>{JSON.stringify(channel, undefined, 2)}</pre>
