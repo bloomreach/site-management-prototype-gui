@@ -11,13 +11,12 @@ import {
   IconButton,
   MenuItem,
   Select,
-  Toolbar,
-  withStyles
+  Toolbar
 } from "@material-ui/core";
 import 'react-sortable-tree/style.css';
 import {Channel, Page} from "./api/models";
 import AddOutlinedIcon from "@material-ui/icons/Add";
-import {convertPagesToTreeDataArray, TreeModel} from "./util";
+import {convertPagesToTreeModelArray, TreeModel} from "./util";
 import {ChannelOperationsApi} from "./api/apis/channel-operations-api";
 import {ChannelPageOperationsApi} from "./api";
 import Form from "@rjsf/material-ui";
@@ -26,13 +25,12 @@ import PageAccordion from "./PageAccordion";
 
 type PagesState = {
   channels: Array<Channel>
-  currentChannelPages: Array<Page>
+  // currentChannelPages: Array<Page>
   currentPageTrees: Array<TreeModel>
   currentChannelId: string,
   dialogOpen: boolean
 }
 type PagesProps = {
-  classes: any
   endpoint: string
 }
 
@@ -95,7 +93,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
     this.state = {
       channels: [],
       currentChannelId: '',
-      currentChannelPages: [],
+      // currentChannelPages: [],
       currentPageTrees: [],
       dialogOpen: false
     }
@@ -117,14 +115,13 @@ class Pages extends React.Component<PagesProps, PagesState> {
     api.getChannelPages(channelId).then(value => {
       this.setState({
         currentChannelId: channelId,
-        currentChannelPages: value.data,
-        currentPageTrees: convertPagesToTreeDataArray(value.data)
+        // currentChannelPages: value.data,
+        currentPageTrees: convertPagesToTreeModelArray(value.data)
       })
     });
   }
 
   render () {
-    const {classes} = this.props;
     return <>
       <AppBar position="sticky" variant={'outlined'} color={'default'}>
         <Toolbar>
@@ -132,17 +129,13 @@ class Pages extends React.Component<PagesProps, PagesState> {
              edge="start"
              color="inherit"
              aria-label="Add"
-             // disabled={true}
              onClick={event => this.openAddDialog()}
            >
             <AddOutlinedIcon/>
           </IconButton>
            <Divider/>
           <FormControl>
-            <Select
-              value={this.state.currentChannelId}
-              // displayEmpty
-              inputProps={{'aria-label': 'Without label'}}>
+            <Select value={this.state.currentChannelId}>
              {this.state.channels.map(channel => {
                return <MenuItem key={channel.id} value={channel.id} onClick={() => this.updatePagesByChannel(channel.id)}>{channel.id}</MenuItem>
              })}
@@ -176,15 +169,6 @@ class Pages extends React.Component<PagesProps, PagesState> {
     this.setState({dialogOpen: true})
   }
 
-  onMove ({treeData, node, nextParentNode, prevPath, prevTreeIndex, nextPath, nextTreeIndex}: { treeData: any, node: any, nextParentNode: any, prevPath: any, prevTreeIndex: any, nextPath: any, nextTreeIndex: any }) {
-    console.log(node);
-    console.log(nextParentNode);
-    console.log(prevPath);
-    console.log(prevTreeIndex);
-    console.log(nextPath);
-    console.log(nextTreeIndex);
-  }
-
 }
 
-export default withStyles(styles)(Pages);
+export default Pages;

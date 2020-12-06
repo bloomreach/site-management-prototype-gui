@@ -33,7 +33,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
     return (
       // <EndpointProvider value={this.state.endpoint}>
       <Fragment>
-        <AppBar position="static" color={'default'}>
+        <AppBar position="sticky" color={'default'}>
           {/*<Toolbar>*/}
           <Tabs
             variant="scrollable"

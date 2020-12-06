@@ -136,6 +136,7 @@ class PageAccordion extends React.Component<PageProps, PageState> {
   }
 
   onComponentSelected (rowInfo: ExtendedNodeData) {
+    console.log(rowInfo);
     console.log(rowInfo.node.component);
     this.setState({drawerOpen: true, selectedComponent: rowInfo.node.component})
   }
@@ -146,8 +147,7 @@ class PageAccordion extends React.Component<PageProps, PageState> {
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon/>}
-          aria-controls="panel1c-content"
-          id="panel1c-header">
+         >
           <Typography className={classes.heading}>name: {this.props.treeModel.page.name}</Typography>
           <Typography className={classes.secondaryHeading}>type: {this.props.treeModel.page.type}</Typography>
         </AccordionSummary>

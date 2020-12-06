@@ -1,30 +1,3 @@
-/**
- * Converts the node object of react tree ui to the component object that server understands
- **/
-
-// export function nodeToComponent (node) {
-//   let component = {
-//     name: node.jcrNodeName,
-//     managed: node.type === 'container',
-//     parameters: {},
-//     label: node.label,
-//     description: node.title,
-//     xtype: node.xtype,
-//     type: node.type
-//   }
-//   node.children && node.children.forEach(c => {
-//     if (!component.components) {
-//       component.components = []
-//     }
-//     component.components.push(nodeToComponent(c))
-//   });
-//
-//   node.parameters && node.parameters.forEach(paramObj => {
-//     component.parameters[paramObj['key']] = paramObj['value'];
-//   })
-//   return component;
-// }
-
 import {TreeItem} from "react-sortable-tree";
 import {AbstractComponent, ManagedComponent, Page, StaticComponent} from "./api/models";
 import {Nullable} from "./api/models/nullable";
@@ -44,6 +17,28 @@ export interface TreeModel {
 }
 
 /**
+ * Converts the node object of react tree ui to the component object that server understands
+ **/
+
+export function nodeToComponent (node: ComponentTreeItem) {
+  const component: Page | StaticComponent | ManagedComponent | AbstractComponent = {...node.component};
+
+  component.components = [];
+
+  node.children && node.children.forEach(c => {
+    if (!component.components) {
+      component.components = []
+    }
+    component.components.push(nodeToComponent(c))
+  });
+
+  // node.parameters && node.parameters.forEach(paramObj => {
+  //   component.parameters[paramObj['key']] = paramObj['value'];
+  // })
+  return component;
+}
+
+/**
  * Converts the component object coming from server to the node object that react ui understands
  **/
 export function componentToNode (component: AbstractComponent | StaticComponent | Page | ManagedComponent, handle?: string) {
@@ -57,17 +52,11 @@ export function componentToNode (component: AbstractComponent | StaticComponent 
       handle: handle
     }) as ComponentTreeItem;
 
+  node.component.components = [];
+
   isNotEmptyOrNull(component.components) &&
   component.components != null &&
   component.components.forEach(child => node.children.push((componentToNode(child, handle)) as ComponentTreeItem));
-
-  // component.parameters && Object.entries(component.parameters).forEach((value) => {
-  //   node.parameters.push({
-  //     key: value[0],
-  //     value: value[1]
-  //   });
-  // })
-  // console.log(node);
   return node;
 }
 
@@ -98,7 +87,7 @@ export function isNotEmptyOrNull (array: any) {
   return (typeof array !== 'undefined' && array.length > 0);
 }
 
-export function convertPagesToTreeDataArray (pages: Array<Page>) {
+export function convertPagesToTreeModelArray (pages: Array<Page>) {
   const trees: Array<TreeModel> = [];
   if (isNotEmptyOrNull(pages)) {
     pages.forEach(page => {
