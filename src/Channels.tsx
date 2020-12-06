@@ -64,14 +64,15 @@ const channelSchema = {
         "nl",
         "en",
         "es",
-      ], "enumNames": [
+      ],
+      "enumNames": [
         "Nederlands",
         "English",
         "Espanol",
       ]
     },
     // responseHeaders: {
-    //   "type": "object",
+    //   "type": ["object", 'null'],
     //   "additionalProperties": {
     //     "type": "string"
     //   }
@@ -113,7 +114,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
 
   componentDidMount (): void {
     const api = new ChannelOperationsApi({
-      // baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
+      baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
     }, this.props.endpoint)
     api.getChannels().then(value => {
       console.log(value);

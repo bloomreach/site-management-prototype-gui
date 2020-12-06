@@ -61,7 +61,7 @@ class NodeRendererDefault extends Component {
         );
       } else {
         // Show the handle used to initiate a drag-and-drop
-        if (node.type === 'container') {
+        if (node.component.type === 'managed') {
           handle = connectDragSource(<div className="rst__moveHandle" style={{padding: '10px'}}>
             <Icon className="fa fa-columns" style={{color: 'grey', fontSize: 20}}/>
           </div>, {
@@ -78,7 +78,19 @@ class NodeRendererDefault extends Component {
       }
     }
     if (treeIndex === 0) {
-      if (node.type === 'container') {
+      if (node.component.type === 'abstract') {
+        handle = (
+          <div className="rst__loadingHandle" style={{padding: '10px'}}>
+            <Icon className="fa fa-font" style={{color: 'grey', fontSize: 20}}/>
+          </div>
+        );
+      } else if (node.component.type === 'xpage') {
+        handle = (
+          <div className="rst__loadingHandle" style={{padding: '10px'}}>
+            <Icon className="fab fa-xing" style={{color: 'grey', fontSize: 20}}/>
+          </div>
+        );
+      } else if (node.component.type === 'managed') {
         handle = (
           <div className="rst__loadingHandle" style={{padding: '10px'}}>
             <Icon className="fa fa-columns" style={{color: 'grey', fontSize: 20}}/>

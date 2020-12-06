@@ -1,36 +1,33 @@
 import React from 'react';
 import {
-  Accordion,
-  AccordionActions,
-  AccordionDetails,
-  AccordionSummary,
-  AppBar, Button, Dialog, DialogActions, DialogContent, DialogTitle,
+  AppBar,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
   FormControl,
   IconButton,
   MenuItem,
   Select,
   Toolbar,
-  Typography, withStyles
+  withStyles
 } from "@material-ui/core";
 import 'react-sortable-tree/style.css';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
-import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 import {Channel, Page} from "./api/models";
-import {examplePages} from "./samples/Example";
 import AddOutlinedIcon from "@material-ui/icons/Add";
-import SortableTree from 'react-sortable-tree';
-import {componentToNode} from "./util";
-import NodeRendererDefault from "./fork/NodeRendererDefault";
+import {convertPagesToTreeDataArray, TreeModel} from "./util";
 import {ChannelOperationsApi} from "./api/apis/channel-operations-api";
 import {ChannelPageOperationsApi} from "./api";
 import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
+import PageAccordion from "./PageAccordion";
 
 type PagesState = {
   channels: Array<Channel>
   currentChannelPages: Array<Page>
+  currentPageTrees: Array<TreeModel>
   currentChannelId: string,
   dialogOpen: boolean
 }
@@ -44,19 +41,21 @@ const pageSchema = {
   properties: {
     type: {
       type: "string",
-      "enum": [
-        "abstract",
-        "page",
-        "xpage",
-      ], "enumNames": [
-        "Abstract Page",
-        "Page",
-        "X Page",
-      ]
+      "enum":
+        [
+          "abstract",
+          "page",
+          "xpage",
+        ],
+      "enumNames":
+        [
+          "Abstract Page",
+          "Page",
+          "X Page",
+        ]
     },
     name: {
       type: "string",
-      "ui:disabled": true
     },
     description: {
       type: "string"
@@ -97,13 +96,14 @@ class Pages extends React.Component<PagesProps, PagesState> {
       channels: [],
       currentChannelId: '',
       currentChannelPages: [],
+      currentPageTrees: [],
       dialogOpen: false
     }
   }
 
   componentDidMount (): void {
     const api = new ChannelOperationsApi({
-      // baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
+      baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
     }, this.props.endpoint)
     api.getChannels().then(value => {
       this.setState({channels: value.data}, () => this.updatePagesByChannel(this.state.channels[0].id))
@@ -112,13 +112,16 @@ class Pages extends React.Component<PagesProps, PagesState> {
 
   updatePagesByChannel (channelId: string) {
     const api = new ChannelPageOperationsApi({
-      // baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
+      baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
     }, this.props.endpoint)
     api.getChannelPages(channelId).then(value => {
-      this.setState({currentChannelId: channelId, currentChannelPages: value.data})
+      this.setState({
+        currentChannelId: channelId,
+        currentChannelPages: value.data,
+        currentPageTrees: convertPagesToTreeDataArray(value.data)
+      })
     });
   }
-
 
   render () {
     const {classes} = this.props;
@@ -159,62 +162,8 @@ class Pages extends React.Component<PagesProps, PagesState> {
           <Button color="primary" onClick={() => this.closeAddDialog()}>Cancel</Button>
         </DialogActions>
       </Dialog>
-      {this.state.currentChannelPages.map((page, index) => {
-        return (
-          <Accordion key={index}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon/>}
-            aria-controls="panel1c-content"
-            id="panel1c-header">
-            <Typography className={classes.heading}>name: {page.name}</Typography>
-            <Typography className={classes.secondaryHeading}>type: {page.type}</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-
-            <SortableTree style={{minHeight: '70px', width: '100%'}} reactVirtualizedListProps={{autoHeight: true}}
-                          isVirtualized={false}
-              // @ts-ignore
-                          treeData={[componentToNode(page)]}
-
-              // getNodeKey={{node} => node.id}
-                          onChange={treeData => console.log(treeData)}
-              // canNodeHaveChildren={node => (node.type !== 'container')}
-              // onMoveNode={({treeData, node, nextParentNode, prevPath, prevTreeIndex, nextPath, nextTreeIndex}) =>
-              //   this.onMove(treeData, node, nextParentNode, prevPath, prevTreeIndex, nextPath, nextTreeIndex)}
-              // canDrag={({treeIndex}) => treeIndex !== 0}
-              // canDrop={({nextParent}) => nextParent !== null}
-              // @ts-ignore
-                          nodeContentRenderer={NodeRendererDefault}
-              // generateNodeProps={rowInfo => ({
-              //   buttons: [rowInfo.node.type !== 'container' ? this.getStaticComponentMenu(rowInfo) :
-              // this.getManageableComponentMenu(rowInfo)], rowLabelClickEventHandler: (event) =>
-              // this.handleNodeClick(rowInfo) })}
-            />
-            <pre>{JSON.stringify(page, undefined, 2)}</pre>
-          </AccordionDetails>
-          <Divider/>
-          <AccordionActions>
-            <IconButton
-              disabled={true}
-              edge="start"
-              color="inherit"
-              aria-label="Delete"
-              // onClick={event => this.deleteComponent(item)}
-            >
-              <DeleteOutlinedIcon/>
-            </IconButton>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="Save"
-              // disabled={!item.changed}
-              disabled={true}
-              // onClick={event => this.handleSave(item)}
-            >
-              <SaveOutlinedIcon/>
-            </IconButton>
-          </AccordionActions>
-        </Accordion>)
+      {this.state.currentPageTrees.map((treeModel, index) => {
+        return (<PageAccordion key={index} treeModel={treeModel}/>)
       })}
     </>
   }
@@ -225,6 +174,15 @@ class Pages extends React.Component<PagesProps, PagesState> {
 
   openAddDialog () {
     this.setState({dialogOpen: true})
+  }
+
+  onMove ({treeData, node, nextParentNode, prevPath, prevTreeIndex, nextPath, nextTreeIndex}: { treeData: any, node: any, nextParentNode: any, prevPath: any, prevTreeIndex: any, nextPath: any, nextTreeIndex: any }) {
+    console.log(node);
+    console.log(nextParentNode);
+    console.log(prevPath);
+    console.log(prevTreeIndex);
+    console.log(nextPath);
+    console.log(nextTreeIndex);
   }
 
 }

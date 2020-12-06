@@ -26,17 +26,19 @@
 // }
 
 import {TreeItem} from "react-sortable-tree";
-import {AbstractComponent, Page} from "./api/models";
+import {AbstractComponent, ManagedComponent, Page, StaticComponent} from "./api/models";
 import {Nullable} from "./api/models/nullable";
 
-interface ComponentTreeItem extends TreeItem {
-  parameters: Record<string, any>[],
+export interface ComponentTreeItem extends TreeItem {
+  id: string
   children: ComponentTreeItem[],
+  component: Page | StaticComponent | ManagedComponent | AbstractComponent
   handle: string
 }
 
-interface TreeModel {
+export interface TreeModel {
   id: string,
+  page: Page,
   name?: Nullable<string>,
   treeData: ComponentTreeItem[]
 }
@@ -44,17 +46,13 @@ interface TreeModel {
 /**
  * Converts the component object coming from server to the node object that react ui understands
  **/
-export function componentToNode (component: AbstractComponent, handle?: string) {
+export function componentToNode (component: AbstractComponent | StaticComponent | Page | ManagedComponent, handle?: string) {
   const node =
     ({
       id: `${component.name}-${getId()}`,
-      jcrNodeName: component.name,
-      type: component.type,
-      title: component.description,
-      label: component.label,
-      xtype: component.xtype,
+      component: {...component},
+      title: `${component.name}`,
       expanded: true,
-      parameters: [],
       children: [],
       handle: handle
     }) as ComponentTreeItem;
@@ -63,31 +61,31 @@ export function componentToNode (component: AbstractComponent, handle?: string) 
   component.components != null &&
   component.components.forEach(child => node.children.push((componentToNode(child, handle)) as ComponentTreeItem));
 
-  component.parameters && Object.entries(component.parameters).forEach((value) => {
-    node.parameters.push({
-      key: value[0],
-      value: value[1]
-    });
-  })
-  // console.log(comp);
+  // component.parameters && Object.entries(component.parameters).forEach((value) => {
+  //   node.parameters.push({
+  //     key: value[0],
+  //     value: value[1]
+  //   });
+  // })
+  // console.log(node);
   return node;
 }
 
-function isPage (x: any): x is Page {
-  return x.type === "page" || x.type == "xpage" || x.type === "abstract";
-}
-
-function isComponent (x: any): x is AbstractComponent {
-  return x.type === "static" || x.type === "managed";
-}
-
-function isManagedComponent (x: any): x is AbstractComponent {
-  return x.type === "managed";
-}
-
-function isStaticComponent (x: any): x is AbstractComponent {
-  return x.type === "static";
-}
+// function isPage (x: any): x is Page {
+//   return x.type === "page" || x.type === "xpage" || x.type === "abstract";
+// }
+//
+// function isComponent (x: any): x is AbstractComponent {
+//   return x.type === "static" || x.type === "managed";
+// }
+//
+// function isManagedComponent (x: any): x is AbstractComponent {
+//   return x.type === "managed";
+// }
+//
+// function isStaticComponent (x: any): x is AbstractComponent {
+//   return x.type === "static";
+// }
 
 export function getId () {
   // Math.random should be unique because of its seeding algorithm.
@@ -100,15 +98,16 @@ export function isNotEmptyOrNull (array: any) {
   return (typeof array !== 'undefined' && array.length > 0);
 }
 
-export function convertComponentsToTreeDataArray (components: Array<AbstractComponent>) {
+export function convertPagesToTreeDataArray (pages: Array<Page>) {
   const trees: Array<TreeModel> = [];
-  if (isNotEmptyOrNull(components)) {
-    components.forEach(component => {
-      const handle = `${component.name}-${getId()}`
+  if (isNotEmptyOrNull(pages)) {
+    pages.forEach(page => {
+      const handle = `${page.name}-${getId()}`
       trees.push({
           id: handle,
-          name: component.description,
-          treeData: [componentToNode(component, handle)]
+          page: {...page},
+          name: page.name,
+          treeData: [componentToNode(page, handle)]
         }
       )
     })
@@ -126,10 +125,3 @@ export function convertComponentsToTreeDataArray (components: Array<AbstractComp
 //     updateNodeIds(childNode);
 //   });
 // }
-
-/**
- * Perform a deep copy of a json
- */
-export function deepCopy (obj: Object) {
-  return JSON.parse(JSON.stringify(obj));
-}
