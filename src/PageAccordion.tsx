@@ -21,20 +21,19 @@ import 'react-sortable-tree/style.css';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
-import SortableTree, {ExtendedNodeData} from 'react-sortable-tree';
-import {ComponentTreeItem, TreeModel} from "./util";
+import SortableTree, {addNodeUnderParent, ExtendedNodeData, FullTree, TreeItem} from 'react-sortable-tree';
+import {componentToNode, ComponentTreeItem, TreeModel} from "./util";
 import NodeRendererDefault from "./fork/NodeRendererDefault";
 import {Delete} from "@material-ui/icons";
-import {AbstractComponent, ManagedComponent, Page, StaticComponent} from "./api/models";
-import {Nullable} from "./api/models/nullable";
+import {AbstractComponent} from "./api/models";
 import {JSONSchema7} from "json-schema";
 import Form from "@rjsf/material-ui";
 
 type PageState = {
-  treeData: ComponentTreeItem[]
+  treeData: ComponentTreeItem[] | TreeItem[]
   saveDisabled: boolean
   drawerOpen: boolean
-  selectedComponent: Nullable<Page | StaticComponent | ManagedComponent | AbstractComponent>
+  selectedNode?: ComponentTreeItem
 }
 type PageProps = {
   classes: any
@@ -83,17 +82,11 @@ class PageAccordion extends React.Component<PageProps, PageState> {
       treeData: props.treeModel.treeData,
       saveDisabled: true,
       drawerOpen: false,
-      selectedComponent: null
+      selectedNode: undefined
     }
   }
 
   componentDidMount (): void {
-    // const api = new ChannelOperationsApi({
-    //   baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
-    // }, this.props.endpoint)
-    // api.getChannels().then(value => {
-    //   this.setState({channels: value.data}, () => this.updatePagesByChannel(this.state.channels[0].id))
-    // });
   }
 
   getMenu (rowInfo: ExtendedNodeData) {
@@ -106,7 +99,7 @@ class PageAccordion extends React.Component<PageProps, PageState> {
           <Menu {...bindMenu(popupState)}>
             {isNotManagedComponent &&
             <MenuItem
-              // onClick={event => this.add(rowInfo, popupState, false, newNode)} key={key}
+              onClick={event => this.addComponent(rowInfo, popupState, "static")}
             >
               <ListItemIcon>
                 <Icon className="fa fa-puzzle-piece" fontSize={'small'}/>
@@ -115,7 +108,7 @@ class PageAccordion extends React.Component<PageProps, PageState> {
             </MenuItem>}
             {isNotManagedComponent &&
             <MenuItem
-              // onClick={event => this.add(rowInfo, popupState, false, newNode)} key={key}
+              onClick={event => this.addComponent(rowInfo, popupState, "managed")}
             >
               <ListItemIcon>
                 <Icon className="fa fa-columns" fontSize={'small'}/>
@@ -135,10 +128,40 @@ class PageAccordion extends React.Component<PageProps, PageState> {
     </PopupState>
   }
 
-  onComponentSelected (rowInfo: ExtendedNodeData) {
-    console.log(rowInfo);
-    console.log(rowInfo.node.component);
-    this.setState({drawerOpen: true, selectedComponent: rowInfo.node.component})
+  addComponent (rowInfo: ExtendedNodeData, popupState: any, type: string) {
+    const newNode: AbstractComponent = {
+      type: type,
+      name: `new-${type}-component`
+    }
+    const componentTreeItem: ComponentTreeItem = componentToNode(newNode, rowInfo.node.handle);
+    // @ts-ignore
+    const getNodeKey = ({node}) => node.id;
+
+    const treeData: TreeItem[] = addNodeUnderParent({
+      treeData: this.state.treeData,
+      parentKey: rowInfo.node.id,
+      expandParent: true,
+      getNodeKey,
+      newNode: componentTreeItem,
+      addAsFirstChild: true,
+    }).treeData;
+
+    this.setState({treeData: treeData}, () => {
+      popupState.close();
+      this.onComponentSelected(componentTreeItem);
+    });
+  }
+
+  onComponentChanged (component: AbstractComponent, node?: ComponentTreeItem) {
+    if (node !== undefined) {
+      node.component = component;
+      node.title = component.name;
+      this.setState({treeData: this.state.treeData});
+    }
+  }
+
+  onComponentSelected (node: ComponentTreeItem) {
+    this.setState({drawerOpen: true, selectedNode: node})
   }
 
   render () {
@@ -147,31 +170,11 @@ class PageAccordion extends React.Component<PageProps, PageState> {
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon/>}
-         >
+        >
           <Typography className={classes.heading}>name: {this.props.treeModel.page.name}</Typography>
           <Typography className={classes.secondaryHeading}>type: {this.props.treeModel.page.type}</Typography>
         </AccordionSummary>
         <Divider/>
-        {/*<Sidebar.Pushable raised>*/}
-        {/*  <Sidebar*/}
-        {/*    animation='overlay'*/}
-        {/*    icon='labeled'*/}
-        {/*    as={Container}*/}
-        {/*    style={{background: 'white'}}*/}
-        {/*    // inverted*/}
-        {/*    onHide={() => this.setState({drawerOpen: false})}*/}
-        {/*    // vertical*/}
-        {/*    visible={this.state.drawerOpen}*/}
-        {/*    width='wide'*/}
-        {/*    direction={"right"}*/}
-        {/*  >*/}
-        {/*    {this.state.selectedComponent &&*/}
-        {/*    <Form onChange={({formData})=> console.log(formData)} schema={componentSchema as JSONSchema7} formData={this.state.selectedComponent}>*/}
-        {/*      <></>*/}
-        {/*    </Form>*/}
-        {/*    }*/}
-        {/*  </Sidebar>*/}
-        {/*  <Sidebar.Pusher dimmed={this.state.drawerOpen}>*/}
         <AccordionDetails>
           <SortableTree style={{minHeight: '70px', width: '100%'}} reactVirtualizedListProps={{autoHeight: true}}
                         isVirtualized={false}
@@ -201,22 +204,20 @@ class PageAccordion extends React.Component<PageProps, PageState> {
                             this.getMenu(rowInfo)
                           ],
                           rowLabelClickEventHandler: () =>
-                            this.onComponentSelected(rowInfo)
+                            this.onComponentSelected((rowInfo.node) as ComponentTreeItem)
                         })}
           />
         </AccordionDetails>
         <Drawer anchor={'right'} open={this.state.drawerOpen}
                 onClose={() => this.setState({drawerOpen: false})}>
-          {this.state.selectedComponent &&
+          {this.state.selectedNode &&
           <Container>
-            <Form onChange={({formData}) => console.log(formData)} schema={componentSchema as JSONSchema7} formData={this.state.selectedComponent}>
+            <Form onChange={({formData}) => this.onComponentChanged(formData, this.state.selectedNode)} schema={componentSchema as JSONSchema7} formData={this.state.selectedNode.component}>
               <></>
             </Form>
           </Container>
           }
         </Drawer>
-        {/*  </Sidebar.Pusher>*/}
-        {/*</Sidebar.Pushable>*/}
         <Divider/>
         <AccordionActions>
           <IconButton
@@ -240,15 +241,6 @@ class PageAccordion extends React.Component<PageProps, PageState> {
           </IconButton>
         </AccordionActions>
       </Accordion>)
-  }
-
-  onMove ({treeData, node, nextParentNode, prevPath, prevTreeIndex, nextPath, nextTreeIndex}: { treeData: any, node: any, nextParentNode: any, prevPath: any, prevTreeIndex: any, nextPath: any, nextTreeIndex: any }) {
-    // console.log(node);
-    // console.log(nextParentNode);
-    // console.log(prevPath);
-    // console.log(prevTreeIndex);
-    // console.log(nextPath);
-    // console.log(nextTreeIndex);
   }
 
 }

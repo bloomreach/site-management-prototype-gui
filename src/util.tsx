@@ -21,9 +21,7 @@ export interface TreeModel {
  **/
 
 export function nodeToComponent (node: ComponentTreeItem) {
-  const component: Page | StaticComponent | ManagedComponent | AbstractComponent = {...node.component};
-
-  component.components = [];
+  const component: Page | StaticComponent | ManagedComponent | AbstractComponent = {...node.component, components:[]};
 
   node.children && node.children.forEach(c => {
     if (!component.components) {
