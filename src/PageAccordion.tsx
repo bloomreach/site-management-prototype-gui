@@ -21,8 +21,8 @@ import 'react-sortable-tree/style.css';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
-import SortableTree, {addNodeUnderParent, ExtendedNodeData, FullTree, TreeItem} from 'react-sortable-tree';
-import {componentToNode, ComponentTreeItem, TreeModel} from "./util";
+import SortableTree, {addNodeUnderParent, ExtendedNodeData, removeNode, TreeItem} from 'react-sortable-tree';
+import {componentToNode, ComponentTreeItem, getNodeKey, TreeModel} from "./util";
 import NodeRendererDefault from "./fork/NodeRendererDefault";
 import {Delete} from "@material-ui/icons";
 import {AbstractComponent} from "./api/models";
@@ -98,25 +98,20 @@ class PageAccordion extends React.Component<PageProps, PageState> {
           <MoreHorizOutlinedIcon {...bindTrigger(popupState)}/>
           <Menu {...bindMenu(popupState)}>
             {isNotManagedComponent &&
-            <MenuItem
-              onClick={event => this.addComponent(rowInfo, popupState, "static")}
-            >
+            <MenuItem onClick={() => this.addComponent(rowInfo, "static", () => popupState.close())}>
               <ListItemIcon>
                 <Icon className="fa fa-puzzle-piece" fontSize={'small'}/>
               </ListItemIcon>
               <Typography variant="inherit">Add Static Component</Typography>
             </MenuItem>}
             {isNotManagedComponent &&
-            <MenuItem
-              onClick={event => this.addComponent(rowInfo, popupState, "managed")}
-            >
+            <MenuItem onClick={() => this.addComponent(rowInfo, "managed", () => popupState.close())}>
               <ListItemIcon>
                 <Icon className="fa fa-columns" fontSize={'small'}/>
               </ListItemIcon>
               <Typography variant="inherit">Add Managed Component</Typography>
-            </MenuItem>
-            }
-            <MenuItem disabled={rowInfo.treeIndex === 0} onClick={event => console.log(rowInfo, popupState)}>
+            </MenuItem>}
+            <MenuItem disabled={rowInfo.treeIndex === 0} onClick={() => this.deleteComponent(rowInfo, () => popupState.close())}>
               <ListItemIcon>
                 <Delete fontSize="small"/>
               </ListItemIcon>
@@ -128,27 +123,27 @@ class PageAccordion extends React.Component<PageProps, PageState> {
     </PopupState>
   }
 
-  addComponent (rowInfo: ExtendedNodeData, popupState: any, type: string) {
+  addComponent (rowInfo: ExtendedNodeData, type: string, callback?: () => void) {
     const newNode: AbstractComponent = {
       type: type,
       name: `new-${type}-component`
     }
-    const componentTreeItem: ComponentTreeItem = componentToNode(newNode, rowInfo.node.handle);
-    // @ts-ignore
-    const getNodeKey = ({node}) => node.id;
+    const newNodeComponent: ComponentTreeItem = componentToNode(newNode);
 
     const treeData: TreeItem[] = addNodeUnderParent({
       treeData: this.state.treeData,
       parentKey: rowInfo.node.id,
       expandParent: true,
       getNodeKey,
-      newNode: componentTreeItem,
+      newNode: newNodeComponent,
       addAsFirstChild: true,
     }).treeData;
 
     this.setState({treeData: treeData}, () => {
-      popupState.close();
-      this.onComponentSelected(componentTreeItem);
+      this.onComponentSelected(newNodeComponent);
+      if (callback) {
+        callback();
+      }
     });
   }
 
@@ -169,32 +164,22 @@ class PageAccordion extends React.Component<PageProps, PageState> {
     return (
       <Accordion>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon/>}
-        >
+          expandIcon={<ExpandMoreIcon/>}>
           <Typography className={classes.heading}>name: {this.props.treeModel.page.name}</Typography>
           <Typography className={classes.secondaryHeading}>type: {this.props.treeModel.page.type}</Typography>
         </AccordionSummary>
         <Divider/>
         <AccordionDetails>
-          <SortableTree style={{minHeight: '70px', width: '100%'}} reactVirtualizedListProps={{autoHeight: true}}
+          <SortableTree style={{minHeight: '70px', width: '100%'}}
+                        reactVirtualizedListProps={{autoHeight: true}}
                         isVirtualized={false}
                         treeData={this.state.treeData}
-                        getNodeKey={({node}) => node.id}
+                        getNodeKey={getNodeKey}
                         onChange={treeData => {
                           // @ts-ignore
                           this.setState({treeData, saveDisabled: false});
                         }}
                         canNodeHaveChildren={node => (node.component.type !== 'managed')}
-            // onMoveNode={({treeData, node, nextParentNode, prevPath, prevTreeIndex, nextPath, nextTreeIndex}) =>
-            //   this.onMove({
-            //     treeData: treeData,
-            //     node: node,
-            //     nextParentNode: nextParentNode,
-            //     prevPath: prevPath,
-            //     prevTreeIndex: prevTreeIndex,
-            //     nextPath: nextPath,
-            //     nextTreeIndex: nextTreeIndex
-            //   })}
                         canDrag={({treeIndex}) => treeIndex !== 0}
                         canDrop={({nextParent}) => nextParent !== null}
             // @ts-ignore
@@ -243,6 +228,22 @@ class PageAccordion extends React.Component<PageProps, PageState> {
       </Accordion>)
   }
 
+  deleteComponent (rowInfo: ExtendedNodeData, callback?: () => void) {
+    // @ts-ignore
+    const treeData: TreeItem[] = removeNode({
+      treeData: this.state.treeData,
+      path: rowInfo.path,
+      getNodeKey,
+      ignoreCollapsed: true
+    }).treeData;
+
+    this.setState({treeData: treeData}, () => {
+      if (callback) {
+        callback();
+      }
+    });
+
+  }
 }
 
 export default withStyles(styles)(PageAccordion);

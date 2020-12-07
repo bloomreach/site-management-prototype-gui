@@ -6,7 +6,7 @@ export interface ComponentTreeItem extends TreeItem {
   id: string
   children: ComponentTreeItem[],
   component: Page | StaticComponent | ManagedComponent | AbstractComponent
-  handle: string
+  // handle: string
 }
 
 export interface TreeModel {
@@ -16,45 +16,45 @@ export interface TreeModel {
   treeData: ComponentTreeItem[]
 }
 
+export const getNodeKey = ({node}:any) => node.id;
+
 /**
  * Converts the node object of react tree ui to the component object that server understands
  **/
 
 export function nodeToComponent (node: ComponentTreeItem) {
-  const component: Page | StaticComponent | ManagedComponent | AbstractComponent = {...node.component, components:[]};
+  const component: Page | StaticComponent | ManagedComponent | AbstractComponent
+    = {...node.component, components: []};
 
-  node.children && node.children.forEach(c => {
+  node.children && node.children.forEach(nodeChild => {
     if (!component.components) {
       component.components = []
     }
-    component.components.push(nodeToComponent(c))
+    component.components.push(nodeToComponent(nodeChild))
   });
 
-  // node.parameters && node.parameters.forEach(paramObj => {
-  //   component.parameters[paramObj['key']] = paramObj['value'];
-  // })
   return component;
 }
 
 /**
  * Converts the component object coming from server to the node object that react ui understands
  **/
-export function componentToNode (component: AbstractComponent | StaticComponent | Page | ManagedComponent, handle?: string) {
+export function componentToNode (component: AbstractComponent | StaticComponent | Page | ManagedComponent) {
   const node =
     ({
       id: `${component.name}-${getId()}`,
-      component: {...component},
+      component: {...component, components: []},
       title: `${component.name}`,
       expanded: true,
       children: [],
-      handle: handle
+      // handle: handle
     }) as ComponentTreeItem;
 
-  node.component.components = [];
+  // node.component.components = [];
 
   isNotEmptyOrNull(component.components) &&
   component.components != null &&
-  component.components.forEach(child => node.children.push((componentToNode(child, handle)) as ComponentTreeItem));
+  component.components.forEach(child => node.children.push((componentToNode(child)) as ComponentTreeItem));
   return node;
 }
 
@@ -89,12 +89,12 @@ export function convertPagesToTreeModelArray (pages: Array<Page>) {
   const trees: Array<TreeModel> = [];
   if (isNotEmptyOrNull(pages)) {
     pages.forEach(page => {
-      const handle = `${page.name}-${getId()}`
+      const id = `${page.name}-${getId()}`
       trees.push({
-          id: handle,
+          id: id,
           page: {...page},
           name: page.name,
-          treeData: [componentToNode(page, handle)]
+          treeData: [componentToNode(page)]
         }
       )
     })
