@@ -4,6 +4,7 @@ import {
   AccordionActions,
   AccordionDetails,
   AccordionSummary,
+  AppBar,
   Container,
   Divider,
   Drawer,
@@ -12,6 +13,7 @@ import {
   ListItemIcon,
   Menu,
   MenuItem,
+  Toolbar,
   Typography,
   withStyles
 } from "@material-ui/core";
@@ -22,11 +24,12 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 import SortableTree, {addNodeUnderParent, ExtendedNodeData, removeNode, TreeItem} from 'react-sortable-tree';
-import {componentToNode, ComponentTreeItem, getNodeKey, TreeModel} from "./util";
+import {componentToNode, ComponentTreeItem, getNodeKey, nodeToComponent, TreeModel} from "./util";
 import NodeRendererDefault from "./fork/NodeRendererDefault";
 import {Delete} from "@material-ui/icons";
 import {AbstractComponent} from "./api/models";
 import {JSONSchema7} from "json-schema";
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Form from "@rjsf/material-ui";
 
 type PageState = {
@@ -143,6 +146,7 @@ class PageAccordion extends React.Component<PageProps, PageState> {
       this.onComponentSelected(newNodeComponent);
       if (callback) {
         callback();
+        this.onPageModelChanged();
       }
     });
   }
@@ -151,8 +155,14 @@ class PageAccordion extends React.Component<PageProps, PageState> {
     if (node !== undefined) {
       node.component = component;
       node.title = component.name;
-      this.setState({treeData: this.state.treeData});
+      this.setState({treeData: this.state.treeData},
+        () => this.onPageModelChanged());
     }
+
+  }
+
+  onPageModelChanged () {
+    console.log('page model changed', nodeToComponent(this.state.treeData[0] as ComponentTreeItem));
   }
 
   onComponentSelected (node: ComponentTreeItem) {
@@ -178,6 +188,7 @@ class PageAccordion extends React.Component<PageProps, PageState> {
                         onChange={treeData => {
                           // @ts-ignore
                           this.setState({treeData, saveDisabled: false});
+                          this.onPageModelChanged();
                         }}
                         canNodeHaveChildren={node => (node.component.type !== 'managed')}
                         canDrag={({treeIndex}) => treeIndex !== 0}
@@ -196,11 +207,22 @@ class PageAccordion extends React.Component<PageProps, PageState> {
         <Drawer anchor={'right'} open={this.state.drawerOpen}
                 onClose={() => this.setState({drawerOpen: false})}>
           {this.state.selectedNode &&
+          <>
+          <AppBar position="static" color={"default"}>
+            <Toolbar>
+              <IconButton edge="start" color="inherit" aria-label="menu">
+               <ChevronRightIcon/>
+              </IconButton>
+              <Typography variant="h6">
+                Component Editor
+              </Typography>
+            </Toolbar>
+          </AppBar>
           <Container>
             <Form onChange={({formData}) => this.onComponentChanged(formData, this.state.selectedNode)} schema={componentSchema as JSONSchema7} formData={this.state.selectedNode.component}>
               <></>
             </Form>
-          </Container>
+          </Container></>
           }
         </Drawer>
         <Divider/>
