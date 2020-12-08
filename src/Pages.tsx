@@ -25,7 +25,6 @@ import PageAccordion from "./PageAccordion";
 
 type PagesState = {
   channels: Array<Channel>
-  // currentChannelPages: Array<Page>
   currentPageTrees: Array<TreeModel>
   currentChannelId: string,
   dialogOpen: boolean
@@ -52,13 +51,13 @@ const pageSchema = {
           "X Page",
         ]
     },
+    extends: {
+      type: "string"
+    },
     name: {
       type: "string",
     },
     description: {
-      type: "string"
-    },
-    extends: {
       type: "string"
     },
     parameters: {
@@ -70,21 +69,6 @@ const pageSchema = {
   }
 };
 
-// @ts-ignore
-const styles = theme => {
-  return ({
-    heading: {
-      fontSize: theme.typography.pxToRem(15),
-      flexBasis: '33.33%',
-      flexShrink: 0,
-    },
-    secondaryHeading: {
-      fontSize: theme.typography.pxToRem(15),
-      color: theme.palette.text.secondary,
-    },
-  });
-};
-
 class Pages extends React.Component<PagesProps, PagesState> {
 
   constructor (props: PagesProps) {
@@ -93,18 +77,23 @@ class Pages extends React.Component<PagesProps, PagesState> {
     this.state = {
       channels: [],
       currentChannelId: '',
-      // currentChannelPages: [],
       currentPageTrees: [],
-      dialogOpen: false
+      dialogOpen: false,
+      // addPage: undefined
     }
   }
 
   componentDidMount (): void {
+    this.updatePages();
+  }
+
+  updatePages () {
     const api = new ChannelOperationsApi({
       baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
     }, this.props.endpoint)
     api.getChannels().then(value => {
-      this.setState({channels: value.data}, () => this.updatePagesByChannel(this.state.channels[0].id))
+      this.setState({channels: value.data},
+        () => this.updatePagesByChannel(this.state.channels[0].id))
     });
   }
 
@@ -122,6 +111,10 @@ class Pages extends React.Component<PagesProps, PagesState> {
   }
 
   render () {
+    let addPage: Page = {
+      name: '',
+      type: 'page'
+    };
     return <>
       <AppBar position="sticky" variant={'outlined'} color={'default'}>
         <Toolbar>
@@ -129,7 +122,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
              edge="start"
              color="inherit"
              aria-label="Add"
-             onClick={event => this.openAddDialog()}
+             onClick={() => this.openAddDialog()}
            >
             <AddOutlinedIcon/>
           </IconButton>
@@ -146,19 +139,58 @@ class Pages extends React.Component<PagesProps, PagesState> {
       <Dialog open={this.state.dialogOpen} aria-labelledby="form-dialog-title">
         <DialogTitle>Add Page</DialogTitle>
         <DialogContent>
-          <Form schema={pageSchema as JSONSchema7}>
+          <Form onChange={({formData}) => addPage = formData} formData={addPage} schema={pageSchema as JSONSchema7}>
            <></>
           </Form>
         </DialogContent>
         <DialogActions>
-          <Button disabled color="primary">Add</Button>
+          <Button color="primary" onClick={() => this.addPage(addPage)}>Add</Button>
           <Button color="primary" onClick={() => this.closeAddDialog()}>Cancel</Button>
         </DialogActions>
       </Dialog>
       {this.state.currentPageTrees.map((treeModel, index) => {
-        return (<PageAccordion key={index} treeModel={treeModel}/>)
+        return (<PageAccordion key={index}
+                               treeModel={treeModel}
+                               onPageModelChange={page => this.onPageModelChanged(page)}
+                               deletePage={page => this.deletePage(page)}
+                               savePage={page => this.savePage(page)}/>)
       })}
     </>
+  }
+
+  addPage (addPage: Page) {
+    const api = new ChannelPageOperationsApi({
+      baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
+    }, this.props.endpoint)
+    api.putChannelPage(this.state.currentChannelId, addPage.name, addPage).then(value => {
+      this.updatePages();
+      this.closeAddDialog();
+    });
+  }
+
+  onPageModelChanged (page: Page) {
+    console.log('page model changed', page);
+  }
+
+  deletePage (page: Page) {
+    const api = new ChannelPageOperationsApi({
+      baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
+    }, this.props.endpoint)
+    api.deleteChannelPage(this.state.currentChannelId, page.name).then(value => {
+      this.updatePages();
+    });
+  }
+
+  savePage (page: Page) {
+    const api = new ChannelPageOperationsApi({
+      baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
+    }, this.props.endpoint);
+    api.getChannelPage(this.state.currentChannelId, page.name).then(value => {
+      api.putChannelPage(this.state.currentChannelId, page.name, page, value.headers['x-resource-version'])
+        .then(() => {
+          this.updatePages();
+        })
+    })
   }
 
   closeAddDialog () {

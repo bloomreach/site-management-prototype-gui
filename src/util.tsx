@@ -16,15 +16,14 @@ export interface TreeModel {
   treeData: ComponentTreeItem[]
 }
 
-export const getNodeKey = ({node}:any) => node.id;
+export const getNodeKey = ({node}: any) => node.id;
 
 /**
  * Converts the node object of react tree ui to the component object that server understands
  **/
 
 export function nodeToComponent (node: ComponentTreeItem) {
-  const component: Page | StaticComponent | ManagedComponent | AbstractComponent
-    = {...node.component, components: []};
+  const component: Page | StaticComponent | ManagedComponent | AbstractComponent = {...node.component, components:undefined};
 
   node.children && node.children.forEach(nodeChild => {
     if (!component.components) {
@@ -32,7 +31,9 @@ export function nodeToComponent (node: ComponentTreeItem) {
     }
     component.components.push(nodeToComponent(nodeChild))
   });
-
+  if(component.type ==='page'){
+    console.log('node to component after', node);
+  }
   return component;
 }
 

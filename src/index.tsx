@@ -9,12 +9,12 @@ import Fallback from "./other/Fallback";
 ReactDOM.render(
   <React.StrictMode>
     <React.Fragment>
-      <HashRouter>
-        <Switch>
-          <Route exact path="/" render={() => <Navigation/>}/>
-          <Route path="/**" render={() => <Fallback/>}/>
-        </Switch>
-      </HashRouter>
+        <HashRouter>
+          <Switch>
+            <Route exact path="/" render={() => <Navigation/>}/>
+            <Route path="/**" render={() => <Fallback/>}/>
+          </Switch>
+        </HashRouter>
     </React.Fragment>,
   </React.StrictMode>,
   document.getElementById('root')

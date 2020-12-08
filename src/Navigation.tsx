@@ -31,7 +31,6 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
     const {tab} = this.state || 0;
 
     return (
-      // <EndpointProvider value={this.state.endpoint}>
       <Fragment>
         <AppBar position="sticky" color={'default'}>
           {/*<Toolbar>*/}
@@ -100,12 +99,10 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
         <TabPanel value={tab} index={1}>
           <Pages endpoint={this.state.endpoint}/>
         </TabPanel>
-
         <AppBar style={{bottom: 0, top: "auto"}}>
           <Typography>endpoint: {this.state.endpoint}</Typography>
         </AppBar>
       </Fragment>)
-    // </EndpointProvider>
   }
 
 }
