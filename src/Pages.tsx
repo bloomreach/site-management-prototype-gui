@@ -22,6 +22,7 @@ import {ChannelPageOperationsApi} from "./api";
 import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
 import PageAccordion from "./PageAccordion";
+import {ChannelPageOperationsApiContext} from "./ApiContext";
 
 type PagesState = {
   channels: Array<Channel>
@@ -71,6 +72,8 @@ const pageSchema = {
 
 class Pages extends React.Component<PagesProps, PagesState> {
 
+  static contextType = ChannelPageOperationsApiContext;
+
   constructor (props: PagesProps) {
     super(props);
 
@@ -79,7 +82,6 @@ class Pages extends React.Component<PagesProps, PagesState> {
       currentChannelId: '',
       currentPageTrees: [],
       dialogOpen: false,
-      // addPage: undefined
     }
   }
 
@@ -98,13 +100,10 @@ class Pages extends React.Component<PagesProps, PagesState> {
   }
 
   updatePagesByChannel (channelId: string) {
-    const api = new ChannelPageOperationsApi({
-      baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
-    }, this.props.endpoint)
+    const api : ChannelPageOperationsApi = this.context;
     api.getChannelPages(channelId).then(value => {
       this.setState({
         currentChannelId: channelId,
-        // currentChannelPages: value.data,
         currentPageTrees: convertPagesToTreeModelArray(value.data)
       })
     });
@@ -159,9 +158,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
   }
 
   addPage (addPage: Page) {
-    const api = new ChannelPageOperationsApi({
-      baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
-    }, this.props.endpoint)
+    const api : ChannelPageOperationsApi = this.context;
     api.putChannelPage(this.state.currentChannelId, addPage.name, addPage).then(value => {
       this.updatePages();
       this.closeAddDialog();
@@ -173,18 +170,14 @@ class Pages extends React.Component<PagesProps, PagesState> {
   }
 
   deletePage (page: Page) {
-    const api = new ChannelPageOperationsApi({
-      baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
-    }, this.props.endpoint)
+    const api : ChannelPageOperationsApi = this.context;
     api.deleteChannelPage(this.state.currentChannelId, page.name).then(value => {
       this.updatePages();
     });
   }
 
   savePage (page: Page) {
-    const api = new ChannelPageOperationsApi({
-      baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
-    }, this.props.endpoint);
+    const api : ChannelPageOperationsApi = this.context;
     api.getChannelPage(this.state.currentChannelId, page.name).then(value => {
       api.putChannelPage(this.state.currentChannelId, page.name, page, value.headers['x-resource-version'])
         .then(() => {

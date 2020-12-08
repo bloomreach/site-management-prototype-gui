@@ -16,10 +16,8 @@ import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 import {TreeModel} from "./util";
 import {Page} from "./api/models";
 import PageEditor from "./PageEditor";
-import {ChannelPageOperationsApiContext} from "./ApiContext";
 
 type PageAccordionState = {
-  // treeData: ComponentTreeItem[] | TreeItem[]
   page: Page
 }
 type PageAccordionProps = {
@@ -47,13 +45,10 @@ const styles = theme => {
 
 class PageAccordion extends React.Component<PageAccordionProps, PageAccordionState> {
 
-  static contextType = ChannelPageOperationsApiContext;
-
   constructor (props: PageAccordionProps) {
     super(props);
 
     this.state = {
-      // treeData: props.treeModel.treeData,
       page: props.treeModel.page
     }
   }

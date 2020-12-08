@@ -6,13 +6,10 @@ export interface ComponentTreeItem extends TreeItem {
   id: string
   children: ComponentTreeItem[],
   component: Page | StaticComponent | ManagedComponent | AbstractComponent
-  // handle: string
 }
 
 export interface TreeModel {
-  id: string,
-  page: Page,
-  name?: Nullable<string>,
+  page: Readonly<Page>,
   treeData: ComponentTreeItem[]
 }
 
@@ -90,11 +87,8 @@ export function convertPagesToTreeModelArray (pages: Array<Page>) {
   const trees: Array<TreeModel> = [];
   if (isNotEmptyOrNull(pages)) {
     pages.forEach(page => {
-      const id = `${page.name}-${getId()}`
       trees.push({
-          id: id,
           page: {...page},
-          name: page.name,
           treeData: [componentToNode(page)]
         }
       )
