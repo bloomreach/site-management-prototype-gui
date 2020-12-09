@@ -1,6 +1,5 @@
 import {TreeItem} from "react-sortable-tree";
 import {AbstractComponent, ManagedComponent, Page, StaticComponent} from "./api/models";
-import {Nullable} from "./api/models/nullable";
 
 export interface ComponentTreeItem extends TreeItem {
   id: string
@@ -20,7 +19,10 @@ export const getNodeKey = ({node}: any) => node.id;
  **/
 
 export function nodeToComponent (node: ComponentTreeItem) {
-  const component: Page | StaticComponent | ManagedComponent | AbstractComponent = {...node.component, components:undefined};
+  const component: Page | StaticComponent | ManagedComponent | AbstractComponent = {
+    ...node.component,
+    components: undefined
+  };
 
   node.children && node.children.forEach(nodeChild => {
     if (!component.components) {
