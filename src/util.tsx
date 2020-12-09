@@ -28,9 +28,7 @@ export function nodeToComponent (node: ComponentTreeItem) {
     }
     component.components.push(nodeToComponent(nodeChild))
   });
-  if(component.type ==='page'){
-    console.log('node to component after', node);
-  }
+
   return component;
 }
 
@@ -88,7 +86,7 @@ export function convertPagesToTreeModelArray (pages: Array<Page>) {
   if (isNotEmptyOrNull(pages)) {
     pages.forEach(page => {
       trees.push({
-          page: {...page},
+          page: page,
           treeData: [componentToNode(page)]
         }
       )

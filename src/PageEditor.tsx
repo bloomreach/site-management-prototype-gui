@@ -151,7 +151,6 @@ class PageEditor extends React.Component<PageEditorProps, PageEditorState> {
                         treeData={this.state.treeData}
                         getNodeKey={getNodeKey}
                         onChange={treeData => {
-                          console.log('on change', treeData);
                           this.setState({treeData: treeData}, () => {
                             this.onPageModelChanged();
                           });

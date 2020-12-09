@@ -49,7 +49,7 @@ class PageAccordion extends React.Component<PageAccordionProps, PageAccordionSta
     super(props);
 
     this.state = {
-      page: props.treeModel.page
+      page: {...props.treeModel.page}
     }
   }
 
