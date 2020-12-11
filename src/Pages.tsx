@@ -22,7 +22,7 @@ import {ChannelPageOperationsApi} from "./api";
 import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
 import PageAccordion from "./PageAccordion";
-import {ChannelPageOperationsApiContext} from "./ApiContext";
+import {channelOperationsApi, channelPageOperationsApi} from "./ApiContext";
 
 type PagesState = {
   channels: Array<Channel>
@@ -31,7 +31,7 @@ type PagesState = {
   dialogOpen: boolean
 }
 type PagesProps = {
-  endpoint: string
+  // endpoint: string
 }
 
 const pageSchema = {
@@ -72,7 +72,7 @@ const pageSchema = {
 
 class Pages extends React.Component<PagesProps, PagesState> {
 
-  static contextType = ChannelPageOperationsApiContext;
+  // static contextType: ApiContextType = ApiContext;
 
   constructor (props: PagesProps) {
     super(props);
@@ -90,9 +90,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
   }
 
   updatePages () {
-    const api = new ChannelOperationsApi({
-      baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
-    }, this.props.endpoint)
+    const api: ChannelOperationsApi = channelOperationsApi;
     api.getChannels().then(value => {
       this.setState({channels: value.data},
         () => this.updatePagesByChannel(this.state.channels[0].id))
@@ -100,7 +98,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
   }
 
   updatePagesByChannel (channelId: string) {
-    const api : ChannelPageOperationsApi = this.context;
+    const api: ChannelPageOperationsApi = channelPageOperationsApi;
     api.getChannelPages(channelId).then(value => {
       this.setState({
         currentChannelId: channelId,
@@ -148,7 +146,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
         </DialogActions>
       </Dialog>
       {this.state.currentPageTrees.map((treeModel, index) => {
-        return (<PageAccordion key={index}
+        return (<PageAccordion key={treeModel.page.name + this.state.currentChannelId + index}
                                treeModel={treeModel}
                                onPageModelChange={page => this.onPageModelChanged(page)}
                                deletePage={page => this.deletePage(page)}
@@ -158,7 +156,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
   }
 
   addPage (addPage: Page) {
-    const api : ChannelPageOperationsApi = this.context;
+    const api: ChannelPageOperationsApi = channelPageOperationsApi;
     api.putChannelPage(this.state.currentChannelId, addPage.name, addPage).then(value => {
       this.updatePages();
       this.closeAddDialog();
@@ -170,14 +168,14 @@ class Pages extends React.Component<PagesProps, PagesState> {
   }
 
   deletePage (page: Page) {
-    const api : ChannelPageOperationsApi = this.context;
+    const api: ChannelPageOperationsApi = channelPageOperationsApi;
     api.deleteChannelPage(this.state.currentChannelId, page.name).then(value => {
       this.updatePages();
     });
   }
 
   savePage (page: Page) {
-    const api : ChannelPageOperationsApi = this.context;
+    const api: ChannelPageOperationsApi = channelPageOperationsApi;
     api.getChannelPage(this.state.currentChannelId, page.name).then(value => {
       api.putChannelPage(this.state.currentChannelId, page.name, page, value.headers['x-resource-version'])
         .then(() => {
