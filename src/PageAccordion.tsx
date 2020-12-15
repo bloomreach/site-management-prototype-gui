@@ -72,21 +72,18 @@ class PageAccordion extends React.Component<PageAccordionProps, PageAccordionSta
 
   render () {
     const {classes} = this.props;
-    return (<Accordion>
+    return (<Accordion >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon/>}>
         <Typography className={classes.heading}>name: {this.props.treeModel.page.name}</Typography>
         <Typography className={classes.secondaryHeading}>type: {this.props.treeModel.page.type}</Typography>
       </AccordionSummary>
       <Divider/>
-      <AccordionDetails>
-        <PageEditor treeModel={this.props.treeModel} onPageModelChange={page => this.onPageModelChanged(page)}/>
-      </AccordionDetails>
-      <Divider/>
       <AccordionActions>
         <IconButton
           disabled={false}
           edge="start"
+          style={{left: 0}}
           color="inherit"
           aria-label="Delete"
           onClick={() => this.deletePage()}>
@@ -101,6 +98,29 @@ class PageAccordion extends React.Component<PageAccordionProps, PageAccordionSta
           <SaveOutlinedIcon/>
         </IconButton>
       </AccordionActions>
+      <AccordionDetails>
+        <PageEditor treeModel={this.props.treeModel} onPageModelChange={page => this.onPageModelChanged(page)}/>
+      </AccordionDetails>
+      <AccordionActions>
+        <IconButton
+          disabled={false}
+          edge="start"
+          style={{left: 0}}
+          color="inherit"
+          aria-label="Delete"
+          onClick={() => this.deletePage()}>
+          <DeleteOutlinedIcon/>
+        </IconButton>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="Save"
+          onClick={() => this.savePage()}
+        >
+          <SaveOutlinedIcon/>
+        </IconButton>
+      </AccordionActions>
+
     </Accordion>)
   }
 

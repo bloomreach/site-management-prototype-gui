@@ -1,41 +1,54 @@
 import React from 'react';
 import {
   AppBar,
+  Button,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
   Drawer,
   FormControl,
+  Icon,
   IconButton,
+  ListItemIcon,
+  Menu,
   MenuItem,
   Select,
   Toolbar,
   Typography
 } from "@material-ui/core";
 import 'react-sortable-tree/style.css';
-import {Channel, Page, SitemapItem} from "./api/models";
+import {Channel, SitemapItem} from "./api/models";
 import AddOutlinedIcon from "@material-ui/icons/Add";
 import {ChannelOperationsApi} from "./api/apis/channel-operations-api";
 import {channelOperationsApi, channelSiteMapOperationsApi} from "./ApiContext";
 import {Nullable} from "./api/models/nullable";
 import {ChannelSitemapOperationsApi} from "./api/apis/channel-sitemap-operations-api";
-import SortableTree, {TreeItem} from "react-sortable-tree";
+import SortableTree, {addNodeUnderParent, ExtendedNodeData, removeNode, TreeItem} from "react-sortable-tree";
 import {
   convertSiteMapToTreeData,
   hasWildCardOrReserved,
   nodeToSiteMapItems,
-  replaceWildCards
+  replaceWildCards,
+  siteMapItemToTreeItem
 } from "./sitemap/sitemap-utils";
-import {ComponentTreeItem, getNodeKey, isNotEmptyOrNull, nodeToComponent} from "./util";
+import {getNodeKey, isNotEmptyOrNull} from "./util";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
-import NodeRendererDefault from "./fork/NodeRendererDefault";
 import SiteMapItemNodeRendererDefault from "./sitemap/SiteMapItemNodeRendererDefault";
+import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
+import PopupState, {bindMenu, bindTrigger} from "material-ui-popup-state";
+import MoreHorizOutlinedIcon from "@material-ui/icons/MoreHorizOutlined";
+import {Delete} from "@material-ui/icons";
 
 type SiteMapState = {
   channels: Array<Channel>
   currentChannelId: Nullable<string>,
   // currentSiteMap: Array<SitemapItem>
+  dialogOpen: boolean
   treeData: TreeItem[]
   drawerOpen: boolean
   // selectedSiteMapItem: Nullable<SitemapItem>
@@ -52,7 +65,13 @@ const siteMapItemSchema = {
       type: "string",
     },
     pageTitle: {
-      type: "string"
+      type: ["string", 'null']
+    },
+    page: {
+      type: ["string", 'null']
+    },
+    relativeContentPath: {
+      type: ["string", 'null']
     },
     parameters: {
       "type": "object",
@@ -63,9 +82,13 @@ const siteMapItemSchema = {
   }
 };
 
-class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
+const uiSchema = {
+  name: {
+    "ui:autofocus": true
+  }
+};
 
-  // static contextType: ApiContextType = ApiContext;
+class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
 
   constructor (props: SiteMapProps) {
     super(props);
@@ -73,11 +96,10 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
     this.state = {
       channels: [],
       currentChannelId: null,
-      // currentSiteMap: [],
       treeData: [],
       drawerOpen: false,
-      // selectedSiteMapItem: null,
-      selectedNode: undefined
+      selectedNode: undefined,
+      dialogOpen: false
     }
   }
 
@@ -100,18 +122,59 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
     api.getChannelSitemap(channelId).then(value => {
       this.setState({
         currentChannelId: channelId,
-        // currentSiteMap: value.data,
         treeData: convertSiteMapToTreeData(value.data)
-        // currentPageTrees: convertPagesToTreeModelArray(value.data)
       }, () => console.log(this.state.treeData));
-
     });
   }
 
+  getMenu (rowInfo: ExtendedNodeData) {
+    const siteMapItem: SitemapItem = rowInfo.node.siteMapItem;
+    const isNotLeaf = isNotEmptyOrNull(rowInfo.node.children);
+    return <PopupState variant="popover" popupId="component-popup-menu">
+      {(popupState) => (
+        <React.Fragment>
+          <MoreHorizOutlinedIcon {...bindTrigger(popupState)}/>
+          <Menu {...bindMenu(popupState)}>
+            <MenuItem onClick={() => this.addSiteMapItem(rowInfo, "new-sitemap-item", () => popupState.close())}>
+              <ListItemIcon>
+                <Icon className="fa fa-sitemap" fontSize={'small'}/>
+              </ListItemIcon>
+              <Typography variant="inherit">Add Custom Matcher</Typography>
+            </MenuItem>
+            <MenuItem onClick={() => this.addSiteMapItem(rowInfo, "_index_", () => popupState.close())}>
+              <ListItemIcon>
+                <Icon className="fa fa-sitemap" fontSize={'small'}/>
+              </ListItemIcon>
+              <Typography variant="inherit">Add ./ Matcher (_index_)</Typography>
+            </MenuItem>
+            <MenuItem onClick={() => this.addSiteMapItem(rowInfo, "_any_", () => popupState.close())}>
+              <ListItemIcon>
+                <Icon className="fa fa-sitemap" fontSize={'small'}/>
+              </ListItemIcon>
+              <Typography variant="inherit">Add ** Matcher (_any_)</Typography>
+            </MenuItem>
+            <MenuItem onClick={() => this.addSiteMapItem(rowInfo, "_default_", () => popupState.close())}>
+              <ListItemIcon>
+                <Icon className="fa fa-sitemap" fontSize={'small'}/>
+              </ListItemIcon>
+              <Typography variant="inherit">Add * Matcher (_default_)</Typography>
+            </MenuItem>
+            <MenuItem disabled={siteMapItem.name === 'root'} onClick={() => this.deleteSiteMapItem(rowInfo, () => popupState.close())}>
+              <ListItemIcon>
+                <Delete fontSize="small"/>
+              </ListItemIcon>
+              <Typography variant="inherit">Delete Sitemap Item</Typography>
+            </MenuItem>
+          </Menu>
+        </React.Fragment>
+      )}
+    </PopupState>
+  }
+
   render () {
-    // let addPage: Page = {
-    //   name: '',
-    // };
+    let addSiteMapItem: SitemapItem = {
+      name: '',
+    };
     return <>
       <AppBar position="sticky" variant={'outlined'} color={'default'}>
         <Toolbar>
@@ -119,10 +182,18 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
              edge="start"
              color="inherit"
              aria-label="Add"
-             // onClick={() => this.openAddDialog()}
+             onClick={() => this.setState({dialogOpen: true})}
            >
             <AddOutlinedIcon/>
           </IconButton>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="Save"
+            onClick={() => this.saveSiteMap()}
+          >
+          <SaveOutlinedIcon/>
+        </IconButton>
            <Divider/>
           <FormControl>
             <Select value={this.state.currentChannelId}>
@@ -133,6 +204,18 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
           </FormControl>
         </Toolbar>
       </AppBar>
+      <Dialog open={this.state.dialogOpen} aria-labelledby="form-dialog-title">
+        <DialogTitle>Add Site Map Item</DialogTitle>
+        <DialogContent>
+          <Form onChange={({formData}) => addSiteMapItem = formData} formData={addSiteMapItem} uiSchema={uiSchema} schema={siteMapItemSchema as JSONSchema7}>
+           <></>
+          </Form>
+        </DialogContent>
+        <DialogActions>
+          <Button color="primary" onClick={() => this.addSiteMapItem(null, addSiteMapItem.name, () => this.setState({dialogOpen: false}, () => this.updateSiteMap()))}>Add</Button>
+          <Button color="primary" onClick={() => this.setState({dialogOpen: false})}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
       <Container>
         {isNotEmptyOrNull(this.state.treeData) &&
         <SortableTree style={{minHeight: '70px', width: '100%'}}
@@ -141,16 +224,14 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
                       treeData={this.state.treeData}
                       getNodeKey={getNodeKey}
                       onChange={treeData => {
-                        this.setState({treeData: treeData}, () => {
-                          console.log('treedata updated', treeData)
-                        });
+                        this.setState({treeData: treeData});
                       }}
                       canNodeHaveChildren={node => (node.siteMapItem.name !== 'root' && !node.siteMapItem.name.includes('_any_'))}
           // @ts-ignore
                       nodeContentRenderer={SiteMapItemNodeRendererDefault}
                       generateNodeProps={rowInfo => ({
                         buttons: [
-                          // this.getMenu(rowInfo)
+                          this.getMenu(rowInfo)
                         ],
                         rowLabelClickEventHandler: () =>
                           this.onNodeSelected(rowInfo.node)
@@ -173,7 +254,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
             </Toolbar>
           </AppBar>
           <Container>
-            <Form onChange={({formData}) => this.onSiteMapItemChanged(formData, this.state.selectedNode)} schema={siteMapItemSchema as JSONSchema7} formData={this.state.selectedNode.siteMapItem}>
+            <Form onChange={({formData}) => this.onSiteMapItemChanged(formData, this.state.selectedNode)} schema={siteMapItemSchema as JSONSchema7} uiSchema={uiSchema} formData={this.state.selectedNode.siteMapItem}>
               <></>
             </Form>
           </Container></>
@@ -182,10 +263,29 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
     </>
   }
 
+  saveSiteMap () {
+    const siteMap: SitemapItem[] = nodeToSiteMapItems(this.state.treeData);
+    const api: ChannelSitemapOperationsApi = channelSiteMapOperationsApi;
+
+    this.state.currentChannelId &&
+
+    siteMap.forEach(siteMapItem => {
+      // @ts-ignore
+      api.getChannelSitemapItem(this.state.currentChannelId, siteMapItem.name).then(value => {
+        // @ts-ignore
+        api.putChannelSitemapItem(this.state.currentChannelId, siteMapItem.name, siteMapItem, value.headers['x-resource-version']);
+      }).catch(reason => {
+        // @ts-ignore
+        api.putChannelSitemapItem(this.state.currentChannelId, siteMapItem.name, siteMapItem);
+      });
+    });
+
+    this.updateSiteMap();
+  }
+
   onSiteMapChanged () {
     const siteMap: SitemapItem[] = nodeToSiteMapItems(this.state.treeData);
     console.log('fullSitemap', siteMap);
-
   }
 
   onNodeSelected (node: TreeItem) {
@@ -202,6 +302,55 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
     }
   }
 
+  private addSiteMapItem (rowInfo: Nullable<ExtendedNodeData>, name: string, callback: () => any) {
+    const newSiteMapItem: SitemapItem = {
+      name: `${name}`
+    };
+    const newNodeSiteMapItem: TreeItem = siteMapItemToTreeItem(newSiteMapItem);
+
+    const treeData: TreeItem[] = addNodeUnderParent({
+      treeData: this.state.treeData,
+      parentKey: rowInfo && rowInfo.node.id,
+      expandParent: true,
+      getNodeKey,
+      newNode: newNodeSiteMapItem,
+      addAsFirstChild: true,
+    }).treeData;
+
+    this.setState({treeData: treeData}, () => {
+      this.onNodeSelected(newNodeSiteMapItem);
+      if (callback) {
+        callback();
+        this.onSiteMapChanged();
+      }
+    });
+
+  }
+
+  private deleteSiteMapItem (rowInfo: ExtendedNodeData, callback: () => any) {
+    // @ts-ignore
+    const treeData: TreeItem[] = removeNode({
+      treeData: this.state.treeData,
+      path: rowInfo.path,
+      getNodeKey,
+      ignoreCollapsed: true
+    }).treeData;
+
+    this.setState({treeData: treeData}, () => {
+      if (callback) {
+        callback();
+        const api: ChannelSitemapOperationsApi = channelSiteMapOperationsApi;
+        const siteMapItem = rowInfo.node.siteMapItem;
+        // @ts-ignore
+        api.getChannelSitemapItem(this.state.currentChannelId, siteMapItem.name).then(value => {
+          // @ts-ignore
+          api.deleteChannelSitemapItem(this.state.currentChannelId, siteMapItem.name, siteMapItem, value.headers['x-resource-version']).then(() => {
+            this.onSiteMapChanged();
+          })
+        });
+      }
+    });
+  }
 }
 
 export default SiteMap;

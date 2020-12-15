@@ -7,16 +7,13 @@ export function nodeToSiteMapItems (treeData: TreeItem[]): SitemapItem[] {
 
     const siteMapItem: SitemapItem = {
       ...treeItem.siteMapItem,
-      items: undefined
+      items: []
     };
 
     // @ts-ignore
     treeItem.children && treeItem.children.forEach((nodeChild: TreeItem) => {
-      if(!siteMapItem.items){
-        siteMapItem.items = []
-      }
-      // @ts-ignore
-      siteMapItem.items.push(nodeToSiteMapItems(nodeChild.children))
+      const smi: SitemapItem[] = nodeToSiteMapItems([nodeChild]);
+      siteMapItem.items?.push(smi[0]);
     });
 
     return siteMapItem;
