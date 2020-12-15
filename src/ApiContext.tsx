@@ -4,6 +4,7 @@ import {ChannelOperationsApi} from "./api/apis/channel-operations-api";
 import {Page} from "./api/models";
 import {TreeItem} from "react-sortable-tree";
 import {ChannelSitemapOperationsApi} from "./api/apis/channel-sitemap-operations-api";
+import {ChannelSiteMenuOperationsApi} from "./api/apis/channel-site-menu-operations-api";
 
 const baseOptions = {
   auth:
@@ -24,6 +25,10 @@ export const channelOperationsApi: ChannelOperationsApi = new ChannelOperationsA
 }, endpoint);
 
 export const channelSiteMapOperationsApi: ChannelSitemapOperationsApi = new ChannelSitemapOperationsApi({
+  baseOptions: baseOptions
+}, endpoint);
+
+export const channelSiteMenuOperationsApi: ChannelSiteMenuOperationsApi = new ChannelSiteMenuOperationsApi({
   baseOptions: baseOptions
 }, endpoint);
 
