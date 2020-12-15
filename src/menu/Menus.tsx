@@ -26,11 +26,11 @@ import {JSONSchema7} from "json-schema";
 import {ChannelSiteMenuOperationsApi} from "../api/apis/channel-site-menu-operations-api";
 import {channelOperationsApi, channelSiteMenuOperationsApi} from "../ApiContext";
 import {isNotEmptyOrNull} from "../util";
-import DeleteIcon from '@material-ui/icons/Delete';
 import MenuIcon from '@material-ui/icons/Menu';
 import {ChannelOperationsApi} from "../api/apis/channel-operations-api";
 import {Channel} from "../api/models";
 import {Nullable} from "../api/models/nullable";
+import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 
 type MenusState = {
   channels: Array<Channel>
@@ -140,7 +140,7 @@ class Menus extends React.Component<MenusProps, MenusState> {
                         />
                         <ListItemSecondaryAction>
                           <IconButton edge="end" aria-label="delete" onClick={() => this.deleteMenu(menu)}>
-                            <DeleteIcon/>
+                            <DeleteOutlinedIcon/>
                           </IconButton>
                         </ListItemSecondaryAction>
                       </ListItem>
@@ -157,17 +157,6 @@ class Menus extends React.Component<MenusProps, MenusState> {
       callback && callback();
       this.updateMenus();
     });
-    // // @ts-ignore
-    // api.getChannelSitemenu(this.state.currentChannelId, menu).then(value => {
-    //   // @ts-ignore
-    //   api.putChannelSitemenu(this.state.currentChannelId, menu, value.headers['x-resource-version']).then(() => {
-    //     callback && callback();
-    //     this.updateMenus();
-    //   });
-    // }).catch(reason => {
-    //   // @ts-ignore
-    //
-    // });
   }
 
   private deleteMenu (menu: string, callback?: () => any) {

@@ -47,7 +47,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
                   position: 'absolute',
                   top: '15px'
                 }}
-                badgeContent={'U/C'} color="primary">
+                color="primary">
               </Badge>
             }/>
             <Tab label="Pages" icon={
@@ -57,7 +57,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
                   position: 'absolute',
                   top: '15px'
                 }}
-                badgeContent={'U/C'} color="primary">
+                 color="primary">
               </Badge>
             }/>
             <Tab label="Catalog" disabled icon={
@@ -67,7 +67,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
                   position: 'absolute',
                   top: '15px'
                 }}
-                badgeContent={'U/C'} color="primary">
+                 color="primary">
               </Badge>
             }/>
             <Tab label="Sitemap"  icon={
@@ -77,7 +77,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
                   position: 'absolute',
                   top: '15px'
                 }}
-                badgeContent={'U/C'} color="primary">
+                color="primary">
               </Badge>
             }/>
 
@@ -88,7 +88,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
                   position: 'absolute',
                   top: '15px'
                 }}
-                badgeContent={'U/C'} color="primary">
+                 color="primary">
               </Badge>
             }/>
           </Tabs>

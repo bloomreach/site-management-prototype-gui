@@ -15,7 +15,7 @@ ReactDOM.render(
             <Route path="/**" render={() => <Fallback/>}/>
           </Switch>
         </HashRouter>
-    </React.Fragment>,
+    </React.Fragment>
   </React.StrictMode>,
   document.getElementById('root')
 );
