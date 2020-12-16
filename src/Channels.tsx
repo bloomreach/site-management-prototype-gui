@@ -5,11 +5,6 @@ import {
   AccordionDetails,
   AccordionSummary,
   AppBar,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Divider,
   IconButton,
   Toolbar,
@@ -24,6 +19,7 @@ import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
 import AddOutlinedIcon from "@material-ui/icons/Add";
 import {channelOperationsApi} from "./ApiContext";
+import {localeEnum, localeValues} from "./samples/Locales";
 
 type ChannelsState = {
   channels: Array<Channel>,
@@ -72,16 +68,8 @@ const channelSchema = {
     },
     locale: {
       type: "string",
-      "enum": [
-        "nl",
-        "en",
-        "es",
-      ],
-      "enumNames": [
-        "Nederlands",
-        "English",
-        "Espanol",
-      ]
+      "enum": localeEnum,
+      "enumNames": localeValues
     },
     devices: {
       type: "array",
@@ -156,8 +144,6 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
       this.setState({channels: data})
     });
   }
-
-
 
   render () {
     const {classes} = this.props;
