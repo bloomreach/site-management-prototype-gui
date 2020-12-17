@@ -23,12 +23,12 @@ import {JSONSchema7} from "json-schema";
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Form from "@rjsf/material-ui";
 
-type PageState = {
+type PageEditorState = {
   treeData: ComponentTreeItem[] | TreeItem[]
   drawerOpen: boolean
   selectedNode?: ComponentTreeItem
 }
-type PageProps = {
+type PageEditorProps = {
   treeModel: TreeModel
   onPageModelChange: (page: Page) => void
 }
@@ -51,9 +51,9 @@ const componentSchema = {
   }
 };
 
-class PageEditor extends React.Component<PageProps, PageState> {
+class PageEditor extends React.Component<PageEditorProps, PageEditorState> {
 
-  constructor (props: PageProps) {
+  constructor (props: PageEditorProps) {
     super(props);
 
     this.state = {
@@ -151,8 +151,9 @@ class PageEditor extends React.Component<PageProps, PageState> {
                         treeData={this.state.treeData}
                         getNodeKey={getNodeKey}
                         onChange={treeData => {
-                          //todo add change here?
-                          this.onPageModelChanged();
+                          this.setState({treeData: treeData}, () => {
+                            this.onPageModelChanged();
+                          });
                         }}
                         canNodeHaveChildren={node => (node.component.type !== 'managed')}
                         canDrag={({treeIndex}) => treeIndex !== 0}
@@ -174,7 +175,7 @@ class PageEditor extends React.Component<PageProps, PageState> {
           <>
           <AppBar position="static" color={"default"}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => this.setState({drawerOpen: false}) }>
+              <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => this.setState({drawerOpen: false})}>
                <ChevronRightIcon/>
               </IconButton>
               <Typography variant="h6">
@@ -204,6 +205,7 @@ class PageEditor extends React.Component<PageProps, PageState> {
     this.setState({treeData: treeData}, () => {
       if (callback) {
         callback();
+        this.onPageModelChanged();
       }
     });
 

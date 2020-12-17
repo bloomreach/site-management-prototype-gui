@@ -1,4 +1,100 @@
 import {Channel, Page} from "../api/models";
+import {TreeItem} from "react-sortable-tree";
+
+export const exampleSiteMapTreeData: TreeItem[] = [
+  {
+    "id": "_any_-va7hn6b1l",
+    "siteMapItem": {
+      "name": "_any_",
+      "page": null,
+      "pageTitle": null,
+      "relativeContentPath": "xpages/${1}",
+      "parameters": {},
+      "doctypePages": {},
+      "items": []
+    },
+    "title": "_any_",
+    "expanded": true,
+    "children": []
+  },
+  {
+    "id": "articles-84q7ntb27",
+    "siteMapItem": {
+      "name": "articles",
+      "page": null,
+      "pageTitle": null,
+      "relativeContentPath": "xpages/articles",
+      "parameters": {},
+      "doctypePages": {},
+      "items": []
+    },
+    "title": "articles",
+    "expanded": true,
+    "children": [
+      {
+        "id": "_any_-413zib60b",
+        "siteMapItem": {
+          "name": "_any_",
+          "page": "content",
+          "pageTitle": null,
+          "relativeContentPath": "content/articles/${1}",
+          "parameters": {},
+          "doctypePages": {},
+          "items": []
+        },
+        "title": "_any_",
+        "expanded": true,
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "products-ok80swipg",
+    "siteMapItem": {
+      "name": "products",
+      "page": null,
+      "pageTitle": null,
+      "relativeContentPath": null,
+      "parameters": {},
+      "doctypePages": {},
+      "items": []
+    },
+    "title": "products",
+    "expanded": true,
+    "children": [
+      {
+        "id": "_any_-pz973iuit",
+        "siteMapItem": {
+          "name": "_any_",
+          "page": "product",
+          "pageTitle": null,
+          "relativeContentPath": "xpages/products/${1}",
+          "parameters": {},
+          "doctypePages": {},
+          "items": []
+        },
+        "title": "_any_",
+        "expanded": true,
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "root-b10gldtzy",
+    "siteMapItem": {
+      "name": "root",
+      "page": null,
+      "pageTitle": null,
+      "relativeContentPath": "xpages/home",
+      "parameters": {},
+      "doctypePages": {},
+      "items": []
+    },
+    "title": "root",
+    "expanded": true,
+    "children": []
+  }
+];
 
 export const exampleChannels: Array<Channel> = [
   {

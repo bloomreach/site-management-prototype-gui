@@ -1,30 +1,28 @@
 import {TreeItem} from "react-sortable-tree";
 import {AbstractComponent, ManagedComponent, Page, StaticComponent} from "./api/models";
-import {Nullable} from "./api/models/nullable";
 
 export interface ComponentTreeItem extends TreeItem {
   id: string
   children: ComponentTreeItem[],
   component: Page | StaticComponent | ManagedComponent | AbstractComponent
-  // handle: string
 }
 
 export interface TreeModel {
-  id: string,
-  page: Page,
-  name?: Nullable<string>,
+  page: Readonly<Page>,
   treeData: ComponentTreeItem[]
 }
 
-export const getNodeKey = ({node}:any) => node.id;
+export const getNodeKey = ({node}: any) => node.id;
 
 /**
  * Converts the node object of react tree ui to the component object that server understands
  **/
 
 export function nodeToComponent (node: ComponentTreeItem) {
-  const component: Page | StaticComponent | ManagedComponent | AbstractComponent
-    = {...node.component, components: []};
+  const component: Page | StaticComponent | ManagedComponent | AbstractComponent = {
+    ...node.component,
+    components: undefined
+  };
 
   node.children && node.children.forEach(nodeChild => {
     if (!component.components) {
@@ -89,11 +87,8 @@ export function convertPagesToTreeModelArray (pages: Array<Page>) {
   const trees: Array<TreeModel> = [];
   if (isNotEmptyOrNull(pages)) {
     pages.forEach(page => {
-      const id = `${page.name}-${getId()}`
       trees.push({
-          id: id,
-          page: {...page},
-          name: page.name,
+          page: page,
           treeData: [componentToNode(page)]
         }
       )

@@ -13,18 +13,19 @@ import 'react-sortable-tree/style.css';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
-import {ExtendedNodeData, removeNode, TreeItem} from 'react-sortable-tree';
-import {ComponentTreeItem, getNodeKey, TreeModel} from "./util";
+import {TreeModel} from "./util";
 import {Page} from "./api/models";
 import PageEditor from "./PageEditor";
 
-type PageState = {
-  treeData: ComponentTreeItem[] | TreeItem[]
-  saveDisabled: boolean
+type PageAccordionState = {
+  page: Page
 }
-type PageProps = {
+type PageAccordionProps = {
   classes: any
   treeModel: TreeModel
+  onPageModelChange: (page: Page) => void
+  deletePage: (page: Page) => void
+  savePage: (page: Page) => void
 }
 
 // @ts-ignore
@@ -42,32 +43,13 @@ const styles = theme => {
   });
 };
 
-const componentSchema = {
-  type: "object",
-  properties: {
-    name: {
-      type: "string",
-    },
-    description: {
-      type: "string"
-    },
-    parameters: {
-      "type": "object",
-      "additionalProperties": {
-        "type": "string"
-      }
-    }
-  }
-};
+class PageAccordion extends React.Component<PageAccordionProps, PageAccordionState> {
 
-class PageAccordion extends React.Component<PageProps, PageState> {
-
-  constructor (props: PageProps) {
+  constructor (props: PageAccordionProps) {
     super(props);
 
     this.state = {
-      treeData: props.treeModel.treeData,
-      saveDisabled: true,
+      page: {...props.treeModel.page}
     }
   }
 
@@ -75,64 +57,73 @@ class PageAccordion extends React.Component<PageProps, PageState> {
   }
 
   onPageModelChanged (page: Page) {
-    console.log('page model changed', page);
-    console.log(JSON.stringify(page));
+    this.setState({page: page}, () => {
+      this.props.onPageModelChange(page);
+    });
+  }
+
+  deletePage () {
+    this.props.deletePage(this.state.page);
+  }
+
+  savePage () {
+    this.props.savePage(this.state.page);
   }
 
   render () {
     const {classes} = this.props;
-    return (
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon/>}>
-          <Typography className={classes.heading}>name: {this.props.treeModel.page.name}</Typography>
-          <Typography className={classes.secondaryHeading}>type: {this.props.treeModel.page.type}</Typography>
-        </AccordionSummary>
-        <Divider/>
-        <AccordionDetails>
-          <PageEditor treeModel={this.props.treeModel} onPageModelChange={page => this.onPageModelChanged(page)}/>
-        </AccordionDetails>
-        <Divider/>
-        <AccordionActions>
-          <IconButton
-            disabled={false}
-            edge="start"
-            color="inherit"
-            aria-label="Delete"
-            onClick={(event) => console.log('deleting', this.props.treeModel.page.name)}
-          >
-            <DeleteOutlinedIcon/>
-          </IconButton>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="Save"
-            // disabled={!item.changed}
-            disabled={this.state.saveDisabled}
-            onClick={(event) => this.setState({saveDisabled: true}, () => console.log('saving', this.props.treeModel.page.name))}
-          >
-            <SaveOutlinedIcon/>
-          </IconButton>
-        </AccordionActions>
-      </Accordion>)
+    return (<Accordion >
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon/>}>
+        <Typography className={classes.heading}>name: {this.props.treeModel.page.name}</Typography>
+        <Typography className={classes.secondaryHeading}>type: {this.props.treeModel.page.type}</Typography>
+      </AccordionSummary>
+      <Divider/>
+      <AccordionActions>
+        <IconButton
+          disabled={false}
+          edge="start"
+          style={{left: 0}}
+          color="inherit"
+          aria-label="Delete"
+          onClick={() => this.deletePage()}>
+          <DeleteOutlinedIcon/>
+        </IconButton>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="Save"
+          onClick={() => this.savePage()}
+        >
+          <SaveOutlinedIcon/>
+        </IconButton>
+      </AccordionActions>
+      <AccordionDetails>
+        <PageEditor treeModel={this.props.treeModel} onPageModelChange={page => this.onPageModelChanged(page)}/>
+      </AccordionDetails>
+      <AccordionActions>
+        <IconButton
+          disabled={false}
+          edge="start"
+          style={{left: 0}}
+          color="inherit"
+          aria-label="Delete"
+          onClick={() => this.deletePage()}>
+          <DeleteOutlinedIcon/>
+        </IconButton>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="Save"
+          onClick={() => this.savePage()}
+        >
+          <SaveOutlinedIcon/>
+        </IconButton>
+      </AccordionActions>
+
+    </Accordion>)
   }
 
-  deleteComponent (rowInfo: ExtendedNodeData, callback?: () => void) {
-    // @ts-ignore
-    const treeData: TreeItem[] = removeNode({
-      treeData: this.state.treeData,
-      path: rowInfo.path,
-      getNodeKey,
-      ignoreCollapsed: true
-    }).treeData;
-
-    this.setState({treeData: treeData}, () => {
-      if (callback) {
-        callback();
-      }
-    });
-
-  }
 }
 
 export default withStyles(styles)(PageAccordion);

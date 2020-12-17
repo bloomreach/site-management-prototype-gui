@@ -58,5 +58,5 @@ export interface SitemapItem {
      * @type {Array&lt;SitemapItem&gt;}
      * @memberof SitemapItem
      */
-    items?: any;
+    items?: Array<SitemapItem>;
 }

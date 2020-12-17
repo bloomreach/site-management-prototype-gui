@@ -5,11 +5,6 @@ import {
   AccordionDetails,
   AccordionSummary,
   AppBar,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Divider,
   IconButton,
   Toolbar,
@@ -23,7 +18,9 @@ import {Channel} from "./api/models";
 import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
 import AddOutlinedIcon from "@material-ui/icons/Add";
-import {ChannelOperationsApi} from "./api/apis/channel-operations-api";
+import {channelOperationsApi} from "./ApiContext";
+import {localeEnum, localeValues} from "./samples/Locales";
+import Icon from "@material-ui/core/Icon";
 
 type ChannelsState = {
   channels: Array<Channel>,
@@ -36,6 +33,18 @@ type ChannelsProps = {
 
 const channelUiSchema = {
   id: {
+    "ui:disabled": true
+  },
+  name: {
+    "ui:disabled": true
+  },
+  branch: {
+    "ui:disabled": true
+  },
+  branchOf: {
+    "ui:disabled": true
+  },
+  contentRootPath: {
     "ui:disabled": true
   }
 }
@@ -60,23 +69,30 @@ const channelSchema = {
     },
     locale: {
       type: "string",
-      "enum": [
-        "nl",
-        "en",
-        "es",
-      ],
-      "enumNames": [
-        "Nederlands",
-        "English",
-        "Espanol",
-      ]
+      "enum": localeEnum,
+      "enumNames": localeValues
     },
-    // responseHeaders: {
-    //   "type": ["object", 'null'],
-    //   "additionalProperties": {
-    //     "type": "string"
-    //   }
-    // },
+    devices: {
+      type: "array",
+      items: {
+        type: "string"
+      }
+    },
+    defaultDevice: {
+      type: "string"
+    },
+    linkurlPrefix: {
+      type: ["string", 'null']
+    },
+    cdnHost: {
+      type: ["string", 'null']
+    },
+    responseHeaders: {
+      "type": ["object", 'null'],
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
     parameters: {
       "type": "object",
       "additionalProperties": {
@@ -113,21 +129,21 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
   }
 
   componentDidMount (): void {
-    const api = new ChannelOperationsApi({
-      baseOptions: {auth: {username: 'admin', password: 'admin'}, withCredentials: true,}
-    }, this.props.endpoint)
+    this.updateChannels();
+  }
+
+  updateChannels () {
+    const api = channelOperationsApi;
     api.getChannels().then(value => {
-      console.log(value);
-      this.setState({channels: value.data})
+      let data: Array<Channel> = value.data;
+      data.map(channel => {
+        if (channel.responseHeaders === null) {
+          channel.responseHeaders = {};
+        }
+        return channel;
+      })
+      this.setState({channels: data})
     });
-  }
-
-  closeAddDialog () {
-    this.setState({dialogOpen: false})
-  }
-
-  openAddDialog () {
-    this.setState({dialogOpen: true})
   }
 
   render () {
@@ -140,23 +156,19 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
             color="inherit"
             aria-label="Add Channel"
             // disabled={true}
-            onClick={event => this.openAddDialog()}>
+            onClick={event => window.open('http://localhost:8080/cms/experience-manager', 'new')}>
             <AddOutlinedIcon/>
+          </IconButton>
+           <IconButton
+             edge="start"
+             color="inherit"
+             aria-label="Branch Channel"
+             // disabled={true}
+             onClick={event => window.open('http://localhost:8080/cms/projects', 'new')}>
+             <Icon className="fas fa-code-branch"/>
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Dialog open={this.state.dialogOpen} aria-labelledby="form-dialog-title">
-        <DialogTitle>Add Channel</DialogTitle>
-        <DialogContent>
-          <Form schema={channelSchema as JSONSchema7}>
-           <></>
-          </Form>
-        </DialogContent>
-        <DialogActions>
-          <Button disabled color="primary">Save</Button>
-          <Button color="primary" onClick={() => this.closeAddDialog()}>Cancel</Button>
-        </DialogActions>
-      </Dialog>
       {this.state.channels.map((channel, index) => {
         return (
           <Accordion key={index}>
@@ -168,10 +180,10 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
               <Typography className={classes.secondaryHeading}>name: {channel.name}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Form uiSchema={channelUiSchema} schema={channelSchema as JSONSchema7}
+              <Form onChange={({formData}) => channel = formData} uiSchema={channelUiSchema} schema={channelSchema as JSONSchema7}
                     formData={channel}><></>
               </Form>
-              <pre>{JSON.stringify(channel, undefined, 2)}</pre>
+              {/*<pre>{JSON.stringify(channel, undefined, 2)}</pre>*/}
             </AccordionDetails>
             <Divider/>
             <AccordionActions>
@@ -189,8 +201,8 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
                 color="inherit"
                 aria-label="Save"
                 // disabled={!item.changed}
-                disabled={true}
-                // onClick={event => this.handleSave(item)}
+                // disabled={true}
+                onClick={() => this.saveChannel(channel)}
               >
                 <SaveOutlinedIcon/>
               </IconButton>
@@ -200,6 +212,16 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
     </>
   }
 
+  private saveChannel (channel: Channel) {
+    const api = channelOperationsApi;
+    api.getChannel(channel.id).then(response => {
+      api.updateChannel(channel.id, channel, response.headers['x-resource-version'])
+        .then(() => {
+          this.updateChannels();
+        })
+    })
+
+  }
 }
 
 export default withStyles(styles)(Channels);

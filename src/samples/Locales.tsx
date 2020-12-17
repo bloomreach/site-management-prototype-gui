@@ -564,3 +564,11 @@ export const locales: Record<string, string> =
     "zu": "Zulu",
     "zu_ZA": "Zulu (South Africa)"
   }
+
+export const localeEnum: Array<string> = Object.entries(locales).map(value => {
+  return value[0];
+});
+
+export const localeValues: Array<string> = Object.entries(locales).map(value => {
+  return value[1];
+});
