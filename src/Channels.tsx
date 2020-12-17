@@ -20,6 +20,7 @@ import {JSONSchema7} from "json-schema";
 import AddOutlinedIcon from "@material-ui/icons/Add";
 import {channelOperationsApi} from "./ApiContext";
 import {localeEnum, localeValues} from "./samples/Locales";
+import Icon from "@material-ui/core/Icon";
 
 type ChannelsState = {
   channels: Array<Channel>,
@@ -157,6 +158,14 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
             // disabled={true}
             onClick={event => window.open('http://localhost:8080/cms/experience-manager', 'new')}>
             <AddOutlinedIcon/>
+          </IconButton>
+           <IconButton
+             edge="start"
+             color="inherit"
+             aria-label="Branch Channel"
+             // disabled={true}
+             onClick={event => window.open('http://localhost:8080/cms/projects', 'new')}>
+             <Icon className="fas fa-code-branch"/>
           </IconButton>
         </Toolbar>
       </AppBar>
