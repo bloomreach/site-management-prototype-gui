@@ -5,9 +5,11 @@ import Tab from "@material-ui/core/Tab";
 import TabPanel from "./TabPanel";
 import Channels from "./Channels";
 import Pages from "./Pages";
-import {Badge, Typography} from "@material-ui/core";
+import {Typography} from "@material-ui/core";
 import SiteMap from "./SiteMap";
 import Menus from "./menu/Menus";
+import {endpoint} from "./ApiContext";
+import Catalog from "./catalog/Catalog";
 
 type NavigationState = {
   tab: number,
@@ -21,7 +23,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
     super(props);
     this.state = {
       tab: 0,
-      endpoint: 'http://localhost:8080/management/site/v1'
+      endpoint: endpoint
     }
   }
 
@@ -35,74 +37,26 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
     return (
       <Fragment>
         <AppBar position="sticky" color={'default'}>
-          {/*<Toolbar>*/}
           <Tabs
             variant="scrollable"
             scrollButtons="auto"
             value={tab} onChange={(event, nextTab) => this.onTabChange(nextTab)}>
-            <Tab label="Channels" icon={
-              <Badge
-                style={{
-                  right: '30px',
-                  position: 'absolute',
-                  top: '15px'
-                }}
-                color="primary">
-              </Badge>
-            }/>
-            <Tab label="Pages" icon={
-              <Badge
-                style={{
-                  right: '30px',
-                  position: 'absolute',
-                  top: '15px'
-                }}
-                 color="primary">
-              </Badge>
-            }/>
-            <Tab label="Catalog" disabled icon={
-              <Badge
-                style={{
-                  right: '30px',
-                  position: 'absolute',
-                  top: '15px'
-                }}
-                 color="primary">
-              </Badge>
-            }/>
-            <Tab label="Sitemap"  icon={
-              <Badge
-                style={{
-                  right: '30px',
-                  position: 'absolute',
-                  top: '15px'
-                }}
-                color="primary">
-              </Badge>
-            }/>
-
-            <Tab label="Menus" icon={
-              <Badge
-                style={{
-                  right: '30px',
-                  position: 'absolute',
-                  top: '15px'
-                }}
-                 color="primary">
-              </Badge>
-            }/>
+            <Tab label="Channels"/>
+            <Tab label="Pages"/>
+            <Tab label="Catalog"/>
+            <Tab label="Sitemap"/>
+            <Tab label="Menus"/>
           </Tabs>
-          {/*</Toolbar>*/}
         </AppBar>
 
         <TabPanel value={tab} index={0}>
-          <Channels endpoint={this.state.endpoint}/>
+          <Channels/>
         </TabPanel>
         <TabPanel value={tab} index={1}>
           <Pages/>
         </TabPanel>
         <TabPanel value={tab} index={2}>
-          <Typography>Catalog comes here</Typography>
+          <Catalog/>
         </TabPanel>
         <TabPanel value={tab} index={3}>
           <SiteMap/>

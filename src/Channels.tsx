@@ -18,9 +18,10 @@ import {Channel} from "./api/models";
 import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
 import AddOutlinedIcon from "@material-ui/icons/Add";
-import {channelOperationsApi} from "./ApiContext";
 import {localeEnum, localeValues} from "./samples/Locales";
 import Icon from "@material-ui/core/Icon";
+import {ChannelOperationsApi} from "./api/apis/channel-operations-api";
+import {baseUrl, channelOperationsApi} from "./ApiContext";
 
 type ChannelsState = {
   channels: Array<Channel>,
@@ -28,7 +29,6 @@ type ChannelsState = {
 }
 type ChannelsProps = {
   classes: any,
-  endpoint: string
 }
 
 const channelUiSchema = {
@@ -126,6 +126,8 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
       channels: [],
       dialogOpen: false
     }
+
+
   }
 
   componentDidMount (): void {
@@ -133,7 +135,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
   }
 
   updateChannels () {
-    const api = channelOperationsApi;
+    const api : ChannelOperationsApi  = channelOperationsApi;
     api.getChannels().then(value => {
       let data: Array<Channel> = value.data;
       data.map(channel => {
@@ -156,7 +158,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
             color="inherit"
             aria-label="Add Channel"
             // disabled={true}
-            onClick={event => window.open('http://localhost:8080/cms/experience-manager', 'new')}>
+            onClick={() => window.open(`${baseUrl}/cms/experience-manager`, 'new')}>
             <AddOutlinedIcon/>
           </IconButton>
            <IconButton
@@ -164,7 +166,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
              color="inherit"
              aria-label="Branch Channel"
              // disabled={true}
-             onClick={event => window.open('http://localhost:8080/cms/projects', 'new')}>
+             onClick={() => window.open(`${baseUrl}/cms/projects`, 'new')}>
              <Icon className="fas fa-code-branch"/>
           </IconButton>
         </Toolbar>
@@ -212,7 +214,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
   }
 
   private saveChannel (channel: Channel) {
-    const api = channelOperationsApi;
+    const api : ChannelOperationsApi = channelOperationsApi;
     api.getChannel(channel.id).then(response => {
       api.updateChannel(channel.id, channel, response.headers['x-resource-version'])
         .then(() => {

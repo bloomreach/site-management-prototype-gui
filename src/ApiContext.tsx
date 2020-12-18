@@ -1,10 +1,8 @@
-import React, {Context} from 'react'
-import {ChannelPageOperationsApi, Configuration} from "./api";
+import {ChannelPageOperationsApi} from "./api";
 import {ChannelOperationsApi} from "./api/apis/channel-operations-api";
-import {Page} from "./api/models";
-import {TreeItem} from "react-sortable-tree";
 import {ChannelSitemapOperationsApi} from "./api/apis/channel-sitemap-operations-api";
 import {ChannelSiteMenuOperationsApi} from "./api/apis/channel-site-menu-operations-api";
+import {ChannelCatalogOperationsApi} from "./api/apis/channel-catalog-operations-api";
 
 const baseOptions = {
   auth:
@@ -14,7 +12,9 @@ const baseOptions = {
     }, withCredentials: true
 };
 
-export const endpoint: string = 'http://localhost:8080/management/site/v1';
+export const baseUrl: string = 'http://localhost:8080';
+
+export const endpoint: string = `${baseUrl}/management/site/v1`;
 
 export const channelPageOperationsApi: ChannelPageOperationsApi = new ChannelPageOperationsApi({
   baseOptions: baseOptions
@@ -32,12 +32,7 @@ export const channelSiteMenuOperationsApi: ChannelSiteMenuOperationsApi = new Ch
   baseOptions: baseOptions
 }, endpoint);
 
-// export interface ApiContextType extends Context {
-//   channelPageOperationsApi: ChannelPageOperationsApi
-//   channelOperationsApi: ChannelOperationsApi
-// }
-//
-// export const ApiContext: ApiContextType = React.createContext({
-//   channelPageOperationsApi: channelPageOperationsApi,
-//   channelOperationsApi: channelOperationsApi
-// });
+export const channelCatalogOperationsApi: ChannelCatalogOperationsApi = new ChannelCatalogOperationsApi({
+  baseOptions: baseOptions
+}, endpoint);
+

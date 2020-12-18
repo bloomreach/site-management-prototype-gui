@@ -2,19 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import {HashRouter, Route, Switch} from "react-router-dom";
+import {BrowserRouter, HashRouter, Route, Switch} from "react-router-dom";
 import Navigation from "./Navigation";
 import Fallback from "./other/Fallback";
 
 ReactDOM.render(
   <React.StrictMode>
     <React.Fragment>
-        <HashRouter>
+        <BrowserRouter>
           <Switch>
             <Route exact path="/" render={() => <Navigation/>}/>
             <Route path="/**" render={() => <Fallback/>}/>
           </Switch>
-        </HashRouter>
+        </BrowserRouter>
     </React.Fragment>
   </React.StrictMode>,
   document.getElementById('root')
