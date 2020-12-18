@@ -183,7 +183,6 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
               <Form onChange={({formData}) => channel = formData} uiSchema={channelUiSchema} schema={channelSchema as JSONSchema7}
                     formData={channel}><></>
               </Form>
-              {/*<pre>{JSON.stringify(channel, undefined, 2)}</pre>*/}
             </AccordionDetails>
             <Divider/>
             <AccordionActions>
