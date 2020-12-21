@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  AppBar,
-  Divider,
-  IconButton,
-  Toolbar,
-  Typography
-} from "@material-ui/core";
+import {Accordion, AccordionSummary, AppBar, Divider, IconButton, Toolbar, Typography} from "@material-ui/core";
 import 'react-sortable-tree/style.css';
 import AddOutlinedIcon from "@material-ui/icons/Add";
 import {Nullable} from "../api/models/nullable";
@@ -17,9 +8,7 @@ import {ChannelCatalogOperationsApi} from "../api/apis/channel-catalog-operation
 import {channelCatalogOperationsApi} from "../ApiContext";
 import {CatalogGroup, ComponentDefinition} from "../api/models";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {JSONSchema7} from "json-schema";
-import Form from "@rjsf/material-ui";
-import {componentDefinitionSchema} from "./catalog-utils";
+import CatalogItem from "./CatalogItem";
 
 type CatalogGroupComponents = {
   group: string
@@ -33,7 +22,6 @@ type CatalogState = {
   drawerOpen: boolean
 }
 type CatalogProps = {}
-
 
 class Catalog extends React.Component<CatalogProps, CatalogState> {
 
@@ -94,26 +82,19 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
           <ChannelSwitcher onChannelChanged={channelId => this.onChannelChanged(channelId)}/>
         </Toolbar>
       </AppBar>
-      {this.state.catalogGroupComponents.map((value, key) => {
+      {this.state.catalogGroupComponents.map((catalogGroupComponent, key) => {
         return (
-          <Accordion key={this.state.currentChannelId + value.group}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon/>}>
-              <Typography>Group: {value.group}</Typography>
+          <Accordion key={this.state.currentChannelId + catalogGroupComponent.group} onChange={(event, expanded) => console.log('on change of accordion', expanded)}>
+
+            <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+              <Typography><strong>Group: {catalogGroupComponent.group}</strong></Typography>
             </AccordionSummary>
-            {value.components.map(componentDefinition => {
-              return <Accordion key={this.state.currentChannelId + value.group + componentDefinition.id}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon/>}>
-                  <Typography>Component: {componentDefinition.label}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  {/*<pre>{JSON.stringify(componentDefinition, undefined, 2)}</pre>*/}
-                  <Form schema={componentDefinitionSchema as JSONSchema7}
-                        formData={componentDefinition}><></>
-                  </Form>
-                </AccordionDetails>
-              </Accordion>
+
+            {catalogGroupComponent.components.map(componentDefinition => {
+              return <CatalogItem
+                key={this.state.currentChannelId + catalogGroupComponent.group + componentDefinition.id}
+                componentDefinition={componentDefinition}>
+              </CatalogItem>
             })}
           </Accordion>)
       })}

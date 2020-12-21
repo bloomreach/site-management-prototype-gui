@@ -126,8 +126,6 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
       channels: [],
       dialogOpen: false
     }
-
-
   }
 
   componentDidMount (): void {
@@ -176,8 +174,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
           <Accordion key={index}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon/>}
-              aria-controls="panel1c-content"
-              id="panel1c-header">
+              >
               <Typography className={classes.heading}>id: {channel.id}</Typography>
               <Typography className={classes.secondaryHeading}>name: {channel.name}</Typography>
             </AccordionSummary>

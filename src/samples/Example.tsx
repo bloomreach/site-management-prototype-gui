@@ -389,3 +389,185 @@ export const examplePages: Array<Page> = [
     ]
   }
 ]
+
+export const exampleComponentDefintionParameters = [
+  {
+    "name": "document1",
+    "valueType": "string",
+    "required": true,
+    "hidden": false,
+    "overlay": false,
+    "defaultValue": "",
+    "displayName": null,
+    "system": false,
+    "config": {
+      "pickerConfiguration": "cms-pickers/documents-only",
+      "pickerInitialPath": "banners",
+      "pickerRememberLastVisited": true,
+      "pickerSelectableNodeTypes": [
+        "brxsaas:banner"
+      ],
+      "relative": true,
+      "pickerRootPath": null,
+      "type": "contentpath"
+    }
+  },
+  {
+    "name": "document2",
+    "valueType": "string",
+    "required": false,
+    "hidden": false,
+    "overlay": false,
+    "defaultValue": "",
+    "displayName": null,
+    "system": false,
+    "config": {
+      "pickerConfiguration": "cms-pickers/documents-only",
+      "pickerInitialPath": "banners",
+      "pickerRememberLastVisited": true,
+      "pickerSelectableNodeTypes": [
+        "brxsaas:banner"
+      ],
+      "relative": true,
+      "pickerRootPath": null,
+      "type": "contentpath"
+    }
+  },
+  {
+    "name": "document3",
+    "valueType": "string",
+    "required": false,
+    "hidden": false,
+    "overlay": false,
+    "defaultValue": "",
+    "displayName": null,
+    "system": false,
+    "config": {
+      "pickerConfiguration": "cms-pickers/documents-only",
+      "pickerInitialPath": "banners",
+      "pickerRememberLastVisited": true,
+      "pickerSelectableNodeTypes": [
+        "brxsaas:banner"
+      ],
+      "relative": true,
+      "pickerRootPath": null,
+      "type": "contentpath"
+    }
+  },
+  {
+    "name": "document4",
+    "valueType": "string",
+    "required": false,
+    "hidden": false,
+    "overlay": false,
+    "defaultValue": "",
+    "displayName": null,
+    "system": false,
+    "config": {
+      "pickerConfiguration": "cms-pickers/documents-only",
+      "pickerInitialPath": "banners",
+      "pickerRememberLastVisited": true,
+      "pickerSelectableNodeTypes": [
+        "brxsaas:banner"
+      ],
+      "relative": true,
+      "pickerRootPath": null,
+      "type": "contentpath"
+    }
+  },
+  {
+    "name": "document5",
+    "valueType": "string",
+    "required": false,
+    "hidden": false,
+    "overlay": false,
+    "defaultValue": "",
+    "displayName": null,
+    "system": false,
+    "config": {
+      "pickerConfiguration": "cms-pickers/documents-only",
+      "pickerInitialPath": "banners",
+      "pickerRememberLastVisited": true,
+      "pickerSelectableNodeTypes": [
+        "brxsaas:banner"
+      ],
+      "relative": true,
+      "pickerRootPath": null,
+      "type": "contentpath"
+    }
+  },
+  {
+    "name": "document6",
+    "valueType": "string",
+    "required": false,
+    "hidden": false,
+    "overlay": false,
+    "defaultValue": "",
+    "displayName": null,
+    "system": false,
+    "config": {
+      "pickerConfiguration": "cms-pickers/documents-only",
+      "pickerInitialPath": "banners",
+      "pickerRememberLastVisited": true,
+      "pickerSelectableNodeTypes": [
+        "brxsaas:banner"
+      ],
+      "relative": true,
+      "pickerRootPath": null,
+      "type": "contentpath"
+    }
+  },
+  {
+    "name": "document7",
+    "valueType": "string",
+    "required": false,
+    "hidden": false,
+    "overlay": false,
+    "defaultValue": "",
+    "displayName": null,
+    "system": false,
+    "config": {
+      "pickerConfiguration": "cms-pickers/documents-only",
+      "pickerInitialPath": "banners",
+      "pickerRememberLastVisited": true,
+      "pickerSelectableNodeTypes": [
+        "brxsaas:banner"
+      ],
+      "relative": true,
+      "pickerRootPath": null,
+      "type": "contentpath"
+    }
+  },
+  {
+    "name": "document8",
+    "valueType": "string",
+    "required": false,
+    "hidden": false,
+    "overlay": false,
+    "defaultValue": "",
+    "displayName": null,
+    "system": false,
+    "config": {
+      "pickerConfiguration": "cms-pickers/documents-only",
+      "pickerInitialPath": "banners",
+      "pickerRememberLastVisited": true,
+      "pickerSelectableNodeTypes": [
+        "brxsaas:banner"
+      ],
+      "relative": true,
+      "pickerRootPath": null,
+      "type": "contentpath"
+    }
+  },
+  {
+    "name": "title",
+    "valueType": "string",
+    "required": false,
+    "hidden": false,
+    "overlay": false,
+    "defaultValue": "",
+    "displayName": null,
+    "system": false,
+    "config": null
+  }
+]
