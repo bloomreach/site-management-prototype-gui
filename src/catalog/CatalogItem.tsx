@@ -167,7 +167,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
     </AccordionActions>)
   }
 
-  getCardHeader (parameter: ParameterType) {
+  getParameterCardHeader (parameter: ParameterType) {
     return <CardHeader style={{padding: '10px'}}
                        avatar={
                          <Avatar>
@@ -191,6 +191,34 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
                        }
                        title={parameter.name}
     />
+  }
+
+  getFieldGroupHeader (fieldGroup: FieldGroup) {
+    return <AppBar position={"sticky"} style={{zIndex: 1}} color="default">
+      <Toolbar variant={"dense"}>
+        <Typography>{fieldGroup.name}</Typography>
+        <IconButton
+          disabled={false}
+          edge="end"
+          style={{left: 0}}
+          color="inherit"
+          aria-label="FieldGroup Settings"
+          // onClick={() => this.deletePage()}
+        >
+          <SettingsOutlinedIcon/>
+        </IconButton>
+        <IconButton
+          disabled={false}
+          edge="end"
+          style={{left: 0}}
+          color="inherit"
+          aria-label="Delete FieldGroup"
+          // onClick={() => this.deletePage()}
+        >
+          <DeleteOutlinedIcon/>
+        </IconButton>
+      </Toolbar>
+    </AppBar>
   }
 
   render () {
@@ -223,8 +251,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
                     {(provided: DroppableProvided) => (
                       <div  {...provided.droppableProps}
                             ref={provided.innerRef}>
-                        {// @ts-ignore
-                          isNotEmptyOrNull(this.state.parameters) && this.state.parameters.map((parameter: ParameterType, index: number) => {
+                        {this.state.parameters.map((parameter: ParameterType, index: number) => {
                             const isInFieldGroup: boolean = this.isInFieldGroup(parameter);
                             return !isInFieldGroup && (
                               <Draggable key={parameter.name} draggableId={parameter.name} index={index}>
@@ -232,7 +259,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
                                   <Card variant={"outlined"} ref={provided.innerRef}
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps} key={index}>
-                                    {this.getCardHeader(parameter)}
+                                    {this.getParameterCardHeader(parameter)}
                                   </Card>
                                 )}
                               </Draggable>
@@ -251,36 +278,12 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
                     overflow: 'auto',
                     marginBottom: '10px'
                   }}>
-                    <AppBar position={"sticky"} style={{zIndex: 1}} color="default">
-                      <Toolbar variant={"dense"}>
-                        <Typography>{fieldGroup.name}</Typography>
-                        <IconButton
-                          disabled={false}
-                          edge="end"
-                          style={{left: 0}}
-                          color="inherit"
-                          aria-label="FieldGroup Settings"
-                          // onClick={() => this.deletePage()}
-                        >
-                          <SettingsOutlinedIcon/>
-                        </IconButton>
-                        <IconButton
-                          disabled={false}
-                          edge="end"
-                          style={{left: 0}}
-                          color="inherit"
-                          aria-label="Delete FieldGroup"
-                          // onClick={() => this.deletePage()}
-                        >
-                          <DeleteOutlinedIcon/>
-                        </IconButton>
-                      </Toolbar>
-                    </AppBar>
+                    {this.getFieldGroupHeader(fieldGroup)}
                     {fieldGroup.parameters?.map(fieldGroupParameterName => {
                       const fieldGroupParameter: ParameterType = this.getParameterFromFieldGroupParameterName(fieldGroupParameterName);
                       return (
                         <Card variant={"outlined"}>
-                          {this.getCardHeader(fieldGroupParameter)}
+                          {this.getParameterCardHeader(fieldGroupParameter)}
                         </Card>
                       )
                     })}
@@ -290,27 +293,25 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
             </Container>
             <Drawer anchor={'left'} open={this.state.drawerOpen}
                     onClose={() => this.setState({drawerOpen: false})}>
-              {this.state.selectedParameter &&
-              <>
-          <AppBar position="static" color={"default"}>
-            <Toolbar>
-              <Typography variant="h6">
-                Component - Parameter Editor
-              </Typography>
-               <IconButton edge="end" color="inherit" aria-label="menu"
-                           onClick={() => this.setState({drawerOpen: false})}>
-               <ChevronLeftIcon/>
-              </IconButton>
-            </Toolbar>
-          </AppBar>
-          <Container>
-            {this.state.selectedParameter &&
-            <Form onChange={({formData}) => console.log(formData)} schema={getSchemaFromParameter(this.state.selectedParameter)} formData={this.state.selectedParameter}>
-              <></>
-            </Form>}
-          </Container>
-              </>
-              }
+              {this.state.selectedParameter && <>
+              <AppBar position="static" color={"default"}>
+                <Toolbar>
+                  <Typography variant="h6">
+                    Component - Parameter Editor
+                  </Typography>
+                   <IconButton edge="end" color="inherit" aria-label="menu"
+                               onClick={() => this.setState({drawerOpen: false})}>
+                   <ChevronLeftIcon/>
+                  </IconButton>
+                </Toolbar>
+              </AppBar>
+              <Container>
+                {this.state.selectedParameter &&
+                <Form onChange={({formData}) => console.log(formData)} schema={getSchemaFromParameter(this.state.selectedParameter)} formData={this.state.selectedParameter}>
+                  <></>
+                </Form>}
+              </Container>
+              </>}
             </Drawer>
           </Grid>
         </AccordionDetails>
