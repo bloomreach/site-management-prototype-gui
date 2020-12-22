@@ -22,11 +22,11 @@ export interface FieldGroup {
      * @type {string}
      * @memberof FieldGroup
      */
-    name?: any;
+    name?: string;
     /**
      * Field Group Parameters
      * @type {Array&lt;string&gt;}
      * @memberof FieldGroup
      */
-    parameters?: any;
+    parameters?: Array<string>;
 }

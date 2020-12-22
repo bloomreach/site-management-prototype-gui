@@ -11,6 +11,9 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import {ParameterType} from "./parameter-type";
+import {FieldGroup} from "./field-group";
+
 /**
  * 
  * @export
@@ -70,11 +73,11 @@ export interface ComponentDefinition {
      * @type {Array&lt;ParameterType&gt;}
      * @memberof ComponentDefinition
      */
-    parameters?: any;
+    parameters?: Array<ParameterType>;
     /**
      * field groups
      * @type {Array&lt;FieldGroup&gt;}
      * @memberof ComponentDefinition
      */
-    fieldGroups?: any;
+    fieldGroups?: Array<FieldGroup>;
 }
