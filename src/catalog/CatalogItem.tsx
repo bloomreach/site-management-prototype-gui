@@ -8,15 +8,12 @@ import {
   Avatar,
   Badge,
   Box,
+  Card,
+  CardHeader,
   Container,
   Drawer,
   Grid,
   IconButton,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemSecondaryAction,
-  ListItemText,
   Toolbar,
   Typography
 } from "@material-ui/core";
@@ -40,13 +37,21 @@ import TextFieldsIcon from '@material-ui/icons/TextFields';
 import {Nullable} from "../api/models/nullable";
 import {isNotEmptyOrNull} from "../common/common-utils";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DroppableProvided,
+  DropResult,
+  ResponderProvided
+} from "react-beautiful-dnd";
 
 type CatalogItemState = {
   componentDefinition: ComponentDefinition
-  parameters?: Array<ParameterType>
+  parameters: Array<ParameterType>
   drawerOpen: boolean
   selectedParameter?: ParameterType
-  fieldGroups?: Array<FieldGroup>
+  fieldGroups: Array<FieldGroup>
 }
 type CatalogItemProps = {
   componentDefinition: ComponentDefinition
@@ -96,80 +101,108 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
   onCatalogItemChanged () {
   }
 
+  getActions () {
+    return (<AccordionActions>
+      <Grid item sm={4}>
+        <IconButton
+          disabled={false}
+          edge="start"
+          style={{left: 0}}
+          color="inherit"
+          aria-label="Delete"
+          onClick={() => this.deleteComponentDefinition(this.state.componentDefinition)}
+        >
+          <DeleteOutlinedIcon/>
+        </IconButton>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="Save"
+          onClick={() => this.saveComponentDefinition(this.state.componentDefinition)}
+        >
+          <SaveOutlinedIcon/>
+        </IconButton></Grid>
+      <Grid item sm={8}>
+        <IconButton
+          disabled={false}
+          edge="start"
+          style={{left: 24}}
+          color="inherit"
+          aria-label="Add FieldGroup"
+          // onClick={() => this.deletePage()}
+        >
+          <PostAddOutlinedIcon/>
+        </IconButton>
+        <IconButton
+          disabled={false}
+          edge="start"
+          style={{left: 24}}
+          color="inherit"
+          aria-label="add Parameter"
+          // onClick={() => this.deletePage()}
+        >
+          <AddOutlinedIcon/>
+        </IconButton>
+
+        <IconButton
+          disabled={false}
+          edge="start"
+          style={{left: 24}}
+          color="inherit"
+          aria-label="add String Field"
+          onClick={() => this.addParameter("string")}
+        >
+          <Badge anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+                 badgeContent={'+'}
+                 color="primary">
+            <TextFieldsIcon/>
+            {/*<Icon className="fa fa-columns"/>*/}
+          </Badge>
+        </IconButton>
+
+      </Grid>
+    </AccordionActions>)
+  }
+
+  getCardHeader (parameter: ParameterType) {
+    return <CardHeader style={{padding: '10px'}}
+                       avatar={
+                         <Avatar>
+                           {getParameterIcon(parameter)}
+                         </Avatar>
+                       }
+                       action={
+                         <>
+                                  <IconButton edge="end" aria-label="settings"
+                                              onClick={() => this.setState({
+                                                selectedParameter: parameter,
+                                                drawerOpen: true
+                                              })}>
+                                        <SettingsOutlinedIcon/>
+                                      </IconButton>
+                                      <IconButton edge="end" aria-label="delete"
+                                                  onClick={() => this.deleteFieldGroupParameter(parameter)}>
+                                        <DeleteOutlinedIcon/>
+                                      </IconButton>
+                                  </>
+                       }
+                       title={parameter.name}
+    />
+  }
+
   render () {
     const name: string = this.state.componentDefinition.label ? this.state.componentDefinition.label : this.state.componentDefinition.id;
-
     return (
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon/>}>
           <Avatar variant={"square"} alt={this.state.componentDefinition.label} src={this.state.componentDefinition.icon}>{name}</Avatar>
-          <Typography style={{paddingLeft: '10px', paddingTop: '7px'}}> {name}</Typography>
+          <Typography style={{paddingLeft: '10px', paddingTop: '7px'}}>{name}</Typography>
         </AccordionSummary>
-        <AccordionActions>
-          <Grid item sm={4}>
-            <IconButton
-              disabled={false}
-              edge="start"
-              style={{left: 0}}
-              color="inherit"
-              aria-label="Delete"
-              onClick={() => this.deleteComponentDefinition(this.state.componentDefinition)}
-            >
-              <DeleteOutlinedIcon/>
-            </IconButton>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="Save"
-              onClick={() => this.saveComponentDefinition(this.state.componentDefinition)}
-            >
-              <SaveOutlinedIcon/>
-            </IconButton></Grid>
-          <Grid item sm={8}>
-            <IconButton
-              disabled={false}
-              edge="start"
-              style={{left: 24}}
-              color="inherit"
-              aria-label="Add FieldGroup"
-              // onClick={() => this.deletePage()}
-            >
-              <PostAddOutlinedIcon/>
-            </IconButton>
-            <IconButton
-              disabled={false}
-              edge="start"
-              style={{left: 24}}
-              color="inherit"
-              aria-label="add Parameter"
-              // onClick={() => this.deletePage()}
-            >
-              <AddOutlinedIcon/>
-            </IconButton>
-
-            <IconButton
-              disabled={false}
-              edge="start"
-              style={{left: 24}}
-              color="inherit"
-              aria-label="add String Field"
-              onClick={() => this.addParameter("string")}
-            >
-              <Badge anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-                     badgeContent={'+'}
-                     color="primary">
-                <TextFieldsIcon/>
-                {/*<Icon className="fa fa-columns"/>*/}
-              </Badge>
-            </IconButton>
-
-          </Grid>
-        </AccordionActions>
-
+        {this.getActions()}
         <AccordionDetails>
           <Grid item sm={4}>
             <Form
@@ -179,110 +212,80 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
           </Grid>
           <Grid item sm={8}>
             <Container>
-              <Grid item sm={12}>
 
-                <Box style={{
-                  maxHeight: '250px',
-                  overflow: 'auto',
-                  marginBottom: '10px'
-                }}>
-
-                  {isNotEmptyOrNull(this.state.parameters) &&
-                  <List dense={true}>
-                    {// @ts-ignore
-                      this.state.parameters.map((parameter: ParameterType) => {
-                        const isInFieldGroup: boolean = this.isInFieldGroup(parameter);
-                        return !isInFieldGroup && (
-                          <ListItem>
-                            <ListItemAvatar>
-                              <Avatar>
-                                {getParameterIcon(parameter)}
-                              </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                              primary={parameter.name}
-                            />
-                            <ListItemSecondaryAction>
-                              <IconButton edge="end" aria-label="settings"
-                                          onClick={() => this.setState({
-                                            selectedParameter: parameter,
-                                            drawerOpen: true
-                                          })}
-
-                              >
-                                <SettingsOutlinedIcon/>
-                              </IconButton>
-                              <IconButton edge="end" aria-label="delete"
-                                          onClick={() => this.deleteFieldGroupParameter(parameter)}
-                              >
-                                <DeleteOutlinedIcon/>
-                              </IconButton>
-                            </ListItemSecondaryAction>
-                          </ListItem>)
-                      })}
-                  </List>
-                  }
-                </Box>
-              </Grid>
+              <Box style={{
+                maxHeight: '250px',
+                overflow: 'auto',
+                marginBottom: '10px'
+              }}>
+                <DragDropContext onDragEnd={this.onDragEnd}>
+                  <Droppable droppableId="droppable">
+                    {(provided: DroppableProvided) => (
+                      <div  {...provided.droppableProps}
+                            ref={provided.innerRef}>
+                        {// @ts-ignore
+                          isNotEmptyOrNull(this.state.parameters) && this.state.parameters.map((parameter: ParameterType, index: number) => {
+                            const isInFieldGroup: boolean = this.isInFieldGroup(parameter);
+                            return !isInFieldGroup && (
+                              <Draggable key={parameter.name} draggableId={parameter.name} index={index}>
+                                {(provided) => (
+                                  <Card variant={"outlined"} ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps} key={index}>
+                                    {this.getCardHeader(parameter)}
+                                  </Card>
+                                )}
+                              </Draggable>
+                            )
+                          })}
+                      </div>
+                    )}
+                  </Droppable>
+                </DragDropContext>
+              </Box>
 
               {this.state.fieldGroups && this.state.fieldGroups.map((fieldGroup: FieldGroup) => {
-                return (<Grid item sm={12}>
-                  <AppBar position={"sticky"} color="default">
-                    <Toolbar variant={"dense"}>
-                      <Typography>{fieldGroup.name}</Typography>
-                      <IconButton
-                        disabled={false}
-                        edge="end"
-                        style={{left: 0}}
-                        color="inherit"
-                        aria-label="FieldGroup Settings"
-                        // onClick={() => this.deletePage()}
-                      >
-                        <SettingsOutlinedIcon/>
-                      </IconButton>
-                    </Toolbar>
-                  </AppBar>
+                return (
                   <Box style={{
-                    maxHeight: '150px',
+                    maxHeight: '200px',
                     overflow: 'auto',
                     marginBottom: '10px'
-                  }} bgcolor="info.main" color="primary.contrastText">
-                    {fieldGroup.parameters &&
-                    <List dense={true}>
-                      {// @ts-ignore
-                        fieldGroup.parameters.map(fieldGroupParameterName => {
-                          const fieldGroupParameter: ParameterType | undefined = this.getParameterFromFieldGroupParameterName(fieldGroupParameterName)
-                          return (
-                            <ListItem>
-                              <ListItemAvatar>
-                                <Avatar>
-                                  {fieldGroupParameter && getParameterIcon(fieldGroupParameter)}
-                                </Avatar>
-                              </ListItemAvatar>
-                              <ListItemText
-                                primary={fieldGroupParameter?.name}
-                              />
-                              <ListItemSecondaryAction>
-                                <IconButton edge="end" aria-label="settings"
-                                            onClick={() => this.setState({
-                                              selectedParameter: fieldGroupParameter,
-                                              drawerOpen: true
-                                            })}
-                                >
-                                  <SettingsOutlinedIcon/>
-                                </IconButton>
-                                <IconButton edge="end" aria-label="delete"
-                                            onClick={() => fieldGroupParameter && this.deleteFieldGroupParameter(fieldGroupParameter)}
-                                >
-                                  <DeleteOutlinedIcon/>
-                                </IconButton>
-                              </ListItemSecondaryAction>
-                            </ListItem>)
-                        })}
-                    </List>
-                    }
+                  }}>
+                    <AppBar position={"sticky"} style={{zIndex: 1}} color="default">
+                      <Toolbar variant={"dense"}>
+                        <Typography>{fieldGroup.name}</Typography>
+                        <IconButton
+                          disabled={false}
+                          edge="end"
+                          style={{left: 0}}
+                          color="inherit"
+                          aria-label="FieldGroup Settings"
+                          // onClick={() => this.deletePage()}
+                        >
+                          <SettingsOutlinedIcon/>
+                        </IconButton>
+                        <IconButton
+                          disabled={false}
+                          edge="end"
+                          style={{left: 0}}
+                          color="inherit"
+                          aria-label="Delete FieldGroup"
+                          // onClick={() => this.deletePage()}
+                        >
+                          <DeleteOutlinedIcon/>
+                        </IconButton>
+                      </Toolbar>
+                    </AppBar>
+                    {fieldGroup.parameters?.map(fieldGroupParameterName => {
+                      const fieldGroupParameter: ParameterType = this.getParameterFromFieldGroupParameterName(fieldGroupParameterName);
+                      return (
+                        <Card variant={"outlined"}>
+                          {this.getCardHeader(fieldGroupParameter)}
+                        </Card>
+                      )
+                    })}
                   </Box>
-                </Grid>)
+                )
               })}
             </Container>
             <Drawer anchor={'left'} open={this.state.drawerOpen}
@@ -332,8 +335,9 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
 
   }
 
-  private getParameterFromFieldGroupParameterName (fieldGroupParameterName: string): ParameterType | undefined {
-    return this.state.parameters && this.state.parameters.find(element => element.name === fieldGroupParameterName);
+  private getParameterFromFieldGroupParameterName (fieldGroupParameterName: string): ParameterType {
+    // @ts-ignore
+    return this.state.parameters.find(element => element.name === fieldGroupParameterName);
   }
 
   private deleteComponentDefinition (componentDefinition: ComponentDefinition) {
@@ -353,6 +357,10 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
       }
     });
     return isInFieldGroup;
+  }
+
+  private onDragEnd (result: DropResult, provided: ResponderProvided) {
+    console.log('result', result);
   }
 }
 
