@@ -6,7 +6,6 @@ import {
   AccordionSummary,
   AppBar,
   Avatar,
-  Badge,
   Box,
   Card,
   CardHeader,
@@ -14,6 +13,10 @@ import {
   Drawer,
   Grid,
   IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
   Toolbar,
   Typography
 } from "@material-ui/core";
@@ -34,17 +37,19 @@ import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 import PostAddOutlinedIcon from '@material-ui/icons/PostAddOutlined';
 import {ComponentDefinition, FieldGroup, ParameterType} from "../api/models";
 import TextFieldsIcon from '@material-ui/icons/TextFields';
-import {Nullable} from "../api/models/nullable";
-import {isNotEmptyOrNull} from "../common/common-utils";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import {
   DragDropContext,
   Draggable,
+  DraggableProvided,
+  DraggableProvidedDragHandleProps,
+  DraggableStateSnapshot,
   Droppable,
   DroppableProvided,
   DropResult,
   ResponderProvided
 } from "react-beautiful-dnd";
+import PopupState, {bindMenu, bindTrigger} from "material-ui-popup-state";
 
 type CatalogItemState = {
   componentDefinition: ComponentDefinition
@@ -52,6 +57,8 @@ type CatalogItemState = {
   drawerOpen: boolean
   selectedParameter?: ParameterType
   fieldGroups: Array<FieldGroup>
+  anchorEl: null | HTMLElement
+  menuAnchorEl: Map<string, HTMLElement | null>
 }
 type CatalogItemProps = {
   componentDefinition: ComponentDefinition
@@ -66,7 +73,9 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
       componentDefinition: {...this.props.componentDefinition, parameters: [], fieldGroups: []},
       drawerOpen: false,
       parameters: this.props.componentDefinition.parameters || [],
-      fieldGroups: this.props.componentDefinition.fieldGroups || []
+      fieldGroups: this.props.componentDefinition.fieldGroups || [],
+      anchorEl: null,
+      menuAnchorEl: new Map<string, HTMLElement | null>()
     }
 
   }
@@ -101,7 +110,55 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
   onCatalogItemChanged () {
   }
 
-  getActions () {
+  getAddParameterMenu (id: string, fieldGroup?: FieldGroup) {
+    return (<PopupState variant="popover" popupId={id}>
+      {(popupState) => (
+        <React.Fragment>
+          <IconButton
+            disabled={false}
+            edge="start"
+            style={{left: 24}}
+            color="inherit"
+            {...bindTrigger(popupState)}
+            aria-label="add Parameter"
+          >
+            <AddOutlinedIcon/>
+          </IconButton>
+          <Menu {...bindMenu(popupState)}>
+            <MenuItem onClick={() => {
+              this.addParameter("string", fieldGroup);
+              popupState.close()
+            }}>
+              <ListItemIcon>
+                <TextFieldsIcon fontSize="small"/>
+              </ListItemIcon>
+              <ListItemText primary="Add Simple String Parameter"/>
+            </MenuItem>
+            <MenuItem onClick={() => {
+              this.addParameter("string", fieldGroup);
+              popupState.close()
+            }}>
+              <ListItemIcon>
+                <TextFieldsIcon fontSize="small"/>
+              </ListItemIcon>
+              <ListItemText primary="Add Content Path Parameter"/>
+            </MenuItem>
+            <MenuItem onClick={() => {
+              this.addParameter("string", fieldGroup);
+              popupState.close()
+            }}>
+              <ListItemIcon>
+                <TextFieldsIcon fontSize="small"/>
+              </ListItemIcon>
+              <ListItemText primary="Add Drop Down Parameter"/>
+            </MenuItem>
+          </Menu>
+        </React.Fragment>
+      )}
+    </PopupState>)
+  }
+
+  getComponentDefinitionsActions () {
     return (<AccordionActions>
       <Grid item sm={4}>
         <IconButton
@@ -133,42 +190,16 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
         >
           <PostAddOutlinedIcon/>
         </IconButton>
-        <IconButton
-          disabled={false}
-          edge="start"
-          style={{left: 24}}
-          color="inherit"
-          aria-label="add Parameter"
-          // onClick={() => this.deletePage()}
-        >
-          <AddOutlinedIcon/>
-        </IconButton>
 
-        <IconButton
-          disabled={false}
-          edge="start"
-          style={{left: 24}}
-          color="inherit"
-          aria-label="add String Field"
-          onClick={() => this.addParameter("string")}
-        >
-          <Badge anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-                 badgeContent={'+'}
-                 color="primary">
-            <TextFieldsIcon/>
-            {/*<Icon className="fa fa-columns"/>*/}
-          </Badge>
-        </IconButton>
+        {this.getAddParameterMenu('default')}
 
       </Grid>
     </AccordionActions>)
   }
 
-  getParameterCardHeader (parameter: ParameterType) {
+  getParameterCardHeader (parameter: ParameterType, snapshot?: DraggableStateSnapshot) {
     return <CardHeader style={{padding: '10px'}}
+                       isDragging={snapshot?.isDragging}
                        avatar={
                          <Avatar>
                            {getParameterIcon(parameter)}
@@ -193,17 +224,17 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
     />
   }
 
-  getFieldGroupHeader (fieldGroup: FieldGroup) {
+  getFieldGroupHeader (fieldGroup: FieldGroup, dragHandleProps?: DraggableProvidedDragHandleProps) {
     return <AppBar position={"sticky"} style={{zIndex: 1}} color="default">
-      <Toolbar variant={"dense"}>
+      <Toolbar {...dragHandleProps} variant={"dense"}>
         <Typography>{fieldGroup.name}</Typography>
         <IconButton
           disabled={false}
           edge="end"
           style={{left: 0}}
           color="inherit"
-          aria-label="FieldGroup Settings"
-          // onClick={() => this.deletePage()}
+          aria-label="Edit FieldGroup"
+          // onClick={() => this.editFieldGroup(fieldGroup)}
         >
           <SettingsOutlinedIcon/>
         </IconButton>
@@ -213,10 +244,11 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
           style={{left: 0}}
           color="inherit"
           aria-label="Delete FieldGroup"
-          // onClick={() => this.deletePage()}
+          // onClick={() => this.deleteFieldGroup()}
         >
           <DeleteOutlinedIcon/>
         </IconButton>
+        {this.getAddParameterMenu(fieldGroup.name, fieldGroup)}
       </Toolbar>
     </AppBar>
   }
@@ -227,10 +259,10 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon/>}>
-          <Avatar variant={"square"} alt={this.state.componentDefinition.label} src={this.state.componentDefinition.icon}>{name}</Avatar>
+          <Avatar variant={"square"} alt={name} src={this.state.componentDefinition.icon}>{name}</Avatar>
           <Typography style={{paddingLeft: '10px', paddingTop: '7px'}}>{name}</Typography>
         </AccordionSummary>
-        {this.getActions()}
+        {this.getComponentDefinitionsActions()}
         <AccordionDetails>
           <Grid item sm={4}>
             <Form
@@ -239,64 +271,100 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
             </Form>
           </Grid>
           <Grid item sm={8}>
-            <Container>
+            <DragDropContext onDragEnd={this.onDragEnd}>
+              <Droppable droppableId="all-fieldGroups"
+                         direction="vertical"
+                         type="column">
+                {(provided: DroppableProvided) => (
+                  <Container {...provided.droppableProps}
+                             ref={provided.innerRef}>
 
-              <Box style={{
-                maxHeight: '250px',
-                overflow: 'auto',
-                marginBottom: '10px'
-              }}>
-                <DragDropContext onDragEnd={this.onDragEnd}>
-                  <Droppable droppableId="droppable">
-                    {(provided: DroppableProvided) => (
-                      <div  {...provided.droppableProps}
-                            ref={provided.innerRef}>
-                        {this.state.parameters.map((parameter: ParameterType, index: number) => {
-                            const isInFieldGroup: boolean = this.isInFieldGroup(parameter);
-                            return !isInFieldGroup && (
-                              <Draggable key={parameter.name} draggableId={parameter.name} index={index}>
-                                {(provided) => (
-                                  <Card variant={"outlined"} ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps} key={index}>
-                                    {this.getParameterCardHeader(parameter)}
-                                  </Card>
-                                )}
-                              </Draggable>
-                            )
-                          })}
-                      </div>
-                    )}
-                  </Droppable>
-                </DragDropContext>
-              </Box>
+                    <Box>
+                      <DragDropContext onDragEnd={this.onDragEnd}>
+                        <Droppable droppableId="default" type={'parameter'}>
 
-              {this.state.fieldGroups && this.state.fieldGroups.map((fieldGroup: FieldGroup) => {
-                return (
-                  <Box style={{
-                    maxHeight: '200px',
-                    overflow: 'auto',
-                    marginBottom: '10px'
-                  }}>
-                    {this.getFieldGroupHeader(fieldGroup)}
-                    {fieldGroup.parameters?.map(fieldGroupParameterName => {
-                      const fieldGroupParameter: ParameterType = this.getParameterFromFieldGroupParameterName(fieldGroupParameterName);
+                          {(provided: DroppableProvided) => (
+                            <div  {...provided.droppableProps}
+                                  ref={provided.innerRef}>
+
+                              {this.state.parameters.map((parameter: ParameterType, index: number) => {
+                                const isInFieldGroup: boolean = this.isInFieldGroup(parameter);
+                                return !isInFieldGroup && (
+                                  <Draggable key={parameter.name} draggableId={parameter.name} index={index}>
+                                    {(provided) => (
+                                      <Card variant={"outlined"} ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps} key={index}>
+                                        {this.getParameterCardHeader(parameter)}
+                                      </Card>
+                                    )}
+                                  </Draggable>
+                                )
+                              })}
+                            </div>
+                          )}
+                        </Droppable>
+                      </DragDropContext>
+                    </Box>
+
+                    {this.state.fieldGroups && this.state.fieldGroups.map((fieldGroup: FieldGroup, index: number) => {
+                      // @ts-ignore
                       return (
-                        <Card variant={"outlined"}>
-                          {this.getParameterCardHeader(fieldGroupParameter)}
-                        </Card>
+                        <Draggable key={fieldGroup.name} draggableId={fieldGroup.name ? fieldGroup.name : index.toString()} index={index}>
+                          {(provided) => (
+                            <Box
+                              // @ts-ignore
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              key={index}>
+
+                              {this.getFieldGroupHeader(fieldGroup, provided.dragHandleProps)}
+
+                              <DragDropContext onDragEnd={this.onDragEnd}>
+                                <Droppable droppableId={fieldGroup.name ? fieldGroup.name : index.toString()} type={'parameter'}>
+
+                                  {(provided: DroppableProvided) => (
+                                    <div  {...provided.droppableProps}
+                                          ref={provided.innerRef}>
+
+                                      {fieldGroup.parameters?.map((fieldGroupParameterName, index) => {
+                                        const fieldGroupParameter: ParameterType = this.getParameterFromFieldGroupParameterName(fieldGroupParameterName);
+
+                                        return (
+                                          <Draggable key={fieldGroupParameter.name} draggableId={fieldGroupParameter.name} index={index}>
+                                            {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                                              <Card variant={"outlined"} ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                    key={index}>
+
+                                                {this.getParameterCardHeader(fieldGroupParameter, snapshot)}
+
+                                              </Card>
+                                            )}
+                                          </Draggable>
+                                        )
+                                      })}
+                                    </div>
+                                  )}
+                                </Droppable>
+                              </DragDropContext>
+
+                            </Box>
+                          )}
+                        </Draggable>
                       )
                     })}
-                  </Box>
-                )
-              })}
-            </Container>
-            <Drawer anchor={'left'} open={this.state.drawerOpen}
+                  </Container>
+                )}
+              </Droppable>
+            </DragDropContext>
+            <Drawer style={{maxWidth: '300px'}} anchor={'left'} open={this.state.drawerOpen}
                     onClose={() => this.setState({drawerOpen: false})}>
               {this.state.selectedParameter && <>
               <AppBar position="static" color={"default"}>
                 <Toolbar>
-                  <Typography variant="h6">
+                  <Typography style={{flexGrow: 1}} variant="h6">
                     Component - Parameter Editor
                   </Typography>
                    <IconButton edge="end" color="inherit" aria-label="menu"
@@ -318,22 +386,32 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
       </Accordion>)
   }
 
-  private addParameter (type: string) {
-    let template: Nullable<ParameterType>;
+  private addParameter (type: string, fieldGroup?: FieldGroup) {
+    let template: ParameterType;
     switch (type) {
       case 'string':
-        template = simpleStringParameterTemplate;
+        template = {...simpleStringParameterTemplate};
         break;
       //todo more
       default:
-        template = simpleStringParameterTemplate;
+        template = {...simpleStringParameterTemplate};
         break;
     }
-
+    const originalTemplateName = template.name;
     const parameters: Array<ParameterType> = this.state.parameters || [];
-    parameters.push(template);
-    this.setState({parameters: parameters});
 
+    let i = 1;
+    while (parameters.some(value => value.name === template.name)) {
+      template.name = (originalTemplateName + i++);
+    }
+    parameters.push(template);
+
+    const fieldGroups: Array<FieldGroup> = this.state.fieldGroups;
+    if (fieldGroup) {
+      const foundFieldGroup = fieldGroups.find(element => element.name === fieldGroup.name);
+      foundFieldGroup?.parameters?.push(template.name);
+    }
+    this.setState({parameters: parameters, fieldGroups: fieldGroups});
   }
 
   private getParameterFromFieldGroupParameterName (fieldGroupParameterName: string): ParameterType {

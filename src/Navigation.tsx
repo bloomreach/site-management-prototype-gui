@@ -11,6 +11,7 @@ import Menus from "./menu/Menus";
 import {endpoint} from "./ApiContext";
 import Catalog from "./catalog/Catalog";
 import CatalogTest from "./catalog/CatalogTest";
+import Board from "./test";
 
 type NavigationState = {
   tab: number,
@@ -47,6 +48,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
             <Tab label="Catalog"/>
             <Tab label="Sitemap"/>
             <Tab label="Menus"/>
+            <Tab label="Test"/>
           </Tabs>
         </AppBar>
 
@@ -65,6 +67,9 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
         </TabPanel>
         <TabPanel value={tab} index={4}>
           <Menus/>
+        </TabPanel>
+        <TabPanel value={tab} index={5}>
+          <Board/>
         </TabPanel>
         <AppBar style={{bottom: 0, top: "auto"}}>
           <Typography>endpoint: {this.state.endpoint}</Typography>

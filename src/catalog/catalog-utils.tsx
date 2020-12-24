@@ -2,6 +2,7 @@ import {ParameterType, ParameterTypeValueTypeEnum} from "../api/models";
 import TextFieldsIcon from "@material-ui/icons/TextFields";
 import React from "react";
 import {JSONSchema7} from "json-schema";
+import {SvgIcon} from "@material-ui/core";
 
 export const componentDefinitionSchema = {
   "required": ["extends", "id"],
@@ -424,5 +425,13 @@ export function getParameterIcon (parameter: ParameterType) {
 
 }
 
+export function DecimalIcon (props: any) {
+  return (
+    <SvgIcon {...props}>
+      {/*<path d="M22,17L19,20V18H13V16H19V14L22,17M9,5A3,3 0 0,1 12,8V11A3,3 0 0,1 9,14A3,3 0 0,1 6,11V8A3,3 0 0,1 9,5M9,7A1,1 0 0,0 8,8V11A1,1 0 0,0 9,12A1,1 0 0,0 10,11V8A1,1 0 0,0 9,7M16,5A3,3 0 0,1 19,8V11A3,3 0 0,1 16,14A3,3 0 0,1 13,11V8A3,3 0 0,1 16,5M16,7A1,1 0 0,0 15,8V11A1,1 0 0,0 16,12A1,1 0 0,0 17,11V8A1,1 0 0,0 16,7M4,12A1,1 0 0,1 5,13A1,1 0 0,1 4,14A1,1 0 0,1 3,13A1,1 0 0,1 4,12Z"/>*/}
+      <path d="M10 7A3 3 0 0 0 7 10V13A3 3 0 0 0 13 13V10A3 3 0 0 0 10 7M11 13A1 1 0 0 1 9 13V10A1 1 0 0 1 11 10M17 7A3 3 0 0 0 14 10V13A3 3 0 0 0 20 13V10A3 3 0 0 0 17 7M18 13A1 1 0 0 1 16 13V10A1 1 0 0 1 18 10M6 15A1 1 0 1 1 5 14A1 1 0 0 1 6 15Z" />
+    </SvgIcon>
+  );
+}
 
 

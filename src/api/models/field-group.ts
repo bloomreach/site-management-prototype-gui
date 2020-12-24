@@ -22,7 +22,7 @@ export interface FieldGroup {
      * @type {string}
      * @memberof FieldGroup
      */
-    name?: string;
+    name: string;
     /**
      * Field Group Parameters
      * @type {Array&lt;string&gt;}
