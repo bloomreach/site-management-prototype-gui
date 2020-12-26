@@ -7,9 +7,14 @@ import {
   AppBar,
   Avatar,
   Box,
+  Button,
   Card,
   CardHeader,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Drawer,
   Grid,
   IconButton,
@@ -27,13 +32,14 @@ import {JSONSchema7} from "json-schema";
 import Form from "@rjsf/material-ui";
 import {
   componentDefinitionSchema,
+  fieldGroupSchema,
+  fieldGroupUiSchema,
   getParameterIcon,
   getSchemaFromParameter,
   simpleStringParameterTemplate
 } from "./catalog-utils";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
-import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 import PostAddOutlinedIcon from '@material-ui/icons/PostAddOutlined';
 import {ComponentDefinition, FieldGroup, ParameterType} from "../api/models";
 import TextFieldsIcon from '@material-ui/icons/TextFields';
@@ -50,6 +56,7 @@ import {
   ResponderProvided
 } from "react-beautiful-dnd";
 import PopupState, {bindMenu, bindTrigger} from "material-ui-popup-state";
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 
 type CatalogItemState = {
   componentDefinition: ComponentDefinition
@@ -57,8 +64,8 @@ type CatalogItemState = {
   drawerOpen: boolean
   selectedParameter?: ParameterType
   fieldGroups: Array<FieldGroup>
-  anchorEl: null | HTMLElement
-  menuAnchorEl: Map<string, HTMLElement | null>
+  dialogOpen: boolean
+  selectedFieldGroup?: FieldGroup
 }
 type CatalogItemProps = {
   componentDefinition: ComponentDefinition
@@ -74,8 +81,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
       drawerOpen: false,
       parameters: this.props.componentDefinition.parameters || [],
       fieldGroups: this.props.componentDefinition.fieldGroups || [],
-      anchorEl: null,
-      menuAnchorEl: new Map<string, HTMLElement | null>()
+      dialogOpen: false
     }
 
   }
@@ -86,6 +92,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
   deleteFieldGroupParameter (parameter: ParameterType) {
     const fieldGroups: Array<FieldGroup> = [];
 
+    //todo can do this better?
     this.state.fieldGroups?.forEach(value => {
       const fieldGroup: FieldGroup = {...value, parameters: []};
       fieldGroup.parameters = value.parameters?.filter(value => value !== parameter.name)
@@ -132,7 +139,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
               <ListItemIcon>
                 <TextFieldsIcon fontSize="small"/>
               </ListItemIcon>
-              <ListItemText primary="Add Simple String Parameter"/>
+              <ListItemText primary="Add Simple Parameter"/>
             </MenuItem>
             <MenuItem onClick={() => {
               this.addParameter("string", fieldGroup);
@@ -186,7 +193,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
           style={{left: 24}}
           color="inherit"
           aria-label="Add FieldGroup"
-          // onClick={() => this.deletePage()}
+          onClick={() => this.setState({dialogOpen: true})}
         >
           <PostAddOutlinedIcon/>
         </IconButton>
@@ -195,6 +202,47 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
 
       </Grid>
     </AccordionActions>)
+  }
+
+  getAddOrEditFieldGroupDialog () {
+    const edit = this.state.selectedFieldGroup && true;
+    const currentFieldGroupName = this.state.selectedFieldGroup ? this.state.selectedFieldGroup.name : '';
+    let nextFieldGroupName = currentFieldGroupName;
+    return <Dialog open={this.state.dialogOpen}>
+      <DialogTitle>Field Group Name</DialogTitle>
+      <DialogContent>
+        <Form onChange={({formData}) => nextFieldGroupName = formData} formData={currentFieldGroupName} uiSchema={fieldGroupUiSchema} schema={fieldGroupSchema as JSONSchema7}>
+          <></>
+        </Form>
+      </DialogContent>
+      <DialogActions>
+        <Button color="primary" onClick={() => {
+          if (!edit) {
+            //add
+            this.setState((state) => {
+              const fieldGroups = state.fieldGroups.concat({name: nextFieldGroupName, parameters: []});
+              return {
+                fieldGroups,
+                dialogOpen: false,
+                selectedFieldGroup: undefined
+              }
+            })
+          } else {
+            this.setState((state) => {
+              const fieldGroups = state.fieldGroups.map(function (item) {
+                return currentFieldGroupName === item.name ? {...item, name: nextFieldGroupName} : item;
+              });
+              return {
+                fieldGroups,
+                dialogOpen: false,
+                selectedFieldGroup: undefined
+              }
+            })
+          }
+        }}>OK</Button>
+        <Button color="primary" onClick={() => this.setState({dialogOpen: false})}>Cancel</Button>
+      </DialogActions>
+    </Dialog>
   }
 
   getParameterCardHeader (parameter: ParameterType, snapshot?: DraggableStateSnapshot) {
@@ -207,18 +255,16 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
                        }
                        action={
                          <>
-                                  <IconButton edge="end" aria-label="settings"
-                                              onClick={() => this.setState({
-                                                selectedParameter: parameter,
-                                                drawerOpen: true
-                                              })}>
-                                        <SettingsOutlinedIcon/>
-                                      </IconButton>
-                                      <IconButton edge="end" aria-label="delete"
-                                                  onClick={() => this.deleteFieldGroupParameter(parameter)}>
-                                        <DeleteOutlinedIcon/>
-                                      </IconButton>
-                                  </>
+                          <IconButton edge="end" aria-label="settings" onClick={() => this.setState({
+                            selectedParameter: parameter,
+                            drawerOpen: true
+                          })}>
+                                <EditOutlinedIcon/>
+                          </IconButton>
+                           <IconButton edge="end" aria-label="delete" onClick={() => this.deleteFieldGroupParameter(parameter)}>
+                                <DeleteOutlinedIcon/>
+                           </IconButton>
+                          </>
                        }
                        title={parameter.name}
     />
@@ -234,9 +280,9 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
           style={{left: 0}}
           color="inherit"
           aria-label="Edit FieldGroup"
-          // onClick={() => this.editFieldGroup(fieldGroup)}
+          onClick={() => this.setState({selectedFieldGroup: fieldGroup, dialogOpen: true})}
         >
-          <SettingsOutlinedIcon/>
+          <EditOutlinedIcon/>
         </IconButton>
         <IconButton
           disabled={false}
@@ -244,8 +290,12 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
           style={{left: 0}}
           color="inherit"
           aria-label="Delete FieldGroup"
-          // onClick={() => this.deleteFieldGroup()}
-        >
+          onClick={() => this.setState((state) => {
+            const fieldGroups = state.fieldGroups.filter((element: FieldGroup) => element.name !== fieldGroup.name);
+            return {
+              fieldGroups
+            };
+          })}>
           <DeleteOutlinedIcon/>
         </IconButton>
         {this.getAddParameterMenu(fieldGroup.name, fieldGroup)}
@@ -255,6 +305,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
 
   render () {
     const name: string = this.state.componentDefinition.label ? this.state.componentDefinition.label : this.state.componentDefinition.id;
+    let currentParameter = this.state.selectedParameter;
     return (
       <Accordion>
         <AccordionSummary
@@ -308,7 +359,6 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
                     </Box>
 
                     {this.state.fieldGroups && this.state.fieldGroups.map((fieldGroup: FieldGroup, index: number) => {
-                      // @ts-ignore
                       return (
                         <Draggable key={fieldGroup.name} draggableId={fieldGroup.name ? fieldGroup.name : index.toString()} index={index}>
                           {(provided) => (
@@ -328,9 +378,9 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
                                           ref={provided.innerRef}>
 
                                       {fieldGroup.parameters?.map((fieldGroupParameterName, index) => {
-                                        const fieldGroupParameter: ParameterType = this.getParameterFromFieldGroupParameterName(fieldGroupParameterName);
+                                        const fieldGroupParameter: ParameterType | undefined = this.getParameterFromFieldGroupParameterName(fieldGroupParameterName);
 
-                                        return (
+                                        return fieldGroupParameter && (
                                           <Draggable key={fieldGroupParameter.name} draggableId={fieldGroupParameter.name} index={index}>
                                             {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                                               <Card variant={"outlined"} ref={provided.innerRef}
@@ -360,7 +410,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
               </Droppable>
             </DragDropContext>
             <Drawer style={{maxWidth: '300px'}} anchor={'left'} open={this.state.drawerOpen}
-                    onClose={() => this.setState({drawerOpen: false})}>
+                    onClose={() => this.onDrawerClose(currentParameter)}>
               {this.state.selectedParameter && <>
               <AppBar position="static" color={"default"}>
                 <Toolbar>
@@ -368,19 +418,20 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
                     Component - Parameter Editor
                   </Typography>
                    <IconButton edge="end" color="inherit" aria-label="menu"
-                               onClick={() => this.setState({drawerOpen: false})}>
+                               onClick={() => this.onDrawerClose(currentParameter)}>
                    <ChevronLeftIcon/>
                   </IconButton>
                 </Toolbar>
               </AppBar>
               <Container>
                 {this.state.selectedParameter &&
-                <Form onChange={({formData}) => console.log(formData)} schema={getSchemaFromParameter(this.state.selectedParameter)} formData={this.state.selectedParameter}>
+                <Form onChange={(form) => {currentParameter = form.formData}} schema={getSchemaFromParameter(this.state.selectedParameter)} formData={this.state.selectedParameter}>
                   <></>
                 </Form>}
               </Container>
               </>}
             </Drawer>
+            {this.getAddOrEditFieldGroupDialog()}
           </Grid>
         </AccordionDetails>
       </Accordion>)
@@ -414,8 +465,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
     this.setState({parameters: parameters, fieldGroups: fieldGroups});
   }
 
-  private getParameterFromFieldGroupParameterName (fieldGroupParameterName: string): ParameterType {
-    // @ts-ignore
+  private getParameterFromFieldGroupParameterName (fieldGroupParameterName: string): ParameterType | undefined {
     return this.state.parameters.find(element => element.name === fieldGroupParameterName);
   }
 
@@ -440,6 +490,37 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
 
   private onDragEnd (result: DropResult, provided: ResponderProvided) {
     console.log('result', result);
+  }
+
+  private onDrawerClose (currentParameter?: ParameterType,) {
+    if (currentParameter && this.state.selectedParameter) {
+      const selectedParameter = this.state.selectedParameter;
+      this.setState((state) => {
+        const parameters = state.parameters.map(function (item) {
+          return selectedParameter.name === item.name ? {...currentParameter} : item;
+        });
+        const fieldGroups = state.fieldGroups.map(function (fieldGroup) {
+          if (fieldGroup.parameters) {
+            fieldGroup.parameters = fieldGroup.parameters?.map(function (parameter) {
+              return parameter === selectedParameter.name ? currentParameter.name : parameter;
+            })
+          }
+          ;
+          return fieldGroup;
+        });
+        return {
+          parameters: parameters,
+          fieldGroups: fieldGroups,
+          drawerOpen: false
+        }
+      })
+    }
+  }
+
+  private onParameterChange (currentParameter: ParameterType, formData: ParameterType) {
+    console.log(currentParameter);
+    console.log(formData);
+
   }
 }
 

@@ -34,7 +34,10 @@ class ChannelSwitcher extends React.Component<ChannelSwitcherProps, ChannelSwitc
     const api: ChannelOperationsApi = channelOperationsApi;
     api.getChannels().then(value => {
       const channels: Array<Channel> = value.data;
-      this.setState({channels: channels, currentChannelId: channels[0].id}, () => this.props.onChannelChanged(channels[0].id))
+      this.setState({
+        channels: channels,
+        currentChannelId: channels[0].id
+      }, () => this.props.onChannelChanged(channels[0].id))
     });
   }
 
@@ -50,7 +53,8 @@ class ChannelSwitcher extends React.Component<ChannelSwitcherProps, ChannelSwitc
               disabled={channel.branch === null}
               key={channel.id}
               value={channel.id}
-              >
+              onSelect={event => console.log('on channel select')}
+            >
               {channel.id}
             </MenuItem>
           })}
