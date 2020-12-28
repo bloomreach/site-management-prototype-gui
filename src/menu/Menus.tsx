@@ -25,7 +25,7 @@ import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
 import {ChannelSiteMenuOperationsApi} from "../api/apis/channel-site-menu-operations-api";
 import {channelOperationsApi, channelSiteMenuOperationsApi} from "../ApiContext";
-import {isNotEmptyOrNull} from "../util";
+import {isNotEmptyOrNull} from "../common/common-utils";
 import MenuIcon from '@material-ui/icons/Menu';
 import {ChannelOperationsApi} from "../api/apis/channel-operations-api";
 import {Channel} from "../api/models";

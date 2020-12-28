@@ -9,3 +9,5 @@ export function isNotEmptyOrNull (array: any) {
   return (typeof array !== 'undefined' && array.length > 0);
 }
 
+export const getNodeKey = ({node}: any) => node.id;
+

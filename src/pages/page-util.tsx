@@ -1,5 +1,6 @@
 import {TreeItem} from "react-sortable-tree";
-import {AbstractComponent, ManagedComponent, Page, StaticComponent} from "./api/models";
+import {AbstractComponent, ManagedComponent, Page, StaticComponent} from "../api/models";
+import {getId, isNotEmptyOrNull} from "../common/common-utils";
 
 export interface ComponentTreeItem extends TreeItem {
   id: string
@@ -11,8 +12,6 @@ export interface TreeModel {
   page: Readonly<Page>,
   treeData: ComponentTreeItem[]
 }
-
-export const getNodeKey = ({node}: any) => node.id;
 
 /**
  * Converts the node object of react tree ui to the component object that server understands
@@ -72,17 +71,6 @@ export function componentToNode (component: AbstractComponent | StaticComponent 
 //   return x.type === "static";
 // }
 
-export function getId () {
-  // Math.random should be unique because of its seeding algorithm.
-  // Convert it to base 36 (numbers + letters), and grab the first 9 characters
-  // after the decimal.
-  return Math.random().toString(36).substr(2, 9);
-}
-
-export function isNotEmptyOrNull (array: any) {
-  return (typeof array !== 'undefined' && array.length > 0);
-}
-
 export function convertPagesToTreeModelArray (pages: Array<Page>) {
   const trees: Array<TreeModel> = [];
   if (isNotEmptyOrNull(pages)) {
@@ -96,14 +84,3 @@ export function convertPagesToTreeModelArray (pages: Array<Page>) {
   }
   return trees;
 }
-
-/**
- * Update ids of a node and its children. Useful for avoiding clash of ids when adding nodes under same nodes
- * @param node
- */
-// export function updateNodeIds (node) {
-//   node.id = node.title + getId();
-//   node.children && node.children.forEach(childNode => {
-//     updateNodeIds(childNode);
-//   });
-// }

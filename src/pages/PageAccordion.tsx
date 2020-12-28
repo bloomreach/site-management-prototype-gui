@@ -13,8 +13,8 @@ import 'react-sortable-tree/style.css';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
-import {TreeModel} from "./util";
-import {Page} from "./api/models";
+import {TreeModel} from "./page-util";
+import {Page} from "../api/models";
 import PageEditor from "./PageEditor";
 
 type PageAccordionState = {

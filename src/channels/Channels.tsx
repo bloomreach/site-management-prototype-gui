@@ -14,14 +14,14 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
-import {Channel} from "./api/models";
+import {Channel} from "../api/models";
 import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
 import AddOutlinedIcon from "@material-ui/icons/Add";
-import {localeEnum, localeValues} from "./samples/Locales";
 import Icon from "@material-ui/core/Icon";
-import {ChannelOperationsApi} from "./api/apis/channel-operations-api";
-import {baseUrl, channelOperationsApi} from "./ApiContext";
+import {ChannelOperationsApi} from "../api/apis/channel-operations-api";
+import {baseUrl, channelOperationsApi} from "../ApiContext";
+import {channelSchema, channelUiSchema} from "./channel-utils";
 
 type ChannelsState = {
   channels: Array<Channel>,
@@ -30,77 +30,6 @@ type ChannelsState = {
 type ChannelsProps = {
   classes: any,
 }
-
-const channelUiSchema = {
-  id: {
-    "ui:disabled": true
-  },
-  name: {
-    "ui:disabled": true
-  },
-  branch: {
-    "ui:disabled": true
-  },
-  branchOf: {
-    "ui:disabled": true
-  },
-  contentRootPath: {
-    "ui:disabled": true
-  }
-}
-
-const channelSchema = {
-  type: "object",
-  properties: {
-    id: {
-      type: "string",
-    },
-    name: {
-      type: "string"
-    },
-    branch: {
-      type: "string"
-    },
-    branchOf: {
-      type: "string"
-    },
-    contentRootPath: {
-      type: "string"
-    },
-    locale: {
-      type: "string",
-      "enum": localeEnum,
-      "enumNames": localeValues
-    },
-    devices: {
-      type: "array",
-      items: {
-        type: "string"
-      }
-    },
-    defaultDevice: {
-      type: "string"
-    },
-    linkurlPrefix: {
-      type: ["string", 'null']
-    },
-    cdnHost: {
-      type: ["string", 'null']
-    },
-    responseHeaders: {
-      "type": ["object", 'null'],
-      "additionalProperties": {
-        "type": "string"
-      }
-    },
-    parameters: {
-      "type": "object",
-      "additionalProperties": {
-        "type": "string"
-      }
-    }
-  }
-};
 
 // @ts-ignore
 const styles = theme => {
@@ -133,7 +62,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
   }
 
   updateChannels () {
-    const api : ChannelOperationsApi  = channelOperationsApi;
+    const api: ChannelOperationsApi = channelOperationsApi;
     api.getChannels().then(value => {
       let data: Array<Channel> = value.data;
       data.map(channel => {
@@ -174,7 +103,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
           <Accordion key={index}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon/>}
-              >
+            >
               <Typography className={classes.heading}>id: {channel.id}</Typography>
               <Typography className={classes.secondaryHeading}>name: {channel.name}</Typography>
             </AccordionSummary>
@@ -211,7 +140,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
   }
 
   private saveChannel (channel: Channel) {
-    const api : ChannelOperationsApi = channelOperationsApi;
+    const api: ChannelOperationsApi = channelOperationsApi;
     api.getChannel(channel.id).then(response => {
       api.updateChannel(channel.id, channel, response.headers['x-resource-version'])
         .then(() => {

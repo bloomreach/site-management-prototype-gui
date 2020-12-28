@@ -20,12 +20,12 @@ import {
   Typography
 } from "@material-ui/core";
 import 'react-sortable-tree/style.css';
-import {Channel, SitemapItem} from "./api/models";
+import {Channel, SitemapItem} from "../api/models";
 import AddOutlinedIcon from "@material-ui/icons/Add";
-import {ChannelOperationsApi} from "./api/apis/channel-operations-api";
-import {channelOperationsApi, channelSiteMapOperationsApi} from "./ApiContext";
-import {Nullable} from "./api/models/nullable";
-import {ChannelSitemapOperationsApi} from "./api/apis/channel-sitemap-operations-api";
+import {ChannelOperationsApi} from "../api/apis/channel-operations-api";
+import {channelOperationsApi, channelSiteMapOperationsApi} from "../ApiContext";
+import {Nullable} from "../api/models/nullable";
+import {ChannelSitemapOperationsApi} from "../api/apis/channel-sitemap-operations-api";
 import SortableTree, {addNodeUnderParent, ExtendedNodeData, removeNode, TreeItem} from "react-sortable-tree";
 import {
   convertSiteMapToTreeData,
@@ -33,12 +33,12 @@ import {
   nodeToSiteMapItems,
   replaceWildCards,
   siteMapItemToTreeItem
-} from "./sitemap/sitemap-utils";
-import {getNodeKey, isNotEmptyOrNull} from "./util";
+} from "./sitemap-utils";
+import {getNodeKey, isNotEmptyOrNull} from "../common/common-utils";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
-import SiteMapItemNodeRendererDefault from "./sitemap/SiteMapItemNodeRendererDefault";
+import SiteMapItemNodeRendererDefault from "./SiteMapItemNodeRendererDefault";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 import PopupState, {bindMenu, bindTrigger} from "material-ui-popup-state";
 import MoreHorizOutlinedIcon from "@material-ui/icons/MoreHorizOutlined";

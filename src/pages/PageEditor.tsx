@@ -15,13 +15,14 @@ import MoreHorizOutlinedIcon from "@material-ui/icons/MoreHorizOutlined";
 import PopupState, {bindMenu, bindTrigger} from "material-ui-popup-state/index";
 import 'react-sortable-tree/style.css';
 import SortableTree, {addNodeUnderParent, ExtendedNodeData, removeNode, TreeItem} from 'react-sortable-tree';
-import {componentToNode, ComponentTreeItem, getNodeKey, nodeToComponent, TreeModel} from "./util";
-import NodeRendererDefault from "./fork/NodeRendererDefault";
+import {componentToNode, ComponentTreeItem, nodeToComponent, TreeModel} from "./page-util";
+import NodeRendererDefault from "./NodeRendererDefault";
 import {Delete} from "@material-ui/icons";
-import {AbstractComponent, Page} from "./api/models";
+import {AbstractComponent, Page} from "../api/models";
 import {JSONSchema7} from "json-schema";
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Form from "@rjsf/material-ui";
+import {getNodeKey} from "../common/common-utils";
 
 type PageEditorState = {
   treeData: ComponentTreeItem[] | TreeItem[]

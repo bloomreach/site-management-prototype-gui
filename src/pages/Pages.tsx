@@ -14,15 +14,15 @@ import {
   Toolbar
 } from "@material-ui/core";
 import 'react-sortable-tree/style.css';
-import {Channel, Page} from "./api/models";
+import {Channel, Page} from "../api/models";
 import AddOutlinedIcon from "@material-ui/icons/Add";
-import {convertPagesToTreeModelArray, TreeModel} from "./util";
-import {ChannelOperationsApi} from "./api/apis/channel-operations-api";
-import {ChannelPageOperationsApi} from "./api";
+import {convertPagesToTreeModelArray, TreeModel} from "./page-util";
+import {ChannelOperationsApi} from "../api/apis/channel-operations-api";
+import {ChannelPageOperationsApi} from "../api";
 import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
 import PageAccordion from "./PageAccordion";
-import {channelOperationsApi, channelPageOperationsApi} from "./ApiContext";
+import {channelOperationsApi, channelPageOperationsApi} from "../ApiContext";
 
 type PagesState = {
   channels: Array<Channel>

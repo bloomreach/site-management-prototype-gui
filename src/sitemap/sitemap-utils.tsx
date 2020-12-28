@@ -1,5 +1,5 @@
 import {SitemapItem} from "../api/models";
-import {getId, isNotEmptyOrNull} from "../util";
+import {getId, isNotEmptyOrNull} from "../common/common-utils";
 import {TreeItem} from "react-sortable-tree";
 
 export function nodeToSiteMapItems (treeData: TreeItem[]): SitemapItem[] {
