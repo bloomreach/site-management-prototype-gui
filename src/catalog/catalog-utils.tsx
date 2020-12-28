@@ -9,7 +9,6 @@ import LinkOutlinedIcon from '@material-ui/icons/LinkOutlined';
 import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
 
 export const componentDefinitionSchema = {
-  "required": ["extends", "id"],
   "type": "object",
   "properties": {
     "id": {
@@ -40,6 +39,15 @@ export const componentDefinitionSchema = {
     }
   }
 };
+
+export function slugify (text: string) {
+  return text.toString().toLowerCase()
+    .replace(/\s+/g, '-')           // Replace spaces with -
+    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+    .replace(/^-+/, '')             // Trim - from start of text
+    .replace(/-+$/, '');            // Trim - from end of text
+}
 
 export const baseParameterDefinitionSchema: JSONSchema7 = {
   type: "object",
@@ -267,6 +275,29 @@ export function getParameterIcon (parameter: ParameterType) {
   }
   return icon;
 }
+
+export const catalogGroupSchema = {
+  type: 'object',
+  properties: {
+    "name": {
+      "type": "string",
+    },
+    "hidden": {
+      "type": "boolean",
+      'default': false
+    },
+    "system": {
+      "type": "boolean",
+      'default': false
+    }
+  }
+};
+
+export const catalogGroupUiSchema = {
+  name: {
+    "ui:autofocus": true
+  }
+};
 
 export const fieldGroupSchema = {
   type: "string",

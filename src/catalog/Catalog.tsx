@@ -1,5 +1,18 @@
 import React from 'react';
-import {Accordion, AccordionSummary, AppBar, Divider, IconButton, Toolbar, Typography} from "@material-ui/core";
+import {
+  Accordion,
+  AccordionSummary,
+  AppBar,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  IconButton,
+  Toolbar,
+  Typography
+} from "@material-ui/core";
 import 'react-sortable-tree/style.css';
 import AddOutlinedIcon from "@material-ui/icons/Add";
 import {Nullable} from "../api/models/nullable";
@@ -9,6 +22,9 @@ import {channelCatalogOperationsApi} from "../ApiContext";
 import {CatalogGroup, ComponentDefinition} from "../api/models";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CatalogItem from "./CatalogItem";
+import Form from "@rjsf/material-ui";
+import {catalogGroupSchema, catalogGroupUiSchema, componentDefinitionSchema, slugify} from "./catalog-utils";
+import {JSONSchema7} from "json-schema";
 
 type CatalogGroupComponents = {
   group: string
@@ -18,8 +34,10 @@ type CatalogGroupComponents = {
 type CatalogState = {
   currentChannelId: Nullable<string>,
   catalogGroupComponents: Array<CatalogGroupComponents>
-  dialogOpen: boolean
+  addGroupDialogOpen: boolean
+  addComponentDialogOpen: boolean
   drawerOpen: boolean
+  selectedGroupName?: string
 }
 type CatalogProps = {}
 
@@ -32,7 +50,8 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
       currentChannelId: null,
       catalogGroupComponents: [],
       drawerOpen: false,
-      dialogOpen: false,
+      addGroupDialogOpen: false,
+      addComponentDialogOpen: false,
     }
 
     this.onChannelChanged = this.onChannelChanged.bind(this);
@@ -69,6 +88,8 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
   }
 
   render () {
+    let currentCatalogGroup: CatalogGroup;
+    let currentComponentDefinition: ComponentDefinition;
     return <>
       <AppBar position="sticky" variant={'outlined'} color={'default'}>
         <Toolbar>
@@ -76,22 +97,33 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
              edge="start"
              color="inherit"
              aria-label="Add"
-             // onClick={() => this.setState({dialogOpen: true})}
+             onClick={() => this.setState({addGroupDialogOpen: true})}
            >
-            <AddOutlinedIcon/>
+            <AddOutlinedIcon/><Typography>Add Group</Typography>
           </IconButton>
            <Divider/>
           <ChannelSwitcher onChannelChanged={channelId => this.onChannelChanged(channelId)}/>
         </Toolbar>
       </AppBar>
-      {this.state.catalogGroupComponents.map((catalogGroupComponent, key) => {
+      {this.state.catalogGroupComponents.map((catalogGroupComponent: CatalogGroupComponents, key) => {
         return (
           <Accordion key={this.state.currentChannelId + catalogGroupComponent.group} onChange={(event, expanded) => console.log('on change of accordion', expanded)}>
-
             <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-              <Typography><strong>Group: {catalogGroupComponent.group}</strong></Typography>
+              <Typography>Group: {catalogGroupComponent.group}</Typography>
             </AccordionSummary>
-
+            <Toolbar>
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="Add"
+                onClick={() => this.setState({
+                  addComponentDialogOpen: true,
+                  selectedGroupName: catalogGroupComponent.group
+                })}
+              >
+                <AddOutlinedIcon/><Typography>Add Component</Typography>
+              </IconButton>
+            </Toolbar>
             {catalogGroupComponent.components.map(componentDefinition => {
               return <CatalogItem
                 deleteComponentDefinition={this.deleteComponentDefinition}
@@ -102,6 +134,34 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
             })}
           </Accordion>)
       })}
+      <Dialog open={this.state.addGroupDialogOpen}>
+        <DialogTitle>Add Group</DialogTitle>
+        <DialogContent>
+          <Form onChange={({formData}) => currentCatalogGroup = formData} uiSchema={catalogGroupUiSchema} schema={catalogGroupSchema as JSONSchema7}>
+            <></>
+          </Form>
+        </DialogContent>
+        <DialogActions>
+          <Button color="primary" onClick={() => {
+            this.addCatalogGroup(currentCatalogGroup, () => this.setState({addGroupDialogOpen: false}));
+          }}>OK</Button>
+          <Button color="primary" onClick={() => this.setState({addGroupDialogOpen: false})}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
+       <Dialog open={this.state.addComponentDialogOpen}>
+        <DialogTitle>Add Component</DialogTitle>
+        <DialogContent>
+          <Form onChange={({formData}) => currentComponentDefinition = formData} uiSchema={componentDefinitionSchema} schema={componentDefinitionSchema as JSONSchema7}>
+            <></>
+          </Form>
+        </DialogContent>
+        <DialogActions>
+          <Button color="primary" onClick={() => {
+            this.addComponentDefinition(currentComponentDefinition, this.state.selectedGroupName, () => this.setState({addComponentDialogOpen: false}));
+          }}>OK</Button>
+          <Button color="primary" onClick={() => this.setState({addComponentDialogOpen: false})}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
     </>
   }
 
@@ -127,8 +187,27 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
 
   }
 
-  private addCatalogGroup (catalogGroup: string, callback?: () => any) {
+  private addCatalogGroup (catalogGroup: CatalogGroup, callback?: () => any) {
+    console.log('add catalog group', catalogGroup)
+    const api: ChannelCatalogOperationsApi = channelCatalogOperationsApi;
+    this.state.currentChannelId && api.putChannelCatalogGroup(this.state.currentChannelId, catalogGroup.name, catalogGroup).then(() => {
+      this.updateCatalogs();
+      callback && callback();
+    });
+  }
 
+  private addComponentDefinition (componentDefinition: ComponentDefinition, group?: string, callback?: () => any) {
+    const api: ChannelCatalogOperationsApi = channelCatalogOperationsApi;
+    let componentName = slugify(componentDefinition.label);
+    const component = {...componentDefinition, id: `${group}/${componentName}`}
+    this.state.currentChannelId && group &&
+    api.putChannelCatalogGroupComponent(this.state.currentChannelId,
+      group,
+      componentName,
+      component).then(() => {
+      this.updateCatalogs();
+      callback && callback();
+    });
   }
 
   private deleteCatalogGroup (catalogGroup: string, callback?: () => any) {

@@ -325,6 +325,9 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
         <AccordionDetails>
           <Grid item sm={4}>
             <Form
+              onChange={(form) => {
+                this.setState({componentDefinition: form.formData})
+              }}
               schema={componentDefinitionSchema as JSONSchema7}
               formData={this.state.componentDefinition}><></>
             </Form>
