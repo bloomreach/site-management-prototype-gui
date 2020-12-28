@@ -32,10 +32,13 @@ import {JSONSchema7} from "json-schema";
 import Form from "@rjsf/material-ui";
 import {
   componentDefinitionSchema,
+  contentPathParameterTemplate,
+  dropDownParameterTemplate,
   fieldGroupSchema,
   fieldGroupUiSchema,
   getParameterIcon,
   getSchemaFromParameter,
+  reorder,
   simpleStringParameterTemplate
 } from "./catalog-utils";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
@@ -57,6 +60,8 @@ import {
 } from "react-beautiful-dnd";
 import PopupState, {bindMenu, bindTrigger} from "material-ui-popup-state";
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import ArrowDropDownCircleOutlinedIcon from '@material-ui/icons/ArrowDropDownCircleOutlined';
+import LinkOutlinedIcon from '@material-ui/icons/LinkOutlined';
 
 type CatalogItemState = {
   componentDefinition: ComponentDefinition
@@ -69,6 +74,8 @@ type CatalogItemState = {
 }
 type CatalogItemProps = {
   componentDefinition: ComponentDefinition
+  deleteComponentDefinition: (componentDefinition: ComponentDefinition) => void
+  saveComponentDefinition: (componentDefinition: ComponentDefinition) => void
 }
 
 class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
@@ -83,6 +90,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
       fieldGroups: this.props.componentDefinition.fieldGroups || [],
       dialogOpen: false
     }
+    this.onDragEnd = this.onDragEnd.bind(this);
 
   }
 
@@ -142,20 +150,20 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
               <ListItemText primary="Add Simple Parameter"/>
             </MenuItem>
             <MenuItem onClick={() => {
-              this.addParameter("string", fieldGroup);
+              this.addParameter("contentpath", fieldGroup);
               popupState.close()
             }}>
               <ListItemIcon>
-                <TextFieldsIcon fontSize="small"/>
+                <LinkOutlinedIcon fontSize="small"/>
               </ListItemIcon>
               <ListItemText primary="Add Content Path Parameter"/>
             </MenuItem>
             <MenuItem onClick={() => {
-              this.addParameter("string", fieldGroup);
+              this.addParameter("dropdown", fieldGroup);
               popupState.close()
             }}>
               <ListItemIcon>
-                <TextFieldsIcon fontSize="small"/>
+                <ArrowDropDownCircleOutlinedIcon fontSize="small"/>
               </ListItemIcon>
               <ListItemText primary="Add Drop Down Parameter"/>
             </MenuItem>
@@ -174,7 +182,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
           style={{left: 0}}
           color="inherit"
           aria-label="Delete"
-          onClick={() => this.deleteComponentDefinition(this.state.componentDefinition)}
+          onClick={() => this.props.deleteComponentDefinition(this.state.componentDefinition)}
         >
           <DeleteOutlinedIcon/>
         </IconButton>
@@ -182,7 +190,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
           edge="start"
           color="inherit"
           aria-label="Save"
-          onClick={() => this.saveComponentDefinition(this.state.componentDefinition)}
+          onClick={() => this.saveComponentDefinition()}
         >
           <SaveOutlinedIcon/>
         </IconButton></Grid>
@@ -332,7 +340,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
 
                     <Box>
                       <DragDropContext onDragEnd={this.onDragEnd}>
-                        <Droppable droppableId="default" type={'parameter'}>
+                        <Droppable droppableId="default" type={'default_parameter'}>
 
                           {(provided: DroppableProvided) => (
                             <div  {...provided.droppableProps}
@@ -371,7 +379,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
                               {this.getFieldGroupHeader(fieldGroup, provided.dragHandleProps)}
 
                               <DragDropContext onDragEnd={this.onDragEnd}>
-                                <Droppable droppableId={fieldGroup.name ? fieldGroup.name : index.toString()} type={'parameter'}>
+                                <Droppable droppableId={fieldGroup.name ? fieldGroup.name : index.toString()} type={'fieldGroup_parameter'}>
 
                                   {(provided: DroppableProvided) => (
                                     <div  {...provided.droppableProps}
@@ -414,7 +422,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
               {this.state.selectedParameter && <>
               <AppBar position="static" color={"default"}>
                 <Toolbar>
-                  <Typography style={{flexGrow: 1}} variant="h6">
+                  <Typography style={{flexGrow: 1, textTransform: 'capitalize'}} variant="h6">
                     Component - Parameter Editor
                   </Typography>
                    <IconButton edge="end" color="inherit" aria-label="menu"
@@ -425,7 +433,9 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
               </AppBar>
               <Container>
                 {this.state.selectedParameter &&
-                <Form onChange={(form) => {currentParameter = form.formData}} schema={getSchemaFromParameter(this.state.selectedParameter)} formData={this.state.selectedParameter}>
+                <Form onChange={(form) => {
+                  currentParameter = form.formData
+                }} schema={getSchemaFromParameter(this.state.selectedParameter)} formData={this.state.selectedParameter}>
                   <></>
                 </Form>}
               </Container>
@@ -443,7 +453,15 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
       case 'string':
         template = {...simpleStringParameterTemplate};
         break;
-      //todo more
+      case 'contentpath':
+        template = {...contentPathParameterTemplate, name: 'document'};
+        break;
+      case 'dropdown':
+        template = {...dropDownParameterTemplate, name: 'dropdown'};
+        break;
+      case 'imagesetpath':
+        template = {...contentPathParameterTemplate, name: 'image'};
+        break;
       default:
         template = {...simpleStringParameterTemplate};
         break;
@@ -469,18 +487,19 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
     return this.state.parameters.find(element => element.name === fieldGroupParameterName);
   }
 
-  private deleteComponentDefinition (componentDefinition: ComponentDefinition) {
-
-  }
-
-  private saveComponentDefinition (componentDefinition: ComponentDefinition) {
-
+  private saveComponentDefinition () {
+    const componentDefinition = {
+      ...this.state.componentDefinition,
+      parameters: this.state.parameters,
+      fieldGroups: this.state.fieldGroups
+    }
+    this.props.saveComponentDefinition(componentDefinition)
   }
 
   private isInFieldGroup (parameter: ParameterType): boolean {
     let isInFieldGroup: boolean = false;
     this.state.fieldGroups?.forEach(value => {
-      let found = value.parameters?.find(element => element === parameter.name);
+      let found = value.parameters?.some(element => element === parameter.name);
       if (found) {
         isInFieldGroup = true;
       }
@@ -489,7 +508,54 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
   }
 
   private onDragEnd (result: DropResult, provided: ResponderProvided) {
-    console.log('result', result);
+    if (!result.destination) {
+      return;
+    }
+
+    if (result.type === 'column') {
+      const fieldGroups = reorder(
+        this.state.fieldGroups,
+        result.source.index,
+        result.destination.index
+      );
+
+      this.setState({
+        fieldGroups
+      });
+
+    }
+
+    if (result.type === 'default_parameter') {
+      const parameters = reorder(
+        this.state.parameters,
+        result.source.index,
+        result.destination.index
+      );
+
+      this.setState({
+        parameters
+      });
+    }
+
+    if (result.type === 'fieldGroup_parameter') {
+      let fieldGroupName = result.destination.droppableId;
+      let fieldGroups = this.state.fieldGroups.map(fieldGroup => {
+        if (fieldGroupName === fieldGroup.name) {
+          // @ts-ignore
+          const parameters = reorder(fieldGroup.parameters,
+            result.source.index,
+            // @ts-ignore
+            result.destination.index);
+          fieldGroup.parameters = parameters;
+        }
+        return fieldGroup;
+      });
+
+      this.setState({
+        fieldGroups
+      });
+    }
+
   }
 
   private onDrawerClose (currentParameter?: ParameterType,) {
@@ -505,7 +571,6 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
               return parameter === selectedParameter.name ? currentParameter.name : parameter;
             })
           }
-          ;
           return fieldGroup;
         });
         return {

@@ -2,7 +2,11 @@ import {ParameterType, ParameterTypeValueTypeEnum} from "../api/models";
 import TextFieldsIcon from "@material-ui/icons/TextFields";
 import React from "react";
 import {JSONSchema7} from "json-schema";
-import {SvgIcon} from "@material-ui/core";
+import CalendarTodayOutlinedIcon from '@material-ui/icons/CalendarTodayOutlined';
+import CheckBoxOutlinedIcon from '@material-ui/icons/CheckBoxOutlined';
+import ArrowDropDownCircleOutlinedIcon from '@material-ui/icons/ArrowDropDownCircleOutlined';
+import LinkOutlinedIcon from '@material-ui/icons/LinkOutlined';
+import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
 
 export const componentDefinitionSchema = {
   "required": ["extends", "id"],
@@ -36,195 +40,6 @@ export const componentDefinitionSchema = {
     }
   }
 };
-
-//todo delete
-export const componentParameterDefinitionSchema = {
-  definitions: {
-    ParameterContentPathType: {
-      "title": "Content Path",
-      // required: [
-      //   "type"
-      // ],
-      type: "object",
-      properties: {
-        type: {
-          type: 'string',
-          "default": 'contentpath',
-        },
-        pickerConfiguration: {
-          type: "string"
-        },
-        pickerInitialPath: {
-          type: "string"
-        },
-        pickerRememberLastVisited: {
-          type: "boolean"
-        },
-        pickerSelectableNodeTypes: {
-          type: "array",
-          items: {
-            type: "string"
-          }
-        },
-        relative: {
-          type: "boolean"
-        },
-        pickerRootPath: {
-          type: "string"
-        }
-      }
-    },
-    ParameterDropdownType: {
-      "title": "Dropdown",
-      required: [
-        "sourceId",
-        "type",
-        "value",
-        "valueListProvider"
-      ],
-      type: "object",
-      properties: {
-        value: {
-          type: "array",
-          items: {
-            type: "string"
-          }
-        },
-        valueListProvider: {
-          type: "string"
-        },
-        sourceId: {
-          type: "string"
-        }
-      }
-    },
-    ParameterImageSetPathType: {
-      "title": "ParameterImageSetPathType",
-      required: [
-        "type"
-      ],
-      type: "object",
-      properties: {
-        pickerConfiguration: {
-          type: "string"
-        },
-        pickerInitialPath: {
-          type: "string"
-        },
-        pickerRememberLastVisited: {
-          type: "boolean"
-        },
-        pickerSelectableNodeTypes: {
-          type: "array",
-          items: {
-            type: "string"
-          }
-        },
-        previewVariant: {
-          type: "string"
-        }
-      }
-    },
-    // ParameterConfigType: {
-    //   "title": "ParameterConfigType",
-    //   required: [
-    //     "type"
-    //   ],
-    //   type: "object",
-    //   oneOf: [
-    //     {
-    //       title: 'Empty',
-    //       type: ''
-    //     },
-    //     {
-    //       title: 'Content Path',
-    //       $ref: "#/definitions/ParameterContentPathType"
-    //     },
-    //     {
-    //       title: 'Dropdown',
-    //       $ref: "#/definitions/ParameterDropdownType"
-    //     },
-    //     {
-    //       title: 'Image',
-    //       $ref: "#/definitions/ParameterImageSetPathType"
-    //     }
-    //   ]
-    // },
-    ParameterType: {
-      "title": "ParameterType",
-      required: [
-        "name",
-        "valueType"
-      ],
-      type: "object",
-      properties: {
-        name: {
-          type: "string"
-        },
-        valueType: {
-          type: "string",
-          enum: [
-            "string",
-            "calendar",
-            "boolean",
-            "integer",
-            "number"
-          ]
-        },
-        required: {
-          type: "boolean"
-        },
-        hidden: {
-          type: "boolean"
-        },
-        overlay: {
-          type: "boolean"
-        },
-        defaultValue: {
-          type: "string"
-        },
-        displayName: {
-          type: "string"
-        },
-        system: {
-          type: "boolean",
-          description: "System readonly parameter"
-        },
-        config: {
-          "type": "object",
-          oneOf: [
-            {
-              title: 'Empty',
-              type: 'null'
-            },
-            {
-              title: 'Content Path',
-              properties: {
-                type: {
-                  type: 'string',
-                  "default": 'contentpath',
-                },
-              },
-              $ref: "#/definitions/ParameterContentPathType"
-            },
-            // {
-            //   title: 'Dropdown',
-            //   $ref: "#/definitions/ParameterDropdownType"
-            // },
-            // {
-            //   title: 'Image',
-            //   $ref: "#/definitions/ParameterImageSetPathType"
-            // }
-          ]
-        }
-      }
-    },
-  },
-  type: "array",
-  items: {
-    $ref: "#/definitions/ParameterType"
-  }
-}
 
 export const baseParameterDefinitionSchema: JSONSchema7 = {
   type: "object",
@@ -358,7 +173,7 @@ export function getSchemaFromParameter (parameter: ParameterType): JSONSchema7 {
         };
       }
       break;
-      //todo add image
+    //todo add image
     default:
       if (schema.properties) {
         delete schema.properties.config
@@ -378,7 +193,7 @@ const simpleParameterTemplate: ParameterType = {
   "displayName": undefined,
   "system": false,
   "config": null
-}
+};
 
 export const simpleStringParameterTemplate: ParameterType = {
   ...simpleParameterTemplate,
@@ -386,28 +201,35 @@ export const simpleStringParameterTemplate: ParameterType = {
   "valueType": ParameterTypeValueTypeEnum.String,
 };
 
-export const simpleIntegerParameterTemplate: ParameterType = {
+export const contentPathParameterTemplate: ParameterType = {
   ...simpleParameterTemplate,
-  "name": "integer",
-  "valueType": ParameterTypeValueTypeEnum.Integer,
+  "name": "string",
+  "valueType": ParameterTypeValueTypeEnum.String,
+  "config": {
+    "pickerConfiguration": "cms-pickers/documents-only",
+    "pickerInitialPath": "",
+    "pickerRememberLastVisited": true,
+    "pickerSelectableNodeTypes": [
+      ""
+    ],
+    "relative": true,
+    "pickerRootPath": null,
+    "type": "contentpath"
+  }
 };
 
-export const simpleNumberParameterTemplate: ParameterType = {
+export const dropDownParameterTemplate: ParameterType = {
   ...simpleParameterTemplate,
-  "name": "number",
-  "valueType": ParameterTypeValueTypeEnum.Number,
-};
-
-export const simpleDateParameterTemplate: ParameterType = {
-  ...simpleParameterTemplate,
-  "name": "calendar",
-  "valueType": ParameterTypeValueTypeEnum.Calendar,
-};
-
-export const simpleBooleanParameterTemplate: ParameterType = {
-  ...simpleParameterTemplate,
-  "name": "boolean",
-  "valueType": ParameterTypeValueTypeEnum.Boolean,
+  "name": "string",
+  "valueType": ParameterTypeValueTypeEnum.String,
+  "config": {
+    "value": [
+      "",
+    ],
+    "valueListProvider": null,
+    "sourceId": null,
+    "type": "dropdown"
+  }
 };
 
 export function getParameterIcon (parameter: ParameterType) {
@@ -420,13 +242,30 @@ export function getParameterIcon (parameter: ParameterType) {
       case ParameterTypeValueTypeEnum.Number:
         icon = <DecimalIcon/>;
         break;
-        //todo more
+      case ParameterTypeValueTypeEnum.Integer:
+        icon = <NumericIcon/>;
+        break;
+      case ParameterTypeValueTypeEnum.Calendar:
+        icon = <CalendarTodayOutlinedIcon/>;
+        break;
+      case ParameterTypeValueTypeEnum.Boolean:
+        icon = <CheckBoxOutlinedIcon/>;
+        break;
     }
   } else {
-
+    switch (parameter.config.type) {
+      case ParameterTypeEnum.DROPDOWN:
+        icon = <ArrowDropDownCircleOutlinedIcon/>;
+        break;
+      case ParameterTypeEnum.CONTENT_PATH:
+        icon = <LinkOutlinedIcon/>;
+        break;
+      case ParameterTypeEnum.IMAGE_PATH:
+        icon = <ImageOutlinedIcon/>;
+        break;
+    }
   }
   return icon;
-
 }
 
 export const fieldGroupSchema = {
@@ -437,12 +276,29 @@ export const fieldGroupUiSchema = {
   "ui:autofocus": true
 };
 
-export function DecimalIcon (props: any) {
+export const reorder = (list: Array<any>, startIndex: number, endIndex: number) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  return result;
+};
+
+function NumericIcon (props: any) {
   return (
-    <SvgIcon {...props}>
-      <path d="M10 7A3 3 0 0 0 7 10V13A3 3 0 0 0 13 13V10A3 3 0 0 0 10 7M11 13A1 1 0 0 1 9 13V10A1 1 0 0 1 11 10M17 7A3 3 0 0 0 14 10V13A3 3 0 0 0 20 13V10A3 3 0 0 0 17 7M18 13A1 1 0 0 1 16 13V10A1 1 0 0 1 18 10M6 15A1 1 0 1 1 5 14A1 1 0 0 1 6 15Z" />
-    </SvgIcon>
-  );
+    <span className="fa-stack fa-3x">
+      <i className="fa fa-square-o fa-stack-2x"></i>
+      <strong className="fa-stack-1x icon-text" style={{fontSize: '0.5em'}}>1</strong>
+    </span>
+  )
+}
+
+function DecimalIcon (props: any) {
+  return (
+    <span className="fa-stack fa-3x">
+      <i className="fa fa-square-o fa-stack-2x"></i>
+      <strong className="fa-stack-1x icon-text" style={{fontSize: '0.3em'}}>1.0</strong>
+    </span>
+  )
 }
 
 

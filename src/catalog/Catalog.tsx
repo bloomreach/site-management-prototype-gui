@@ -36,6 +36,8 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
     }
 
     this.onChannelChanged = this.onChannelChanged.bind(this);
+    this.deleteComponentDefinition = this.deleteComponentDefinition.bind(this);
+    this.saveComponentDefinition = this.saveComponentDefinition.bind(this);
   }
 
   componentDidMount (): void {
@@ -92,6 +94,8 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
 
             {catalogGroupComponent.components.map(componentDefinition => {
               return <CatalogItem
+                deleteComponentDefinition={this.deleteComponentDefinition}
+                saveComponentDefinition={this.saveComponentDefinition}
                 key={this.state.currentChannelId + catalogGroupComponent.group + componentDefinition.id}
                 componentDefinition={componentDefinition}>
               </CatalogItem>
@@ -99,6 +103,28 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
           </Accordion>)
       })}
     </>
+  }
+
+  private deleteComponentDefinition (componentDefinition: ComponentDefinition) {
+    const api: ChannelCatalogOperationsApi = channelCatalogOperationsApi;
+    const group = componentDefinition.id.split('/')[0];
+    const name = componentDefinition.id.split('/')[1];
+    this.state.currentChannelId && api.deleteChannelCatalogGroupComponent(this.state.currentChannelId, group, name).then(value => {
+      this.updateCatalogs();
+    })
+  }
+
+  private saveComponentDefinition (componentDefinition: ComponentDefinition) {
+    console.log('saving..', componentDefinition)
+    const api: ChannelCatalogOperationsApi = channelCatalogOperationsApi;
+    const group = componentDefinition.id.split('/')[0];
+    const name = componentDefinition.id.split('/')[1];
+    this.state.currentChannelId && api.getChannelCatalogGroupComponent(this.state.currentChannelId, group, name).then(response => {
+      this.state.currentChannelId && api.putChannelCatalogGroupComponent(this.state.currentChannelId, group, name, componentDefinition, response.headers['x-resource-version']).then(response => {
+        // this.updateCatalogs();
+      })
+    })
+
   }
 
   private addCatalogGroup (catalogGroup: string, callback?: () => any) {
