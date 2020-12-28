@@ -328,6 +328,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
   }
 
   private deleteSiteMapItem (rowInfo: ExtendedNodeData, callback: () => any) {
+    console.log('row delete', rowInfo);
     // @ts-ignore
     const treeData: TreeItem[] = removeNode({
       treeData: this.state.treeData,
@@ -339,15 +340,14 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
     this.setState({treeData: treeData}, () => {
       if (callback) {
         callback();
-        const api: ChannelSitemapOperationsApi = channelSiteMapOperationsApi;
-        const siteMapItem = rowInfo.node.siteMapItem;
-        // @ts-ignore
-        api.getChannelSitemapItem(this.state.currentChannelId, siteMapItem.name).then(value => {
+        if (rowInfo.parentNode === null) {
+          const api: ChannelSitemapOperationsApi = channelSiteMapOperationsApi;
+          const siteMapItem = rowInfo.node.siteMapItem;
           // @ts-ignore
-          api.deleteChannelSitemapItem(this.state.currentChannelId, siteMapItem.name, siteMapItem, value.headers['x-resource-version']).then(() => {
+          api.deleteChannelSitemapItem(this.state.currentChannelId, siteMapItem.name).then(() => {
             this.onSiteMapChanged();
           })
-        });
+        }
       }
     });
   }
