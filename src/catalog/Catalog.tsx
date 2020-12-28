@@ -53,7 +53,7 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
       drawerOpen: false,
       addGroupDialogOpen: false,
       addComponentDialogOpen: false,
-    }
+    };
 
     this.onChannelChanged = this.onChannelChanged.bind(this);
     this.deleteComponentDefinition = this.deleteComponentDefinition.bind(this);
@@ -98,8 +98,7 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
              edge="start"
              color="inherit"
              aria-label="Add"
-             onClick={() => this.setState({addGroupDialogOpen: true})}
-           >
+             onClick={() => this.setState({addGroupDialogOpen: true})}>
             <AddOutlinedIcon/><Typography>Add Group</Typography>
           </IconButton>
            <Divider/>
@@ -120,27 +119,25 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
                 onClick={() => this.setState({
                   addComponentDialogOpen: true,
                   selectedGroupName: catalogGroupComponent.group
-                })}
-              >
+                })}>
                 <AddOutlinedIcon/><Typography>Add Component</Typography>
               </IconButton>
               <IconButton
                 edge="start"
                 color="inherit"
                 aria-label="Delete"
-                onClick={() => this.deleteCatalogGroup(catalogGroupComponent.group)}
-              >
+                onClick={() => this.deleteCatalogGroup(catalogGroupComponent.group)}>
                 <DeleteOutlinedIcon/><Typography>Delete Catalog Group</Typography>
               </IconButton>
-
             </Toolbar>
             {catalogGroupComponent.components.map(componentDefinition => {
-              return <CatalogItem
-                deleteComponentDefinition={this.deleteComponentDefinition}
-                saveComponentDefinition={this.saveComponentDefinition}
-                key={this.state.currentChannelId + catalogGroupComponent.group + componentDefinition.id}
-                componentDefinition={componentDefinition}>
-              </CatalogItem>
+              return (
+                <CatalogItem
+                  deleteComponentDefinition={this.deleteComponentDefinition}
+                  saveComponentDefinition={this.saveComponentDefinition}
+                  key={this.state.currentChannelId + catalogGroupComponent.group + componentDefinition.id}
+                  componentDefinition={componentDefinition}>
+                </CatalogItem>)
             })}
           </Accordion>)
       })}

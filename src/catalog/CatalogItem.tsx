@@ -89,9 +89,8 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
       parameters: this.props.componentDefinition.parameters || [],
       fieldGroups: this.props.componentDefinition.fieldGroups || [],
       dialogOpen: false
-    }
+    };
     this.onDragEnd = this.onDragEnd.bind(this);
-
   }
 
   componentDidMount (): void {
@@ -122,9 +121,6 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
     });
   }
 
-  onCatalogItemChanged () {
-  }
-
   getAddParameterMenu (id: string, fieldGroup?: FieldGroup) {
     return (<PopupState variant="popover" popupId={id}>
       {(popupState) => (
@@ -135,8 +131,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
             style={{left: 24}}
             color="inherit"
             {...bindTrigger(popupState)}
-            aria-label="add Parameter"
-          >
+            aria-label="add Parameter">
             <AddOutlinedIcon/>
           </IconButton>
           <Menu {...bindMenu(popupState)}>
@@ -182,16 +177,14 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
           style={{left: 0}}
           color="inherit"
           aria-label="Delete"
-          onClick={() => this.props.deleteComponentDefinition(this.state.componentDefinition)}
-        >
+          onClick={() => this.props.deleteComponentDefinition(this.state.componentDefinition)}>
           <DeleteOutlinedIcon/>
         </IconButton>
         <IconButton
           edge="start"
           color="inherit"
           aria-label="Save"
-          onClick={() => this.saveComponentDefinition()}
-        >
+          onClick={() => this.saveComponentDefinition()}>
           <SaveOutlinedIcon/>
         </IconButton></Grid>
       <Grid item sm={8}>
@@ -201,13 +194,10 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
           style={{left: 24}}
           color="inherit"
           aria-label="Add FieldGroup"
-          onClick={() => this.setState({dialogOpen: true})}
-        >
+          onClick={() => this.setState({dialogOpen: true})}>
           <PostAddOutlinedIcon/>
         </IconButton>
-
         {this.getAddParameterMenu('default')}
-
       </Grid>
     </AccordionActions>)
   }
@@ -254,28 +244,27 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
   }
 
   getParameterCardHeader (parameter: ParameterType, snapshot?: DraggableStateSnapshot) {
-    return <CardHeader style={{padding: '10px'}}
-                       isDragging={snapshot?.isDragging}
-                       avatar={
-                         <Avatar>
-                           {getParameterIcon(parameter)}
-                         </Avatar>
-                       }
-                       action={
-                         <>
-                          <IconButton edge="end" aria-label="settings" onClick={() => this.setState({
-                            selectedParameter: parameter,
-                            drawerOpen: true
-                          })}>
-                                <EditOutlinedIcon/>
-                          </IconButton>
-                           <IconButton edge="end" aria-label="delete" onClick={() => this.deleteFieldGroupParameter(parameter)}>
-                                <DeleteOutlinedIcon/>
-                           </IconButton>
-                          </>
-                       }
-                       title={parameter.name}
-    />
+    return (
+      <CardHeader style={{padding: '10px'}}
+                  isDragging={snapshot?.isDragging}
+                  avatar={<Avatar>
+                    {getParameterIcon(parameter)}
+                  </Avatar>}
+                  action={
+                    <>
+                      <IconButton edge="end" aria-label="settings" onClick={() => this.setState({
+                        selectedParameter: parameter,
+                        drawerOpen: true
+                      })}>
+                            <EditOutlinedIcon/>
+                      </IconButton>
+                       <IconButton edge="end" aria-label="delete" onClick={() => this.deleteFieldGroupParameter(parameter)}>
+                            <DeleteOutlinedIcon/>
+                       </IconButton>
+                    </>
+                  }
+                  title={parameter.name}
+      />)
   }
 
   getFieldGroupHeader (fieldGroup: FieldGroup, dragHandleProps?: DraggableProvidedDragHandleProps) {
@@ -288,8 +277,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
           style={{left: 0}}
           color="inherit"
           aria-label="Edit FieldGroup"
-          onClick={() => this.setState({selectedFieldGroup: fieldGroup, dialogOpen: true})}
-        >
+          onClick={() => this.setState({selectedFieldGroup: fieldGroup, dialogOpen: true})}>
           <EditOutlinedIcon/>
         </IconButton>
         <IconButton
@@ -583,12 +571,6 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
         }
       })
     }
-  }
-
-  private onParameterChange (currentParameter: ParameterType, formData: ParameterType) {
-    console.log(currentParameter);
-    console.log(formData);
-
   }
 }
 
