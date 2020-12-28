@@ -25,6 +25,7 @@ import CatalogItem from "./CatalogItem";
 import Form from "@rjsf/material-ui";
 import {catalogGroupSchema, catalogGroupUiSchema, componentDefinitionSchema, slugify} from "./catalog-utils";
 import {JSONSchema7} from "json-schema";
+import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 
 type CatalogGroupComponents = {
   group: string
@@ -123,6 +124,15 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
               >
                 <AddOutlinedIcon/><Typography>Add Component</Typography>
               </IconButton>
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="Delete"
+                onClick={() => this.deleteCatalogGroup(catalogGroupComponent.group)}
+              >
+                <DeleteOutlinedIcon/><Typography>Delete Catalog Group</Typography>
+              </IconButton>
+
             </Toolbar>
             {catalogGroupComponent.components.map(componentDefinition => {
               return <CatalogItem
@@ -210,8 +220,13 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
     });
   }
 
-  private deleteCatalogGroup (catalogGroup: string, callback?: () => any) {
-
+  private deleteCatalogGroup (catalogGroup: string) {
+    const api: ChannelCatalogOperationsApi = channelCatalogOperationsApi;
+    this.state.currentChannelId && catalogGroup &&
+    api.deleteChannelCatalogGroup(this.state.currentChannelId,
+      catalogGroup).then(() => {
+      this.updateCatalogs();
+    });
   }
 
 }
