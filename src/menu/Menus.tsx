@@ -93,17 +93,15 @@ class Menus extends React.Component<MenusProps, MenusState> {
     return <>
       <AppBar position="sticky" variant={'outlined'} color={'default'}>
         <Toolbar>
+          <ChannelSwitcher onChannelChanged={channelId => this.onChannelChanged(channelId)}/>
           <Button
             variant="outlined"
             color="primary"
             style={{marginRight: '10px'}}
             startIcon={<AddOutlinedIcon/>}
-            onClick={() => this.setState({dialogOpen: true})}
-          >
+            onClick={() => this.setState({dialogOpen: true})}>
             Add Menu
           </Button>
-           <Divider/>
-          <ChannelSwitcher onChannelChanged={channelId => this.onChannelChanged(channelId)}/>
         </Toolbar>
       </AppBar>
       <Dialog open={this.state.dialogOpen} aria-labelledby="form-dialog-title">

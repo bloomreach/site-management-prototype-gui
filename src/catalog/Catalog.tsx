@@ -8,8 +8,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
-  IconButton,
   Toolbar,
   Typography
 } from "@material-ui/core";
@@ -94,15 +92,15 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
     return <>
       <AppBar position="sticky" variant={'outlined'} color={'default'}>
         <Toolbar>
-           <IconButton
-             edge="start"
-             color="inherit"
-             aria-label="Add"
-             onClick={() => this.setState({addGroupDialogOpen: true})}>
-            <AddOutlinedIcon/><Typography>Add Group</Typography>
-          </IconButton>
-           <Divider/>
           <ChannelSwitcher onChannelChanged={channelId => this.onChannelChanged(channelId)}/>
+           <Button
+             variant="outlined"
+             color="primary"
+             style={{marginRight: '10px'}}
+             startIcon={<AddOutlinedIcon/>}
+             onClick={() => this.setState({addGroupDialogOpen: true})}>
+            Add Group
+          </Button>
         </Toolbar>
       </AppBar>
       {this.state.catalogGroupComponents.map((catalogGroupComponent: CatalogGroupComponents, key) => {
@@ -112,23 +110,25 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
               <Typography>Group: {catalogGroupComponent.group}</Typography>
             </AccordionSummary>
             <Toolbar>
-              <IconButton
-                edge="start"
-                color="inherit"
-                aria-label="Add"
+              <Button
+                variant="outlined"
+                color="primary"
+                style={{marginRight: '10px'}}
+                startIcon={<AddOutlinedIcon/>}
                 onClick={() => this.setState({
                   addComponentDialogOpen: true,
                   selectedGroupName: catalogGroupComponent.group
                 })}>
-                <AddOutlinedIcon/><Typography>Add Component</Typography>
-              </IconButton>
-              <IconButton
-                edge="start"
-                color="inherit"
-                aria-label="Delete"
+                Add Component
+              </Button>
+              <Button
+                variant="outlined"
+                color="secondary"
+                style={{marginRight: '10px'}}
+                startIcon={<DeleteOutlinedIcon/>}
                 onClick={() => this.deleteCatalogGroup(catalogGroupComponent.group)}>
-                <DeleteOutlinedIcon/><Typography>Delete Catalog Group</Typography>
-              </IconButton>
+                Delete Group
+              </Button>
             </Toolbar>
             {catalogGroupComponent.components.map(componentDefinition => {
               return (

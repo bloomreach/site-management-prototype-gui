@@ -5,6 +5,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   AppBar,
+  Button,
   Divider,
   IconButton,
   Toolbar,
@@ -80,22 +81,22 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
     return <>
       <AppBar position="sticky" variant={'outlined'} color={'default'}>
         <Toolbar>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="Add Channel"
-            // disabled={true}
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{marginRight: '10px'}}
+            startIcon={<AddOutlinedIcon/>}
             onClick={() => window.open(`${baseUrl}/cms/experience-manager`, 'new')}>
-            <AddOutlinedIcon/>
-          </IconButton>
-           <IconButton
-             edge="start"
-             color="inherit"
-             aria-label="Branch Channel"
-             // disabled={true}
-             onClick={() => window.open(`${baseUrl}/cms/projects`, 'new')}>
-             <Icon className="fas fa-code-branch"/>
-          </IconButton>
+            Add Channel
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{marginRight: '10px'}}
+            startIcon={<Icon className="fas fa-code-branch"/>}
+            onClick={() => window.open(`${baseUrl}/cms/projects`, 'new')}>
+            Branch Channel
+          </Button>
         </Toolbar>
       </AppBar>
       {this.state.channels.map((channel, index) => {

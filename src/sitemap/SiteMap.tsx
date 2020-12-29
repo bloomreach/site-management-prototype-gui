@@ -134,24 +134,25 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
     return <>
       <AppBar position="sticky" variant={'outlined'} color={'default'}>
         <Toolbar>
-           <IconButton
-             edge="start"
-             color="inherit"
-             aria-label="Add"
-             onClick={() => this.setState({dialogOpen: true})}
-           >
-            <AddOutlinedIcon/><Typography>Add Item</Typography>
-          </IconButton>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="Save"
-            onClick={() => this.saveSiteMap()}
-          >
-          <SaveOutlinedIcon/><Typography>Save SiteMap</Typography>
-        </IconButton>
-           <Divider/>
           <ChannelSwitcher onChannelChanged={channelId => this.onChannelChanged(channelId)}/>
+          <Button
+              variant="outlined"
+              color="primary"
+              style={{marginRight: '10px'}}
+              startIcon={<AddOutlinedIcon/>}
+              onClick={() => this.setState({dialogOpen: true})}
+            >
+            Add Item
+          </Button>
+          <Button
+              variant="outlined"
+              color="primary"
+              style={{marginRight: '10px'}}
+              startIcon={<SaveOutlinedIcon/>}
+              onClick={() => this.saveSiteMap()}
+            >
+            Save SiteMap
+          </Button>
         </Toolbar>
       </AppBar>
       <Dialog open={this.state.dialogOpen} aria-labelledby="form-dialog-title">

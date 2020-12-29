@@ -1,15 +1,5 @@
 import React from 'react';
-import {
-  AppBar,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  IconButton,
-  Toolbar, Typography
-} from "@material-ui/core";
+import {AppBar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Toolbar} from "@material-ui/core";
 import 'react-sortable-tree/style.css';
 import {Channel, Page} from "../api/models";
 import AddOutlinedIcon from "@material-ui/icons/Add";
@@ -69,15 +59,15 @@ class Pages extends React.Component<PagesProps, PagesState> {
     return <>
       <AppBar position="sticky" variant={'outlined'} color={'default'}>
         <Toolbar>
-           <IconButton
-             edge="start"
-             color="inherit"
-             aria-label="Add Page"
-             onClick={() => this.openAddDialog()}>
-            <AddOutlinedIcon/><Typography >Add Page</Typography>
-          </IconButton>
-           <Divider/>
           <ChannelSwitcher onChannelChanged={channelId => this.onChannelChanged(channelId)}/>
+           <Button
+             variant="outlined"
+             color="primary"
+             style={{marginRight: '10px'}}
+             startIcon={<AddOutlinedIcon/>}
+             onClick={() => this.openAddDialog()}>
+            Add Page
+          </Button>
         </Toolbar>
       </AppBar>
       <Dialog open={this.state.dialogOpen} aria-labelledby="form-dialog-title">

@@ -43,7 +43,7 @@ class ChannelSwitcher extends React.Component<ChannelSwitcherProps, ChannelSwitc
 
   render () {
     return (
-      <FormControl>
+      <FormControl style={{marginRight: '10px'}}>
         {this.state.currentChannelId &&
         <Select value={this.state.currentChannelId}
                 onChange={(event) => this.setState({currentChannelId: event.target.value as string},
