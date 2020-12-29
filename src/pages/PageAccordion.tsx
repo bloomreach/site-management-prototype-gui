@@ -85,14 +85,14 @@ class PageAccordion extends React.Component<PageAccordionProps, PageAccordionSta
           edge="start"
           style={{left: 0}}
           color="inherit"
-          aria-label="Delete"
+          aria-label="Delete Page"
           onClick={() => this.deletePage()}>
           <DeleteOutlinedIcon/>
         </IconButton>
         <IconButton
           edge="start"
           color="inherit"
-          aria-label="Save"
+          aria-label="Save Page"
           onClick={() => this.savePage()}
         >
           <SaveOutlinedIcon/>
@@ -107,14 +107,14 @@ class PageAccordion extends React.Component<PageAccordionProps, PageAccordionSta
           edge="start"
           style={{left: 0}}
           color="inherit"
-          aria-label="Delete"
+          aria-label="Delete Page"
           onClick={() => this.deletePage()}>
           <DeleteOutlinedIcon/>
         </IconButton>
         <IconButton
           edge="start"
           color="inherit"
-          aria-label="Save"
+          aria-label="Save Page"
           onClick={() => this.savePage()}
         >
           <SaveOutlinedIcon/>

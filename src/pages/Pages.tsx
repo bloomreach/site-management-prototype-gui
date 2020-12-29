@@ -7,22 +7,19 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  FormControl,
   IconButton,
-  MenuItem,
-  Select,
   Toolbar
 } from "@material-ui/core";
 import 'react-sortable-tree/style.css';
 import {Channel, Page} from "../api/models";
 import AddOutlinedIcon from "@material-ui/icons/Add";
-import {convertPagesToTreeModelArray, TreeModel} from "./page-util";
-import {ChannelOperationsApi} from "../api/apis/channel-operations-api";
+import {convertPagesToTreeModelArray, pageSchema, TreeModel} from "./page-util";
 import {ChannelPageOperationsApi} from "../api";
 import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
 import PageAccordion from "./PageAccordion";
-import {channelOperationsApi, channelPageOperationsApi} from "../ApiContext";
+import {channelPageOperationsApi} from "../ApiContext";
+import ChannelSwitcher from "../common/ChannelSwitcher";
 
 type PagesState = {
   channels: Array<Channel>
@@ -30,45 +27,7 @@ type PagesState = {
   currentChannelId: string,
   dialogOpen: boolean
 }
-type PagesProps = {
-  // endpoint: string
-}
-
-const pageSchema = {
-  type: "object",
-  properties: {
-    type: {
-      type: "string",
-      "enum":
-        [
-          "abstract",
-          "page",
-          "xpage",
-        ],
-      "enumNames":
-        [
-          "Abstract Page",
-          "Page",
-          "X Page",
-        ]
-    },
-    extends: {
-      type: "string"
-    },
-    name: {
-      type: "string",
-    },
-    description: {
-      type: "string"
-    },
-    parameters: {
-      "type": "object",
-      "additionalProperties": {
-        "type": "string"
-      }
-    }
-  }
-};
+type PagesProps = {}
 
 class Pages extends React.Component<PagesProps, PagesState> {
 
@@ -86,15 +45,6 @@ class Pages extends React.Component<PagesProps, PagesState> {
   }
 
   componentDidMount (): void {
-    this.updatePages();
-  }
-
-  updatePages () {
-    const api: ChannelOperationsApi = channelOperationsApi;
-    api.getChannels().then(value => {
-      this.setState({channels: value.data},
-        () => this.updatePagesByChannel(this.state.channels[0].id))
-    });
   }
 
   updatePagesByChannel (channelId: string) {
@@ -105,6 +55,10 @@ class Pages extends React.Component<PagesProps, PagesState> {
         currentPageTrees: convertPagesToTreeModelArray(value.data)
       })
     });
+  }
+
+  private onChannelChanged (channelId: string) {
+    this.updatePagesByChannel(channelId);
   }
 
   render () {
@@ -118,19 +72,12 @@ class Pages extends React.Component<PagesProps, PagesState> {
            <IconButton
              edge="start"
              color="inherit"
-             aria-label="Add"
-             onClick={() => this.openAddDialog()}
-           >
+             aria-label="Add Page"
+             onClick={() => this.openAddDialog()}>
             <AddOutlinedIcon/>
           </IconButton>
            <Divider/>
-          <FormControl>
-            <Select value={this.state.currentChannelId}>
-             {this.state.channels.map(channel => {
-               return <MenuItem key={channel.id} value={channel.id} onClick={() => this.updatePagesByChannel(channel.id)}>{channel.id}</MenuItem>
-             })}
-            </Select>
-          </FormControl>
+          <ChannelSwitcher onChannelChanged={channelId => this.onChannelChanged(channelId)}/>
         </Toolbar>
       </AppBar>
       <Dialog open={this.state.dialogOpen} aria-labelledby="form-dialog-title">
@@ -158,7 +105,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
   addPage (addPage: Page) {
     const api: ChannelPageOperationsApi = channelPageOperationsApi;
     api.putChannelPage(this.state.currentChannelId, addPage.name, addPage).then(value => {
-      this.updatePages();
+      this.updatePagesByChannel(this.state.currentChannelId);
       this.closeAddDialog();
     });
   }
@@ -170,7 +117,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
   deletePage (page: Page) {
     const api: ChannelPageOperationsApi = channelPageOperationsApi;
     api.deleteChannelPage(this.state.currentChannelId, page.name).then(value => {
-      this.updatePages();
+      this.updatePagesByChannel(this.state.currentChannelId);
     });
   }
 
@@ -179,7 +126,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
     api.getChannelPage(this.state.currentChannelId, page.name).then(value => {
       api.putChannelPage(this.state.currentChannelId, page.name, page, value.headers['x-resource-version'])
         .then(() => {
-          this.updatePages();
+          this.updatePagesByChannel(this.state.currentChannelId);
         })
     })
   }

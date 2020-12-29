@@ -15,7 +15,14 @@ import MoreHorizOutlinedIcon from "@material-ui/icons/MoreHorizOutlined";
 import PopupState, {bindMenu, bindTrigger} from "material-ui-popup-state/index";
 import 'react-sortable-tree/style.css';
 import SortableTree, {addNodeUnderParent, ExtendedNodeData, removeNode, TreeItem} from 'react-sortable-tree';
-import {componentToNode, ComponentTreeItem, nodeToComponent, TreeModel} from "./page-util";
+import {
+  componentSchema,
+  componentToNode,
+  ComponentTreeItem,
+  getSchemaForComponentType,
+  nodeToComponent,
+  TreeModel
+} from "./page-util";
 import NodeRendererDefault from "./NodeRendererDefault";
 import {Delete} from "@material-ui/icons";
 import {AbstractComponent, Page} from "../api/models";
@@ -34,23 +41,7 @@ type PageEditorProps = {
   onPageModelChange: (page: Page) => void
 }
 
-const componentSchema = {
-  type: "object",
-  properties: {
-    name: {
-      type: "string",
-    },
-    description: {
-      type: "string"
-    },
-    parameters: {
-      "type": "object",
-      "additionalProperties": {
-        "type": "string"
-      }
-    }
-  }
-};
+
 
 class PageEditor extends React.Component<PageEditorProps, PageEditorState> {
 
@@ -176,7 +167,7 @@ class PageEditor extends React.Component<PageEditorProps, PageEditorState> {
           <>
           <AppBar position="static" color={"default"}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => this.setState({drawerOpen: false})}>
+              <IconButton edge="start" color="inherit" aria-label="close drawer" onClick={() => this.setState({drawerOpen: false})}>
                <ChevronRightIcon/>
               </IconButton>
               <Typography variant="h6">
@@ -185,7 +176,7 @@ class PageEditor extends React.Component<PageEditorProps, PageEditorState> {
             </Toolbar>
           </AppBar>
           <Container>
-            <Form onChange={({formData}) => this.onComponentChanged(formData, this.state.selectedNode)} schema={componentSchema as JSONSchema7} formData={this.state.selectedNode.component}>
+            <Form onChange={({formData}) => this.onComponentChanged(formData, this.state.selectedNode)} schema={getSchemaForComponentType(this.state.selectedNode?.component.type) as JSONSchema7} formData={this.state.selectedNode.component}>
               <></>
             </Form>
           </Container></>
