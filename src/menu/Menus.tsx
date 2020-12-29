@@ -8,15 +8,12 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  FormControl,
   IconButton,
   List,
   ListItem,
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
-  MenuItem,
-  Select,
   Toolbar
 } from "@material-ui/core";
 import 'react-sortable-tree/style.css';
@@ -24,13 +21,13 @@ import AddOutlinedIcon from "@material-ui/icons/Add";
 import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
 import {ChannelSiteMenuOperationsApi} from "../api/apis/channel-site-menu-operations-api";
-import {channelOperationsApi, channelSiteMenuOperationsApi} from "../ApiContext";
+import {channelSiteMenuOperationsApi} from "../ApiContext";
 import {isNotEmptyOrNull} from "../common/common-utils";
 import MenuIcon from '@material-ui/icons/Menu';
-import {ChannelOperationsApi} from "../api/apis/channel-operations-api";
 import {Channel} from "../api/models";
 import {Nullable} from "../api/models/nullable";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
+import ChannelSwitcher from "../common/ChannelSwitcher";
 
 type MenusState = {
   channels: Array<Channel>
@@ -66,20 +63,20 @@ class Menus extends React.Component<MenusProps, MenusState> {
   }
 
   componentDidMount (): void {
-    this.updateMenus();
+    // this.updateMenus();
   }
 
-  updateMenus () {
-    if (this.state.currentChannelId === null) {
-      const api: ChannelOperationsApi = channelOperationsApi;
-      api.getChannels().then(value => {
-        this.setState({channels: value.data},
-          () => this.updateMenuByChannel(this.state.channels[0].id))
-      });
-    } else {
-      this.state.currentChannelId && this.updateMenuByChannel(this.state.currentChannelId)
-    }
-  }
+  // updateMenus () {
+  //   if (this.state.currentChannelId === null) {
+  //     const api: ChannelOperationsApi = channelOperationsApi;
+  //     api.getChannels().then(value => {
+  //       this.setState({channels: value.data},
+  //         () => this.updateMenuByChannel(this.state.channels[0].id))
+  //     });
+  //   } else {
+  //     this.state.currentChannelId && this.updateMenuByChannel(this.state.currentChannelId)
+  //   }
+  // }
 
   updateMenuByChannel (channelId: string) {
     const api: ChannelSiteMenuOperationsApi = channelSiteMenuOperationsApi;
@@ -96,23 +93,17 @@ class Menus extends React.Component<MenusProps, MenusState> {
     return <>
       <AppBar position="sticky" variant={'outlined'} color={'default'}>
         <Toolbar>
-           <IconButton
-             edge="start"
-             color="inherit"
-             aria-label="Add"
-             onClick={() => this.setState({dialogOpen: true})}
-           >
-            <AddOutlinedIcon/>
-          </IconButton>
-
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{marginRight: '10px'}}
+            startIcon={<AddOutlinedIcon/>}
+            onClick={() => this.setState({dialogOpen: true})}
+          >
+            Add Menu
+          </Button>
            <Divider/>
-          <FormControl>
-            <Select value={this.state.currentChannelId}>
-             {this.state.channels.map(channel => {
-               return <MenuItem disabled={channel.branch === null} key={channel.id} value={channel.id} onClick={() => this.updateMenuByChannel(channel.id)}>{channel.id} {channel.branch !== null && 'branch of ' + channel.branchOf}</MenuItem>
-             })}
-            </Select>
-          </FormControl>
+          <ChannelSwitcher onChannelChanged={channelId => this.onChannelChanged(channelId)}/>
         </Toolbar>
       </AppBar>
       <Dialog open={this.state.dialogOpen} aria-labelledby="form-dialog-title">
@@ -123,7 +114,7 @@ class Menus extends React.Component<MenusProps, MenusState> {
           </Form>
         </DialogContent>
         <DialogActions>
-          <Button color="primary" onClick={() => this.addMenu(addMenu, () => this.setState({dialogOpen: false}, () => this.updateMenus()))}>Add</Button>
+          <Button color="primary" onClick={() => this.addMenu(addMenu, () => this.setState({dialogOpen: false}, () => this.state.currentChannelId && this.updateMenuByChannel(this.state.currentChannelId)))}>Add</Button>
           <Button color="primary" onClick={() => this.setState({dialogOpen: false})}>Cancel</Button>
         </DialogActions>
       </Dialog>
@@ -155,7 +146,7 @@ class Menus extends React.Component<MenusProps, MenusState> {
     // @ts-ignore
     api.putChannelSitemenu(this.state.currentChannelId, menu).then(() => {
       callback && callback();
-      this.updateMenus();
+      this.state.currentChannelId && this.updateMenuByChannel(this.state.currentChannelId);
     });
   }
 
@@ -165,7 +156,7 @@ class Menus extends React.Component<MenusProps, MenusState> {
     api.getChannelSitemenu(this.state.currentChannelId, menu).then(value => {
       // @ts-ignore
       api.deleteChannelSitemenu(this.state.currentChannelId, menu, value.headers['x-resource-version']).then(() => {
-        this.updateMenus();
+        this.state.currentChannelId && this.updateMenuByChannel(this.state.currentChannelId);
       });
     }).catch(reason => {
       // @ts-ignore
@@ -173,6 +164,9 @@ class Menus extends React.Component<MenusProps, MenusState> {
     });
   }
 
+  private onChannelChanged (channelId: string) {
+    this.updateMenuByChannel(channelId);
+  }
 }
 
 export default Menus;
