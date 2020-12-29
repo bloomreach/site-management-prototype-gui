@@ -65,6 +65,7 @@ export function getSchemaForComponentType (type: Nullable<string>) {
   switch (type) {
     case ComponentType.PAGE:
       schema = pageSchema as JSONSchema7;
+      Object.assign(schema.properties?.name, {readOnly: true});
       break;
     case ComponentType.MANAGED:
       Object.assign(schema.properties, {

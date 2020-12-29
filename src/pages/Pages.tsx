@@ -8,7 +8,7 @@ import {
   DialogTitle,
   Divider,
   IconButton,
-  Toolbar
+  Toolbar, Typography
 } from "@material-ui/core";
 import 'react-sortable-tree/style.css';
 import {Channel, Page} from "../api/models";
@@ -74,7 +74,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
              color="inherit"
              aria-label="Add Page"
              onClick={() => this.openAddDialog()}>
-            <AddOutlinedIcon/>
+            <AddOutlinedIcon/><Typography >Add Page</Typography>
           </IconButton>
            <Divider/>
           <ChannelSwitcher onChannelChanged={channelId => this.onChannelChanged(channelId)}/>
