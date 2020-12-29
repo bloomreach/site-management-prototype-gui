@@ -56,6 +56,8 @@ export function componentToNode (component: AbstractComponent | StaticComponent 
 
 enum ComponentType {
   PAGE = 'page',
+  XPAGE = 'xpage',
+  ABSTRACT = 'abstract',
   MANAGED = 'managed',
   STATIC = 'static',
 }
@@ -64,6 +66,8 @@ export function getSchemaForComponentType (type: Nullable<string>) {
   let schema = componentSchema;
   switch (type) {
     case ComponentType.PAGE:
+    case ComponentType.XPAGE:
+    case ComponentType.ABSTRACT:
       schema = pageSchema as JSONSchema7;
       Object.assign(schema.properties?.name, {readOnly: true});
       break;
