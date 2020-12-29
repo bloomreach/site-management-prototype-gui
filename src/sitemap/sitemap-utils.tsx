@@ -55,3 +55,33 @@ export function convertSiteMapToTreeData (siteMapItems: Array<SitemapItem>): Tre
   }
   return treeData;
 }
+
+export const siteMapItemSchema = {
+  type: "object",
+  properties: {
+    name: {
+      type: "string",
+    },
+    pageTitle: {
+      type: ["string", 'null']
+    },
+    page: {
+      type: ["string", 'null']
+    },
+    relativeContentPath: {
+      type: ["string", 'null']
+    },
+    parameters: {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  }
+};
+
+export const siteMapItemUiSchema = {
+  name: {
+    "ui:autofocus": true
+  }
+};

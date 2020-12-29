@@ -9,21 +9,18 @@ import {
   DialogTitle,
   Divider,
   Drawer,
-  FormControl,
   Icon,
   IconButton,
   ListItemIcon,
   Menu,
   MenuItem,
-  Select,
   Toolbar,
   Typography
 } from "@material-ui/core";
 import 'react-sortable-tree/style.css';
 import {Channel, SitemapItem} from "../api/models";
 import AddOutlinedIcon from "@material-ui/icons/Add";
-import {ChannelOperationsApi} from "../api/apis/channel-operations-api";
-import {channelOperationsApi, channelSiteMapOperationsApi} from "../ApiContext";
+import {channelSiteMapOperationsApi} from "../ApiContext";
 import {Nullable} from "../api/models/nullable";
 import {ChannelSitemapOperationsApi} from "../api/apis/channel-sitemap-operations-api";
 import SortableTree, {addNodeUnderParent, ExtendedNodeData, removeNode, TreeItem} from "react-sortable-tree";
@@ -32,7 +29,9 @@ import {
   hasWildCardOrReserved,
   nodeToSiteMapItems,
   replaceWildCards,
-  siteMapItemToTreeItem
+  siteMapItemSchema,
+  siteMapItemToTreeItem,
+  siteMapItemUiSchema
 } from "./sitemap-utils";
 import {getNodeKey, isNotEmptyOrNull} from "../common/common-utils";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -43,50 +42,17 @@ import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 import PopupState, {bindMenu, bindTrigger} from "material-ui-popup-state";
 import MoreHorizOutlinedIcon from "@material-ui/icons/MoreHorizOutlined";
 import {Delete} from "@material-ui/icons";
+import ChannelSwitcher from "../common/ChannelSwitcher";
 
 type SiteMapState = {
   channels: Array<Channel>
   currentChannelId: Nullable<string>,
-  // currentSiteMap: Array<SitemapItem>
   dialogOpen: boolean
   treeData: TreeItem[]
   drawerOpen: boolean
-  // selectedSiteMapItem: Nullable<SitemapItem>
   selectedNode?: TreeItem
 }
-type SiteMapProps = {
-  // endpoint: string
-}
-
-const siteMapItemSchema = {
-  type: "object",
-  properties: {
-    name: {
-      type: "string",
-    },
-    pageTitle: {
-      type: ["string", 'null']
-    },
-    page: {
-      type: ["string", 'null']
-    },
-    relativeContentPath: {
-      type: ["string", 'null']
-    },
-    parameters: {
-      "type": "object",
-      "additionalProperties": {
-        "type": "string"
-      }
-    }
-  }
-};
-
-const uiSchema = {
-  name: {
-    "ui:autofocus": true
-  }
-};
+type SiteMapProps = {}
 
 class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
 
@@ -104,17 +70,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
   }
 
   componentDidMount (): void {
-    this.updateSiteMap();
-  }
 
-  updateSiteMap () {
-    if (this.state.currentChannelId === null) {
-      const api: ChannelOperationsApi = channelOperationsApi;
-      api.getChannels().then(value => {
-        this.setState({channels: value.data},
-          () => this.updateSiteMapByChannel(this.state.channels[0].id))
-      });
-    }
   }
 
   updateSiteMapByChannel (channelId: string) {
@@ -184,7 +140,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
              aria-label="Add"
              onClick={() => this.setState({dialogOpen: true})}
            >
-            <AddOutlinedIcon/>
+            <AddOutlinedIcon/><Typography>Add Item</Typography>
           </IconButton>
           <IconButton
             edge="start"
@@ -192,27 +148,21 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
             aria-label="Save"
             onClick={() => this.saveSiteMap()}
           >
-          <SaveOutlinedIcon/>
+          <SaveOutlinedIcon/><Typography>Save SiteMap</Typography>
         </IconButton>
            <Divider/>
-          <FormControl>
-            <Select value={this.state.currentChannelId}>
-             {this.state.channels.map(channel => {
-               return <MenuItem disabled={channel.branch === null} key={channel.id} value={channel.id} onClick={() => this.updateSiteMapByChannel(channel.id)}>{channel.id} {channel.branch !== null && 'branch of ' + channel.branchOf}</MenuItem>
-             })}
-            </Select>
-          </FormControl>
+          <ChannelSwitcher onChannelChanged={channelId => this.onChannelChanged(channelId)}/>
         </Toolbar>
       </AppBar>
       <Dialog open={this.state.dialogOpen} aria-labelledby="form-dialog-title">
         <DialogTitle>Add Site Map Item</DialogTitle>
         <DialogContent>
-          <Form onChange={({formData}) => addSiteMapItem = formData} formData={addSiteMapItem} uiSchema={uiSchema} schema={siteMapItemSchema as JSONSchema7}>
+          <Form onChange={({formData}) => addSiteMapItem = formData} formData={addSiteMapItem} uiSchema={siteMapItemUiSchema} schema={siteMapItemSchema as JSONSchema7}>
            <></>
           </Form>
         </DialogContent>
         <DialogActions>
-          <Button color="primary" onClick={() => this.addSiteMapItem(null, addSiteMapItem.name, () => this.setState({dialogOpen: false}, () => this.updateSiteMap()))}>Add</Button>
+          <Button color="primary" onClick={() => this.addSiteMapItem(null, addSiteMapItem.name, () => this.setState({dialogOpen: false}, () => this.state.currentChannelId && this.updateSiteMapByChannel(this.state.currentChannelId)))}>Add</Button>
           <Button color="primary" onClick={() => this.setState({dialogOpen: false})}>Cancel</Button>
         </DialogActions>
       </Dialog>
@@ -254,7 +204,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
             </Toolbar>
           </AppBar>
           <Container>
-            <Form onChange={({formData}) => this.onSiteMapItemChanged(formData, this.state.selectedNode)} schema={siteMapItemSchema as JSONSchema7} uiSchema={uiSchema} formData={this.state.selectedNode.siteMapItem}>
+            <Form onChange={({formData}) => this.onSiteMapItemChanged(formData, this.state.selectedNode)} schema={siteMapItemSchema as JSONSchema7} uiSchema={siteMapItemUiSchema} formData={this.state.selectedNode.siteMapItem}>
               <></>
             </Form>
           </Container></>
@@ -280,7 +230,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
       });
     });
 
-    this.updateSiteMap();
+    this.state.currentChannelId && this.updateSiteMapByChannel(this.state.currentChannelId);
   }
 
   onSiteMapChanged () {
@@ -350,6 +300,10 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
         }
       }
     });
+  }
+
+  private onChannelChanged (channelId: string) {
+    this.updateSiteMapByChannel(channelId);
   }
 }
 
