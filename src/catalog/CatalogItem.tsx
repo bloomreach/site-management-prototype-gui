@@ -312,7 +312,7 @@ class CatalogItem extends React.Component<CatalogItemProps, CatalogItemState> {
         {this.getComponentDefinitionsActions()}
         <AccordionDetails>
           <Grid item sm={4}>
-            <Form
+            <Form idPrefix={this.state.componentDefinition.id}
               onChange={(form) => {
                 this.setState({componentDefinition: form.formData})
               }}
