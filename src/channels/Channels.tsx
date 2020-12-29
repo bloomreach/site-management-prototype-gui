@@ -107,6 +107,23 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
               <Typography className={classes.heading}>id: {channel.id}</Typography>
               <Typography className={classes.secondaryHeading}>name: {channel.name}</Typography>
             </AccordionSummary>
+            <AccordionActions>
+              <IconButton
+                // disabled={true}
+                edge="start"
+                color="inherit"
+                aria-label="Delete Channel"
+                onClick={() => window.open(`${baseUrl}/cms/projects/${channel.id?.split(':')[1]}/channels`, 'new')}>
+                <DeleteOutlinedIcon/>
+              </IconButton>
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="Save Channel"
+                onClick={() => this.saveChannel(channel)}>
+                <SaveOutlinedIcon/>
+              </IconButton>
+            </AccordionActions>
             <AccordionDetails>
               <Form onChange={({formData}) => channel = formData} uiSchema={channelUiSchema} schema={channelSchema as JSONSchema7}
                     formData={channel}><></>
@@ -115,12 +132,11 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
             <Divider/>
             <AccordionActions>
               <IconButton
-                disabled={true}
+                // disabled={true}
                 edge="start"
                 color="inherit"
                 aria-label="Delete Channel"
-                // onClick={event => this.deleteComponent(item)}
-              >
+                onClick={() => window.open(`${baseUrl}/cms/projects/${channel.id?.split(':')[1]}/channels`, 'new')}>
                 <DeleteOutlinedIcon/>
               </IconButton>
               <IconButton
