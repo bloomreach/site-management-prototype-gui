@@ -23,7 +23,6 @@ class ChannelSwitcher extends React.Component<ChannelSwitcherProps, ChannelSwitc
       channels: [],
       currentChannelId: null,
     };
-
   }
 
   componentDidMount (): void {
@@ -34,26 +33,27 @@ class ChannelSwitcher extends React.Component<ChannelSwitcherProps, ChannelSwitc
     const api: ChannelOperationsApi = channelOperationsApi;
     api.getChannels().then(value => {
       const channels: Array<Channel> = value.data;
+      const currentChannel = channels.find(channel => channel.branch !== null);
       this.setState({
         channels: channels,
-        currentChannelId: channels[0].id
-      }, () => this.props.onChannelChanged(channels[0].id))
+        currentChannelId: currentChannel?.id
+      }, () => currentChannel && this.props.onChannelChanged(currentChannel?.id))
     });
   }
 
   render () {
-    // @ts-ignore
     return (
       <FormControl>
         {this.state.currentChannelId &&
-        // @ts-ignore
-        <Select value={this.state.currentChannelId} onChange={(event) => this.setState({currentChannelId: event.target.value}, () => this.props.onChannelChanged(event.target.value))}>
+        <Select value={this.state.currentChannelId}
+                onChange={(event) => this.setState({currentChannelId: event.target.value as string},
+                  () => this.props.onChannelChanged(event.target.value as string))}>
           {this.state.channels.map(channel => {
             return <MenuItem
               disabled={channel.branch === null}
               key={channel.id}
               value={channel.id}
-              onSelect={event => console.log('on channel select')}
+              // onClick={() => console.log('on channel select', channel)}
             >
               {channel.id}
             </MenuItem>
@@ -61,9 +61,7 @@ class ChannelSwitcher extends React.Component<ChannelSwitcherProps, ChannelSwitc
         </Select>
         }
       </FormControl>)
-
   }
-
 }
 
 export default ChannelSwitcher;

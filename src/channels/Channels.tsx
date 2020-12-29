@@ -102,8 +102,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
         return (
           <Accordion key={index}>
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon/>}
-            >
+              expandIcon={<ExpandMoreIcon/>}>
               <Typography className={classes.heading}>id: {channel.id}</Typography>
               <Typography className={classes.secondaryHeading}>name: {channel.name}</Typography>
             </AccordionSummary>
@@ -118,7 +117,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
                 disabled={true}
                 edge="start"
                 color="inherit"
-                aria-label="Delete"
+                aria-label="Delete Channel"
                 // onClick={event => this.deleteComponent(item)}
               >
                 <DeleteOutlinedIcon/>
@@ -126,11 +125,8 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
               <IconButton
                 edge="start"
                 color="inherit"
-                aria-label="Save"
-                // disabled={!item.changed}
-                // disabled={true}
-                onClick={() => this.saveChannel(channel)}
-              >
+                aria-label="Save Channel"
+                onClick={() => this.saveChannel(channel)}>
                 <SaveOutlinedIcon/>
               </IconButton>
             </AccordionActions>

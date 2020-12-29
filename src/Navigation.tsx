@@ -48,7 +48,6 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
             <Tab label="Menus"/>
           </Tabs>
         </AppBar>
-
         <TabPanel value={tab} index={0}>
           <Channels/>
         </TabPanel>
