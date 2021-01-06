@@ -21,6 +21,10 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
 
   constructor (props: NavigationProps) {
     super(props);
+
+    console.log('env', process.env);
+    console.log('dir', __dirname);
+
     this.state = {
       tab: 0,
       endpoint: endpoint

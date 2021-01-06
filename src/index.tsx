@@ -2,19 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import {BrowserRouter, HashRouter, Route, Switch} from "react-router-dom";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Navigation from "./Navigation";
 import Fallback from "./other/Fallback";
+require('dotenv').config();
 
 ReactDOM.render(
   <React.StrictMode>
     <React.Fragment>
-        <BrowserRouter>
-          <Switch>
-            <Route exact path="/" render={() => <Navigation/>}/>
-            <Route path="/**" render={() => <Fallback/>}/>
-          </Switch>
-        </BrowserRouter>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/" render={() => <Navigation/>}/>
+          <Route path="/channel/:id" render={() => <Navigation/>}/>
+          <Route path="/channel/:id/:tab" render={() => <Navigation/>}/>
+          <Route path="/**" render={() => <Fallback/>}/>
+        </Switch>
+      </BrowserRouter>
     </React.Fragment>
   </React.StrictMode>,
   document.getElementById('root')

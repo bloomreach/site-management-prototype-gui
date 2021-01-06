@@ -1,0 +1,8 @@
+node_modules
+build
+.dockerignore
+.idea
+.env
+Dockerfile
+Dockerfile.prod
+brxm-config-api-frontend.iml

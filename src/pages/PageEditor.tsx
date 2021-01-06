@@ -15,14 +15,7 @@ import MoreHorizOutlinedIcon from "@material-ui/icons/MoreHorizOutlined";
 import PopupState, {bindMenu, bindTrigger} from "material-ui-popup-state/index";
 import 'react-sortable-tree/style.css';
 import SortableTree, {addNodeUnderParent, ExtendedNodeData, removeNode, TreeItem} from 'react-sortable-tree';
-import {
-  componentSchema,
-  componentToNode,
-  ComponentTreeItem,
-  getSchemaForComponentType,
-  nodeToComponent,
-  TreeModel
-} from "./page-util";
+import {componentToNode, ComponentTreeItem, getSchemaForComponentType, nodeToComponent, TreeModel} from "./page-util";
 import NodeRendererDefault from "./NodeRendererDefault";
 import {Delete} from "@material-ui/icons";
 import {AbstractComponent, Page} from "../api/models";
@@ -40,8 +33,6 @@ type PageEditorProps = {
   treeModel: TreeModel
   onPageModelChange: (page: Page) => void
 }
-
-
 
 class PageEditor extends React.Component<PageEditorProps, PageEditorState> {
 

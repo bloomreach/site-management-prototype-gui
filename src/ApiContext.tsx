@@ -7,12 +7,12 @@ import {ChannelCatalogOperationsApi} from "./api/apis/channel-catalog-operations
 const baseOptions = {
   auth:
     {
-      username: 'admin',
-      password: 'admin'
+      username: process.env.REACT_APP_USERNAME!,
+      password: process.env.REACT_APP_PASSWORD!
     }, withCredentials: true
 };
 
-export const baseUrl: string = 'http://localhost:8080';
+export const baseUrl: string = process.env.REACT_APP_BASE_URL!;
 
 export const endpoint: string = `${baseUrl}/management/site/v1`;
 

@@ -7,7 +7,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
   IconButton,
   List,
   ListItem,
@@ -63,20 +62,7 @@ class Menus extends React.Component<MenusProps, MenusState> {
   }
 
   componentDidMount (): void {
-    // this.updateMenus();
   }
-
-  // updateMenus () {
-  //   if (this.state.currentChannelId === null) {
-  //     const api: ChannelOperationsApi = channelOperationsApi;
-  //     api.getChannels().then(value => {
-  //       this.setState({channels: value.data},
-  //         () => this.updateMenuByChannel(this.state.channels[0].id))
-  //     });
-  //   } else {
-  //     this.state.currentChannelId && this.updateMenuByChannel(this.state.currentChannelId)
-  //   }
-  // }
 
   updateMenuByChannel (channelId: string) {
     const api: ChannelSiteMenuOperationsApi = channelSiteMenuOperationsApi;

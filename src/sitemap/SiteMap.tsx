@@ -7,7 +7,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
   Drawer,
   Icon,
   IconButton,
@@ -85,7 +84,6 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
 
   getMenu (rowInfo: ExtendedNodeData) {
     const siteMapItem: SitemapItem = rowInfo.node.siteMapItem;
-    const isNotLeaf = isNotEmptyOrNull(rowInfo.node.children);
     return <PopupState variant="popover" popupId="component-popup-menu">
       {(popupState) => (
         <React.Fragment>
@@ -93,25 +91,25 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
           <Menu {...bindMenu(popupState)}>
             <MenuItem onClick={() => this.addSiteMapItem(rowInfo, "new-sitemap-item", () => popupState.close())}>
               <ListItemIcon>
-                <Icon className="fa fa-sitemap" fontSize={'small'}/>
+                <Icon style={{width: '1.25em'}} className="fa fa-sitemap" fontSize={'small'}/>
               </ListItemIcon>
               <Typography variant="inherit">Add Custom Matcher</Typography>
             </MenuItem>
             <MenuItem onClick={() => this.addSiteMapItem(rowInfo, "_index_", () => popupState.close())}>
               <ListItemIcon>
-                <Icon className="fa fa-sitemap" fontSize={'small'}/>
+                <Icon style={{width: '1.25em'}} className="fa fa-sitemap" fontSize={'small'}/>
               </ListItemIcon>
               <Typography variant="inherit">Add ./ Matcher (_index_)</Typography>
             </MenuItem>
             <MenuItem onClick={() => this.addSiteMapItem(rowInfo, "_any_", () => popupState.close())}>
               <ListItemIcon>
-                <Icon className="fa fa-sitemap" fontSize={'small'}/>
+                <Icon style={{width: '1.25em'}} className="fa fa-sitemap" fontSize={'small'}/>
               </ListItemIcon>
               <Typography variant="inherit">Add ** Matcher (_any_)</Typography>
             </MenuItem>
             <MenuItem onClick={() => this.addSiteMapItem(rowInfo, "_default_", () => popupState.close())}>
               <ListItemIcon>
-                <Icon className="fa fa-sitemap" fontSize={'small'}/>
+                <Icon style={{width: '1.25em'}} className="fa fa-sitemap" fontSize={'small'}/>
               </ListItemIcon>
               <Typography variant="inherit">Add * Matcher (_default_)</Typography>
             </MenuItem>
@@ -136,21 +134,21 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
         <Toolbar>
           <ChannelSwitcher onChannelChanged={channelId => this.onChannelChanged(channelId)}/>
           <Button
-              variant="outlined"
-              color="primary"
-              style={{marginRight: '10px'}}
-              startIcon={<AddOutlinedIcon/>}
-              onClick={() => this.setState({dialogOpen: true})}
-            >
+            variant="outlined"
+            color="primary"
+            style={{marginRight: '10px'}}
+            startIcon={<AddOutlinedIcon/>}
+            onClick={() => this.setState({dialogOpen: true})}
+          >
             Add Item
           </Button>
           <Button
-              variant="outlined"
-              color="primary"
-              style={{marginRight: '10px'}}
-              startIcon={<SaveOutlinedIcon/>}
-              onClick={() => this.saveSiteMap()}
-            >
+            variant="outlined"
+            color="primary"
+            style={{marginRight: '10px'}}
+            startIcon={<SaveOutlinedIcon/>}
+            onClick={() => this.saveSiteMap()}
+          >
             Save SiteMap
           </Button>
         </Toolbar>
