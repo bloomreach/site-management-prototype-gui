@@ -161,7 +161,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
           </Form>
         </DialogContent>
         <DialogActions>
-          <Button color="primary" onClick={() => this.addSiteMapItem(null, addSiteMapItem.name, () => this.setState({dialogOpen: false}, () => this.state.currentChannelId && this.updateSiteMapByChannel(this.state.currentChannelId)))}>Add</Button>
+          <Button color="primary" onClick={() => this.addSiteMapItem(null, addSiteMapItem.name, () => this.setState({dialogOpen: false}, () => {/*this.state.currentChannelId && this.updateSiteMapByChannel(this.state.currentChannelId)*/}))}>Add</Button>
           <Button color="primary" onClick={() => this.setState({dialogOpen: false})}>Cancel</Button>
         </DialogActions>
       </Dialog>
@@ -229,7 +229,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
       });
     });
 
-    this.state.currentChannelId && this.updateSiteMapByChannel(this.state.currentChannelId);
+    // this.state.currentChannelId && this.updateSiteMapByChannel(this.state.currentChannelId);
   }
 
   onSiteMapChanged () {
