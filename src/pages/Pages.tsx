@@ -3,10 +3,9 @@ import {AppBar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Toolb
 import 'react-sortable-tree/style.css';
 import {Channel, Page} from "../api/models";
 import AddOutlinedIcon from "@material-ui/icons/Add";
-import {addPageSchema, convertPagesToTreeModelArray, pageSchema, TreeModel} from "./page-util";
+import {convertPagesToTreeModelArray, getPageSchema, TreeModel} from "./page-util";
 import {ChannelPageOperationsApi} from "../api";
 import Form from "@rjsf/material-ui";
-import {JSONSchema7} from "json-schema";
 import PageAccordion from "./PageAccordion";
 import {channelPageOperationsApi} from "../ApiContext";
 import ChannelSwitcher from "../common/ChannelSwitcher";
@@ -14,6 +13,7 @@ import ChannelSwitcher from "../common/ChannelSwitcher";
 type PagesState = {
   channels: Array<Channel>
   currentPageTrees: Array<TreeModel>
+  pages: Array<Page>
   currentChannelId: string,
   dialogOpen: boolean
 }
@@ -28,6 +28,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
 
     this.state = {
       channels: [],
+      pages: [],
       currentChannelId: '',
       currentPageTrees: [],
       dialogOpen: false,
@@ -42,6 +43,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
     api.getChannelPages(channelId).then(value => {
       this.setState({
         currentChannelId: channelId,
+        pages: value.data,
         currentPageTrees: convertPagesToTreeModelArray(value.data)
       })
     });
@@ -73,7 +75,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
       <Dialog open={this.state.dialogOpen} aria-labelledby="form-dialog-title">
         <DialogTitle>Add Page</DialogTitle>
         <DialogContent>
-          <Form onChange={({formData}) => addPage = formData} formData={addPage} schema={addPageSchema as JSONSchema7}>
+          <Form onChange={({formData}) => addPage = formData} formData={addPage} schema={getPageSchema(this.state.pages)}>
            <></>
           </Form>
         </DialogContent>

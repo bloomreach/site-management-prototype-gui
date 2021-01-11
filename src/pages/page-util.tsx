@@ -62,6 +62,15 @@ enum ComponentType {
   STATIC = 'static',
 }
 
+export function getPageSchema (pages: Array<Page>) : JSONSchema7 {
+  const abstractPages: Array<string> = pages.filter(page => page.type === 'abstract').map(page => page.name);
+  const pageSchema = {...addPageSchema};
+  Object.assign(pageSchema.properties?.extends, {
+    "enum": abstractPages
+  });
+  return pageSchema as JSONSchema7;
+}
+
 export function getSchemaForComponentType (type: Nullable<string>) {
   let schema = null;
   switch (type) {
