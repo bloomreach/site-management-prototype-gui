@@ -3,7 +3,7 @@ import {AppBar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Toolb
 import 'react-sortable-tree/style.css';
 import {Channel, Page} from "../api/models";
 import AddOutlinedIcon from "@material-ui/icons/Add";
-import {convertPagesToTreeModelArray, pageSchema, TreeModel} from "./page-util";
+import {addPageSchema, convertPagesToTreeModelArray, pageSchema, TreeModel} from "./page-util";
 import {ChannelPageOperationsApi} from "../api";
 import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
@@ -73,7 +73,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
       <Dialog open={this.state.dialogOpen} aria-labelledby="form-dialog-title">
         <DialogTitle>Add Page</DialogTitle>
         <DialogContent>
-          <Form onChange={({formData}) => addPage = formData} formData={addPage} schema={pageSchema as JSONSchema7}>
+          <Form onChange={({formData}) => addPage = formData} formData={addPage} schema={addPageSchema as JSONSchema7}>
            <></>
           </Form>
         </DialogContent>

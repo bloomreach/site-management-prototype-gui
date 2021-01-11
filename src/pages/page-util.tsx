@@ -63,15 +63,16 @@ enum ComponentType {
 }
 
 export function getSchemaForComponentType (type: Nullable<string>) {
-  let schema = componentSchema;
+  let schema = null;
   switch (type) {
     case ComponentType.PAGE:
     case ComponentType.XPAGE:
     case ComponentType.ABSTRACT:
-      schema = pageSchema as JSONSchema7;
+      schema = {...pageSchema} as JSONSchema7;
       Object.assign(schema.properties?.name, {readOnly: true});
       break;
     case ComponentType.MANAGED:
+      schema = {...componentSchema};
       Object.assign(schema.properties, {
         xtype: {
           type: "string",
@@ -83,6 +84,7 @@ export function getSchemaForComponentType (type: Nullable<string>) {
       delete schema.properties?.definition;
       break;
     case ComponentType.STATIC:
+      schema = {...componentSchema};
       Object.assign(schema.properties, {
         definition: {
           type: "string",
@@ -98,6 +100,42 @@ export function getSchemaForComponentType (type: Nullable<string>) {
 export const componentSchema: JSONSchema7 = {
   type: "object",
   properties: {
+    name: {
+      type: "string",
+    },
+    description: {
+      type: "string"
+    },
+    parameters: {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  }
+};
+
+export const addPageSchema = {
+  type: "object",
+  properties: {
+    type: {
+      type: "string",
+      "enum":
+        [
+          "abstract",
+          "page",
+          "xpage",
+        ],
+      "enumNames":
+        [
+          "Abstract Page",
+          "Page",
+          "X Page",
+        ]
+    },
+    extends: {
+      type: "string"
+    },
     name: {
       type: "string",
     },
