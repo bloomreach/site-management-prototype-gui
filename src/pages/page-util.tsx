@@ -63,7 +63,7 @@ enum ComponentType {
 }
 
 export function getPageSchema (pages: Array<Page>): JSONSchema7 {
-  const abstractPages: Array<string> = pages.filter(page => page.type === 'abstract').map(page => page.name);
+  const abstractPages: Array<string> = [''].concat(pages.filter(page => page.type === 'abstract').map(page => page.name));
   const pageSchema = {...addPageSchema};
   Object.assign(pageSchema.properties?.extends, {
     "enum": abstractPages
@@ -85,32 +85,49 @@ export function getSchemaForComponentType (type: Nullable<string>, pages?: Array
       });
       break;
     case ComponentType.MANAGED:
-      schema = {...componentSchema};
-      Object.assign(schema.properties, {
-        xtype: {
-          type: "string",
-        },
-        label: {
-          type: "string",
-        }
-      });
-      delete schema.properties?.definition;
+      schema = {...managedComponentSchema};
       break;
     case ComponentType.STATIC:
-      schema = {...componentSchema};
-      Object.assign(schema.properties, {
-        definition: {
-          type: "string",
-        }
-      });
-      delete schema.properties?.xtype;
-      delete schema.properties?.label;
+      schema = {...staticComponentSchema};
       break;
   }
   return schema
 }
 
-export const componentSchema: JSONSchema7 = {
+const managedComponentSchema: JSONSchema7 = {
+  type: "object",
+  properties: {
+    name: {
+      type: "string",
+    },
+    label: {
+      type: "string",
+    },
+    description: {
+      type: "string"
+    },
+    parameters: {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    xtype: {
+      type: "string",
+      "enum":
+        [
+          "hst.nomarkup",
+          "hst.span",
+          "hst.orderedlist",
+          "hst.unorderedlist",
+          "hst.vbox",
+        ],
+      "default": 'hst.nomarkup',
+    }
+  }
+};
+
+const staticComponentSchema: JSONSchema7 = {
   type: "object",
   properties: {
     name: {
@@ -124,6 +141,9 @@ export const componentSchema: JSONSchema7 = {
       "additionalProperties": {
         "type": "string"
       }
+    },
+    definition: {
+      type: "string",
     }
   }
 };
@@ -164,7 +184,7 @@ export const addPageSchema = {
   }
 };
 
-export const pageSchema = {
+const pageSchema = {
   type: "object",
   properties: {
     type: {
