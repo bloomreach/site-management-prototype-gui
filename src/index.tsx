@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Navigation from "./Navigation";
 import Fallback from "./other/Fallback";
+
 require('dotenv').config();
 
 ReactDOM.render(
