@@ -52,7 +52,6 @@ class ChannelSwitcher extends React.Component<ChannelSwitcherProps, ChannelSwitc
               disabled={channel.branch === null}
               key={channel.id}
               value={channel.id}
-              // onClick={() => console.log('on channel select', channel)}
             >
               {channel.id}
             </MenuItem>

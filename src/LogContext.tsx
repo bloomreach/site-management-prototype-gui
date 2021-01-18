@@ -1,26 +1,22 @@
 import React from "react";
 
-type GlobalState = {
+type LogProviderState = {
   severity: 'error' | 'success'
   message: string
   timeOut: number
   open: boolean
 }
 
-type GlobalType = {
-  severity: string
-  message: string
-  timeOut: number
-  open: boolean
+export interface LogContextType extends LogProviderState {
   logError: (message: string) => void;
   logSuccess: (message: string) => void;
   onClose: () => void;
 }
 
-export const GlobalContext = React.createContext<Partial<GlobalType>>({});
+export const LogContext = React.createContext<Partial<LogContextType>>({});
 
-export default class GlobalProvider extends React.Component<{}, GlobalState> {
-  constructor (props:{}) {
+export default class LogProvider extends React.Component<{}, LogProviderState> {
+  constructor (props: {}) {
     super(props);
     // Initialize the state
     this.state = {
@@ -48,12 +44,14 @@ export default class GlobalProvider extends React.Component<{}, GlobalState> {
 
   render () {
     return (
-      <GlobalContext.Provider value={{...this.state,
+      <LogContext.Provider value={{
+        ...this.state,
         logError: this.logError,
         logSuccess: this.logSuccess,
-        onClose: this.onClose}}>
+        onClose: this.onClose
+      }}>
         {this.props.children}
-      </GlobalContext.Provider>
+      </LogContext.Provider>
     );
   }
 }

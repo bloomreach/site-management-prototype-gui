@@ -10,7 +10,7 @@ import SiteMap from "./sitemap/SiteMap";
 import Menus from "./menu/Menus";
 import {endpoint} from "./ApiContext";
 import Catalog from "./catalog/Catalog";
-import GlobalProvider, {GlobalContext} from "./LogContext";
+import LogProvider, {LogContext} from "./LogContext";
 import Alert from '@material-ui/lab/Alert';
 
 type NavigationState = {
@@ -41,7 +41,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
     const {tab} = this.state || 0;
 
     return (
-      <GlobalProvider>
+      <LogProvider>
         <Fragment>
           <AppBar position="sticky" color={'default'}>
             <Tabs
@@ -70,7 +70,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
           <TabPanel value={tab} index={4}>
             <Menus/>
           </TabPanel>
-          <GlobalContext.Consumer>
+          <LogContext.Consumer>
             {(props) => {
               return (
                 <Snackbar
@@ -84,12 +84,12 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
                 </Snackbar>
               )
             }}
-          </GlobalContext.Consumer>
+          </LogContext.Consumer>
           <AppBar style={{bottom: 0, top: "auto"}}>
             <Typography>endpoint: {this.state.endpoint}</Typography>
           </AppBar>
         </Fragment>
-      </GlobalProvider>
+      </LogProvider>
     )
   }
 

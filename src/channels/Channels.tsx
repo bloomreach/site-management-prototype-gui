@@ -23,7 +23,8 @@ import Icon from "@material-ui/core/Icon";
 import {ChannelOperationsApi} from "../api/apis/channel-operations-api";
 import {baseUrl, channelOperationsApi} from "../ApiContext";
 import {channelSchema, channelUiSchema} from "./channel-utils";
-import {GlobalContext} from "../LogContext";
+import {LogContext} from "../LogContext";
+import {logError, logSuccess} from "../common/common-utils";
 
 type ChannelsState = {
   channels: Array<Channel>,
@@ -50,8 +51,8 @@ const styles = theme => {
 
 class Channels extends React.Component<ChannelsProps, ChannelsState> {
 
-  static contextType = GlobalContext;
-  context!: React.ContextType<typeof GlobalContext>;
+  static contextType = LogContext;
+  context!: React.ContextType<typeof LogContext>;
 
   constructor (props: ChannelsProps) {
     super(props);
@@ -76,10 +77,10 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
           channel.responseHeaders = {};
         }
         return channel;
-      })
+      });
       this.setState({channels: data});
-      this.context.logSuccess && this.context.logSuccess('updated channels');
-    }).catch(reason =>  this.context.logError && this.context.logError('error retrieving channels' + reason));
+      logSuccess('updated channels..', this.context);
+    }).catch(reason => logError("error trying to get the channels, reason:", reason?.data));
   }
 
   render () {

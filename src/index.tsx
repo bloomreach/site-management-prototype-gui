@@ -14,8 +14,11 @@ ReactDOM.render(
       <BrowserRouter>
         <Switch>
           <Route exact path="/" render={() => <Navigation/>}/>
-          <Route path="/channel/:id" render={() => <Navigation/>}/>
-          <Route path="/channel/:id/:tab" render={() => <Navigation/>}/>
+          {/*<Route path="/channel/:channelId" render={() => <Navigation/>}/>*/}
+          {/*<Route path="/channel/:channelId/:operation" render={() => <Navigation/>}/>*/}
+          <Route path="/open-ui/channel" render={() => <Fallback/>}/>
+          <Route path="/openui/pages" render={() => <Fallback/>}/>
+          {/*<Route path="/openui/catalog" render={() => <Fallback/>}/>*/}
           <Route path="/**" render={() => <Fallback/>}/>
         </Switch>
       </BrowserRouter>
