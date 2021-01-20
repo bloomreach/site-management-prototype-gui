@@ -155,7 +155,7 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
           <Button color="primary" onClick={() => this.setState({addGroupDialogOpen: false})}>Cancel</Button>
         </DialogActions>
       </Dialog>
-       <Dialog open={this.state.addComponentDialogOpen}>
+      <Dialog open={this.state.addComponentDialogOpen}>
         <DialogTitle>Add Component</DialogTitle>
         <DialogContent>
           <Form onChange={({formData}) => currentComponentDefinition = formData} uiSchema={componentDefinitionSchema} schema={componentDefinitionSchema as JSONSchema7}>

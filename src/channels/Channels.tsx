@@ -1,30 +1,14 @@
 import React from 'react';
-import {
-  Accordion,
-  AccordionActions,
-  AccordionDetails,
-  AccordionSummary,
-  AppBar,
-  Button,
-  Divider,
-  IconButton,
-  Toolbar,
-  Typography,
-  withStyles
-} from "@material-ui/core";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
-import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
+import {Accordion, AccordionSummary, AppBar, Button, Toolbar, Typography, withStyles} from "@material-ui/core";
 import {Channel} from "../api/models";
-import Form from "@rjsf/material-ui";
-import {JSONSchema7} from "json-schema";
 import AddOutlinedIcon from "@material-ui/icons/Add";
 import Icon from "@material-ui/core/Icon";
 import {ChannelOperationsApi} from "../api/apis/channel-operations-api";
 import {baseUrl, channelOperationsApi} from "../ApiContext";
-import {channelSchema, channelUiSchema} from "./channel-utils";
 import {LogContext} from "../LogContext";
 import {logError, logSuccess} from "../common/common-utils";
+import ChannelEditor from "./ChannelEditor";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 type ChannelsState = {
   channels: Array<Channel>,
@@ -61,7 +45,6 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
       channels: [],
       dialogOpen: false
     }
-
   }
 
   componentDidMount (): void {
@@ -108,67 +91,19 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
       </AppBar>
       {this.state.channels.map((channel, index) => {
         return (
-          <Accordion key={index}>
+          <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon/>}>
               <Typography className={classes.heading}>id: {channel.id}</Typography>
               <Typography className={classes.secondaryHeading}>name: {channel.name}</Typography>
             </AccordionSummary>
-            <AccordionActions>
-              <IconButton
-                // disabled={true}
-                edge="start"
-                color="inherit"
-                aria-label="Delete Channel"
-                onClick={() => window.open(`${baseUrl}/cms/projects/${channel.id?.split(':')[1]}/channels`, 'new')}>
-                <DeleteOutlinedIcon/>
-              </IconButton>
-              <IconButton
-                edge="start"
-                color="inherit"
-                aria-label="Save Channel"
-                onClick={() => this.saveChannel(channel)}>
-                <SaveOutlinedIcon/>
-              </IconButton>
-            </AccordionActions>
-            <AccordionDetails>
-              <Form onChange={({formData}) => channel = formData} uiSchema={channelUiSchema} schema={channelSchema as JSONSchema7}
-                    formData={channel}><></>
-              </Form>
-            </AccordionDetails>
-            <Divider/>
-            <AccordionActions>
-              <IconButton
-                // disabled={true}
-                edge="start"
-                color="inherit"
-                aria-label="Delete Channel"
-                onClick={() => window.open(`${baseUrl}/cms/projects/${channel.id?.split(':')[1]}/channels`, 'new')}>
-                <DeleteOutlinedIcon/>
-              </IconButton>
-              <IconButton
-                edge="start"
-                color="inherit"
-                aria-label="Save Channel"
-                onClick={() => this.saveChannel(channel)}>
-                <SaveOutlinedIcon/>
-              </IconButton>
-            </AccordionActions>
-          </Accordion>)
+            <ChannelEditor updateChannels={this.updateChannels} channel={channel}/>
+          </Accordion>
+        )
       })}
     </>
   }
 
-  private saveChannel (channel: Channel) {
-    const api: ChannelOperationsApi = channelOperationsApi;
-    api.getChannel(channel.id).then(response => {
-      api.updateChannel(channel.id, channel, response.headers['x-resource-version'])
-        .then(() => {
-          this.updateChannels();
-        })
-    })
-
-  }
 }
 
 export default withStyles(styles)(Channels);
