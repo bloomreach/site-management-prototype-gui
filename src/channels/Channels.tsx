@@ -97,7 +97,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
               <Typography className={classes.heading}>id: {channel.id}</Typography>
               <Typography className={classes.secondaryHeading}>name: {channel.name}</Typography>
             </AccordionSummary>
-            <ChannelEditor updateChannels={this.updateChannels} channel={channel}/>
+            <ChannelEditor channel={channel}/>
           </Accordion>
         )
       })}

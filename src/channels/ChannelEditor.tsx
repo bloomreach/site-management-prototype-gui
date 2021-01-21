@@ -38,6 +38,7 @@ import AddOutlinedIcon from "@material-ui/icons/Add";
 import TextFieldsIcon from "@material-ui/icons/TextFields";
 import LinkOutlinedIcon from "@material-ui/icons/LinkOutlined";
 import ArrowDropDownCircleOutlinedIcon from "@material-ui/icons/ArrowDropDownCircleOutlined";
+import RefreshOutlinedIcon from '@material-ui/icons/RefreshOutlined';
 import {
   contentPathParameterTemplate,
   dropDownParameterTemplate,
@@ -61,6 +62,7 @@ import {
 } from "react-beautiful-dnd";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import {logError, logSuccess} from "../common/common-utils";
 //todo a lot of copy paste from Catalog item, fix later
 type ChannelEditorState = {
   channel: Channel
@@ -74,7 +76,6 @@ type ChannelEditorState = {
 }
 type ChannelEditorProps = {
   channel: Channel
-  updateChannels: () => void
 }
 
 class ChannelEditor extends React.Component<ChannelEditorProps, ChannelEditorState> {
@@ -93,7 +94,6 @@ class ChannelEditor extends React.Component<ChannelEditorProps, ChannelEditorSta
   }
 
   componentDidMount (): void {
-    //todo get parameters and fieldgroups
     const api: ChannelOperationsApi = channelOperationsApi;
     api.getChannelParametersInfo(this.props.channel.id).then(response => this.setState({parameters: response.data}));
     api.getFieldGroups(this.props.channel.id).then(response => this.setState({fieldGroups: response.data}));
@@ -106,12 +106,12 @@ class ChannelEditor extends React.Component<ChannelEditorProps, ChannelEditorSta
       <>
         {this.getActions(channel)}
         <AccordionDetails>
-          <Grid item sm={10}>
+          <Grid item sm={6}>
             <Form onChange={({formData}) => this.setState({channel: formData})} uiSchema={channelUiSchema} schema={channelSchema as JSONSchema7}
                   formData={channel}><></>
             </Form>
           </Grid>
-          <Grid item sm={10}>
+          <Grid item sm={6}>
             <IconButton
               disabled={false}
               edge="start"
@@ -375,20 +375,29 @@ class ChannelEditor extends React.Component<ChannelEditorProps, ChannelEditorSta
 
   private getActions (channel: Channel) {
     return (<AccordionActions>
-      <IconButton
-        edge="start"
-        color="inherit"
-        aria-label="Delete Channel"
-        onClick={() => window.open(`${baseUrl}/cms/projects/${channel.id?.split(':')[1]}/channels`, 'new')}>
-        <DeleteOutlinedIcon/>
-      </IconButton>
-      <IconButton
-        edge="start"
-        color="inherit"
-        aria-label="Save Channel"
-        onClick={() => this.saveChannel(channel)}>
-        <SaveOutlinedIcon/>
-      </IconButton>
+      <Grid item sm={12} style={{justifyContent: "flex-start"}}>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="Delete Channel"
+          onClick={() => window.open(`${baseUrl}/cms/projects/${channel.id?.split(':')[1]}/channels`, 'new')}>
+          <DeleteOutlinedIcon/>
+        </IconButton>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="Save Channel"
+          onClick={() => this.saveChannel(channel)}>
+          <SaveOutlinedIcon/>
+        </IconButton>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="Refresh Channel"
+          onClick={() => this.updateChannel()}>
+          <RefreshOutlinedIcon/>
+        </IconButton>
+      </Grid>
     </AccordionActions>)
   }
 
@@ -567,6 +576,7 @@ class ChannelEditor extends React.Component<ChannelEditorProps, ChannelEditorSta
         }
       });
 
+      //updating by removing and adding...
       const api: ChannelOperationsApi = channelOperationsApi;
       api.deleteChannelParameterInfo(this.state.channel.id, selectedParameter.name).then();
       api.putChannelParameterInfo(this.state.channel.id, currentParameter.name, currentParameter).then();
@@ -595,10 +605,22 @@ class ChannelEditor extends React.Component<ChannelEditorProps, ChannelEditorSta
     api.getChannel(channel.id).then(response => {
       api.updateChannel(channel.id, channel, response.headers['x-resource-version'])
         .then(() => {
-          this.props.updateChannels();
+          this.updateChannel();
         })
     });
 
+  }
+
+  updateChannel () {
+    const api: ChannelOperationsApi = channelOperationsApi;
+    api.getChannel(this.state.channel.id).then(value => {
+      let channel: Channel = value.data;
+      if (channel.responseHeaders === null) {
+        channel.responseHeaders = {};
+      }
+      this.setState({channel: channel});
+      logSuccess('updated channel ' + channel.id, this.context);
+    }).catch(reason => logError("error trying to get the channels, reason:", reason?.data));
   }
 
 }
