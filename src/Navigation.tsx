@@ -24,13 +24,15 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
   constructor (props: NavigationProps) {
     super(props);
 
-    console.log('env', process.env);
-    console.log('dir', __dirname);
+    // console.log('env', process.env);
+    // @ts-ignore
+    // console.log('window env', window._env_);
 
     this.state = {
       tab: 0,
       endpoint: endpoint
     }
+
   }
 
   onTabChange (nextTab: number) {

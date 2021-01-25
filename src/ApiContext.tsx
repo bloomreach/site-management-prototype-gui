@@ -4,15 +4,18 @@ import {ChannelSitemapOperationsApi} from "./api/apis/channel-sitemap-operations
 import {ChannelSiteMenuOperationsApi} from "./api/apis/channel-site-menu-operations-api";
 import {ChannelCatalogOperationsApi} from "./api/apis/channel-catalog-operations-api";
 
+
 const baseOptions = {
   auth:
     {
-      username: process.env.REACT_APP_USERNAME!,
-      password: process.env.REACT_APP_PASSWORD!
+      // @ts-ignore
+      username: window._env_.BRX_USERNAME!,
+      // @ts-ignore
+      password: window._env_.BRX_PASSWORD!
     }, withCredentials: true
 };
-
-export const baseUrl: string = process.env.REACT_APP_BASE_URL!;
+// @ts-ignore
+export const baseUrl: string = window._env_.BRX_BASE_URL!;
 
 export const endpoint: string = `${baseUrl}/management/site/v1`;
 

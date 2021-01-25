@@ -1,15 +1,32 @@
-FROM node:alpine
-
+# => Build container
+FROM node:alpine as builder
 WORKDIR /app
+COPY package.json .
+COPY yarn.lock .
+RUN yarn
+COPY . .
+RUN yarn build
 
-ENV REACT_APP_BASE_URL=http://localhost:8080
-ENV REACT_APP_USERNAME=admin
-ENV REACT_APP_PASSWORD=admin
+# => Run container
+FROM nginx:1.15.2-alpine
 
-COPY package.json /app
+# Nginx config
+RUN rm -rf /etc/nginx/conf.d
+COPY conf /etc/nginx
 
-RUN yarn install
+# Static build
+COPY --from=builder /app/build /usr/share/nginx/html/
 
-COPY . /app
+# Default port exposure
+EXPOSE 80
 
-CMD ["yarn", "run", "start"]
+# Copy .env file and shell script to container
+WORKDIR /usr/share/nginx/html
+COPY ./env.sh .
+COPY .env .
+
+# Make our shell script executable
+RUN chmod +x env.sh
+
+# Start Nginx server
+CMD ["/bin/sh", "-c", "/usr/share/nginx/html/env.sh && nginx -g \"daemon off;\""]
