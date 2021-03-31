@@ -117,7 +117,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
               <ListItemIcon>
                 <Delete fontSize="small"/>
               </ListItemIcon>
-              <Typography variant="inherit">Delete Sitemap Item</Typography>
+              <Typography variant="inherit">Delete Route</Typography>
             </MenuItem>
           </Menu>
         </React.Fragment>
@@ -140,7 +140,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
             startIcon={<AddOutlinedIcon/>}
             onClick={() => this.setState({dialogOpen: true})}
           >
-            Add Item
+            Add Route
           </Button>
           <Button
             variant="outlined"
@@ -149,12 +149,12 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
             startIcon={<SaveOutlinedIcon/>}
             onClick={() => this.saveSiteMap()}
           >
-            Save SiteMap
+            Save Routes
           </Button>
         </Toolbar>
       </AppBar>
       <Dialog open={this.state.dialogOpen} aria-labelledby="form-dialog-title">
-        <DialogTitle>Add Site Map Item</DialogTitle>
+        <DialogTitle>Add Route</DialogTitle>
         <DialogContent>
           <Form onChange={({formData}) => addSiteMapItem = formData} formData={addSiteMapItem} uiSchema={siteMapItemUiSchema} schema={siteMapItemSchema as JSONSchema7}>
            <></>
@@ -198,7 +198,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
                <ChevronRightIcon/>
               </IconButton>
               <Typography variant="h6">
-                SiteMap Item Editor
+                Route Editor
               </Typography>
             </Toolbar>
           </AppBar>

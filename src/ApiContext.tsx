@@ -4,38 +4,34 @@ import {ChannelSitemapOperationsApi} from "./api/apis/channel-sitemap-operations
 import {ChannelSiteMenuOperationsApi} from "./api/apis/channel-site-menu-operations-api";
 import {ChannelCatalogOperationsApi} from "./api/apis/channel-catalog-operations-api";
 
-
-const baseOptions = {
-  auth:
-    {
-      // @ts-ignore
-      username: window._env_.BRX_USERNAME!,
-      // @ts-ignore
-      password: window._env_.BRX_PASSWORD!
-    }, withCredentials: true
-};
 // @ts-ignore
 export const baseUrl: string = window._env_.BRX_BASE_URL!;
 
 export const endpoint: string = `${baseUrl}/management/site/v1`;
 
 export const channelPageOperationsApi: ChannelPageOperationsApi = new ChannelPageOperationsApi({
-  baseOptions: baseOptions
+  // @ts-ignore
+  apiKey: window._env_.BRX_API_KEY!
 }, endpoint);
 
+
 export const channelOperationsApi: ChannelOperationsApi = new ChannelOperationsApi({
-  baseOptions: baseOptions
+  // @ts-ignore
+  apiKey: window._env_.BRX_API_KEY!
 }, endpoint);
 
 export const channelSiteMapOperationsApi: ChannelSitemapOperationsApi = new ChannelSitemapOperationsApi({
-  baseOptions: baseOptions
+  // @ts-ignore
+  apiKey: window._env_.BRX_API_KEY!
 }, endpoint);
 
 export const channelSiteMenuOperationsApi: ChannelSiteMenuOperationsApi = new ChannelSiteMenuOperationsApi({
-  baseOptions: baseOptions
+  // @ts-ignore
+  apiKey: window._env_.BRX_API_KEY!
 }, endpoint);
 
 export const channelCatalogOperationsApi: ChannelCatalogOperationsApi = new ChannelCatalogOperationsApi({
-  baseOptions: baseOptions
+  // @ts-ignore
+  apiKey: window._env_.BRX_API_KEY!
 }, endpoint);
 

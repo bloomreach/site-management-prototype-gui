@@ -39,7 +39,7 @@ export const ChannelSiteMenuOperationsApiAxiosParamCreator = function (configura
             if (menuName === null || menuName === undefined) {
                 throw new RequiredError('menuName','Required parameter menuName was null or undefined when calling deleteChannelSitemenu.');
             }
-            const localVarPath = `/channels/{channel_id}/sitemenus/{menu_name}`
+            const localVarPath = `/channels/{channel_id}/menus/{menu_name}`
                 .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)))
                 .replace(`{${"menu_name"}}`, encodeURIComponent(String(menuName)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -51,6 +51,14 @@ export const ChannelSiteMenuOperationsApiAxiosParamCreator = function (configura
             const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
@@ -85,7 +93,7 @@ export const ChannelSiteMenuOperationsApiAxiosParamCreator = function (configura
             if (menuName === null || menuName === undefined) {
                 throw new RequiredError('menuName','Required parameter menuName was null or undefined when calling getChannelSitemenu.');
             }
-            const localVarPath = `/channels/{channel_id}/sitemenus/{menu_name}`
+            const localVarPath = `/channels/{channel_id}/menus/{menu_name}`
                 .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)))
                 .replace(`{${"menu_name"}}`, encodeURIComponent(String(menuName)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -97,6 +105,14 @@ export const ChannelSiteMenuOperationsApiAxiosParamCreator = function (configura
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
@@ -126,7 +142,7 @@ export const ChannelSiteMenuOperationsApiAxiosParamCreator = function (configura
             if (channelId === null || channelId === undefined) {
                 throw new RequiredError('channelId','Required parameter channelId was null or undefined when calling getChannelSitemenus.');
             }
-            const localVarPath = `/channels/{channel_id}/sitemenus`
+            const localVarPath = `/channels/{channel_id}/menus`
                 .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -137,6 +153,14 @@ export const ChannelSiteMenuOperationsApiAxiosParamCreator = function (configura
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
@@ -172,7 +196,7 @@ export const ChannelSiteMenuOperationsApiAxiosParamCreator = function (configura
             if (menuName === null || menuName === undefined) {
                 throw new RequiredError('menuName','Required parameter menuName was null or undefined when calling putChannelSitemenu.');
             }
-            const localVarPath = `/channels/{channel_id}/sitemenus/{menu_name}`
+            const localVarPath = `/channels/{channel_id}/menus/{menu_name}`
                 .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)))
                 .replace(`{${"menu_name"}}`, encodeURIComponent(String(menuName)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -184,6 +208,14 @@ export const ChannelSiteMenuOperationsApiAxiosParamCreator = function (configura
             const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             if (xResourceVersion !== undefined && xResourceVersion !== null) {
                 localVarHeaderParameter['X-Resource-Version'] = String(xResourceVersion);

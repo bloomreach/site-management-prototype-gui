@@ -31,18 +31,18 @@ export const ChannelPageOperationsApiAxiosParamCreator = function (configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteChannelPage: async (channelId: string, pageName: string, options: any = {}): Promise<RequestArgs> => {
+        deleteChannelPage: async (channelId: string, layoutName: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'channelId' is not null or undefined
             if (channelId === null || channelId === undefined) {
                 throw new RequiredError('channelId','Required parameter channelId was null or undefined when calling deleteChannelPage.');
             }
-            // verify required parameter 'pageName' is not null or undefined
-            if (pageName === null || pageName === undefined) {
-                throw new RequiredError('pageName','Required parameter pageName was null or undefined when calling deleteChannelPage.');
+            // verify required parameter 'layoutName' is not null or undefined
+            if (layoutName === null || layoutName === undefined) {
+                throw new RequiredError('layoutName','Required parameter layoutName was null or undefined when calling deleteChannelPage.');
             }
-            const localVarPath = `/channels/{channel_id}/pages/{page_name}`
+            const localVarPath = `/channels/{channel_id}/layouts/{layout_name}`
               .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)))
-              .replace(`{${"page_name"}}`, encodeURIComponent(String(pageName)));
+                .replace(`{${"layout_name"}}`, encodeURIComponent(String(layoutName)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -52,6 +52,14 @@ export const ChannelPageOperationsApiAxiosParamCreator = function (configuration
             const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
@@ -71,25 +79,25 @@ export const ChannelPageOperationsApiAxiosParamCreator = function (configuration
         },
         /**
          *
-         * @summary Get a channel page
+         * @summary Get a channel layout
          * @param {string} channelId
-         * @param {string} pageName
+         * @param {string} layoutName
          * @param {boolean} [resolved]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChannelPage: async (channelId: string, pageName: string, resolved?: boolean, options: any = {}): Promise<RequestArgs> => {
+        getChannelPage: async (channelId: string, layoutName: string, resolved?: boolean, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'channelId' is not null or undefined
             if (channelId === null || channelId === undefined) {
                 throw new RequiredError('channelId','Required parameter channelId was null or undefined when calling getChannelPage.');
             }
-            // verify required parameter 'pageName' is not null or undefined
-            if (pageName === null || pageName === undefined) {
-                throw new RequiredError('pageName','Required parameter pageName was null or undefined when calling getChannelPage.');
+            // verify required parameter 'layoutName' is not null or undefined
+            if (layoutName === null || layoutName === undefined) {
+                throw new RequiredError('layoutName','Required parameter layoutName was null or undefined when calling getChannelPage.');
             }
-            const localVarPath = `/channels/{channel_id}/pages/{page_name}`
+            const localVarPath = `/channels/{channel_id}/layouts/{layout_name}`
               .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)))
-              .replace(`{${"page_name"}}`, encodeURIComponent(String(pageName)));
+                .replace(`{${"layout_name"}}`, encodeURIComponent(String(layoutName)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -99,6 +107,14 @@ export const ChannelPageOperationsApiAxiosParamCreator = function (configuration
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             if (resolved !== undefined) {
                 localVarQueryParameter['resolved'] = resolved;
@@ -122,7 +138,7 @@ export const ChannelPageOperationsApiAxiosParamCreator = function (configuration
         },
         /**
          *
-         * @summary Get the channel pages
+         * @summary Get the channel layouts
          * @param {string} channelId
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -132,7 +148,7 @@ export const ChannelPageOperationsApiAxiosParamCreator = function (configuration
             if (channelId === null || channelId === undefined) {
                 throw new RequiredError('channelId','Required parameter channelId was null or undefined when calling getChannelPages.');
             }
-            const localVarPath = `/channels/{channel_id}/pages`
+            const localVarPath = `/channels/{channel_id}/layouts`
               .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -143,6 +159,14 @@ export const ChannelPageOperationsApiAxiosParamCreator = function (configuration
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
@@ -162,10 +186,10 @@ export const ChannelPageOperationsApiAxiosParamCreator = function (configuration
         },
         /**
          *
-         * @summary Create or update a channel page
+         * @summary Create or update a channel layout
          * @param {string} channelId
-         * @param {string} pageName
-         * @param {Page} [body]
+         * @param {string} layoutName
+         * @param {Layout} [body]
          * @param {string} [xResourceVersion] Resource&#x27;s version
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -175,13 +199,13 @@ export const ChannelPageOperationsApiAxiosParamCreator = function (configuration
             if (channelId === null || channelId === undefined) {
                 throw new RequiredError('channelId','Required parameter channelId was null or undefined when calling putChannelPage.');
             }
-            // verify required parameter 'pageName' is not null or undefined
-            if (pageName === null || pageName === undefined) {
-                throw new RequiredError('pageName','Required parameter pageName was null or undefined when calling putChannelPage.');
+            // verify required parameter 'layoutName' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('layoutName','Required parameter layoutName was null or undefined when calling putChannelPage.');
             }
-            const localVarPath = `/channels/{channel_id}/pages/{page_name}`
+            const localVarPath = `/channels/{channel_id}/layouts/{layout_name}`
               .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)))
-              .replace(`{${"page_name"}}`, encodeURIComponent(String(pageName)));
+                .replace(`{${"layout_name"}}`, encodeURIComponent(String(pageName)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -191,6 +215,14 @@ export const ChannelPageOperationsApiAxiosParamCreator = function (configuration
             const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             if (xResourceVersion !== undefined && xResourceVersion !== null) {
                 localVarHeaderParameter['X-Resource-Version'] = String(xResourceVersion);

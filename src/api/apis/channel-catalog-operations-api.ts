@@ -41,7 +41,7 @@ export const ChannelCatalogOperationsApiAxiosParamCreator = function (configurat
             if (groupName === null || groupName === undefined) {
                 throw new RequiredError('groupName','Required parameter groupName was null or undefined when calling deleteChannelCatalogGroup.');
             }
-            const localVarPath = `/channels/{channel_id}/catalog/{group_name}`
+            const localVarPath = `/channels/{channel_id}/component_groups/{group_name}`
                 .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)))
                 .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -53,6 +53,14 @@ export const ChannelCatalogOperationsApiAxiosParamCreator = function (configurat
             const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
@@ -92,7 +100,7 @@ export const ChannelCatalogOperationsApiAxiosParamCreator = function (configurat
             if (componentName === null || componentName === undefined) {
                 throw new RequiredError('componentName','Required parameter componentName was null or undefined when calling deleteChannelCatalogGroupComponent.');
             }
-            const localVarPath = `/channels/{channel_id}/catalog/{group_name}/components/{component_name}`
+            const localVarPath = `/channels/{channel_id}/component_groups/{group_name}/components/{component_name}`
                 .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)))
                 .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)))
                 .replace(`{${"component_name"}}`, encodeURIComponent(String(componentName)));
@@ -105,6 +113,14 @@ export const ChannelCatalogOperationsApiAxiosParamCreator = function (configurat
             const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
@@ -139,7 +155,7 @@ export const ChannelCatalogOperationsApiAxiosParamCreator = function (configurat
             if (groupName === null || groupName === undefined) {
                 throw new RequiredError('groupName','Required parameter groupName was null or undefined when calling getChannelCatalogGroup.');
             }
-            const localVarPath = `/channels/{channel_id}/catalog/{group_name}`
+            const localVarPath = `/channels/{channel_id}/component_groups/{group_name}`
                 .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)))
                 .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -151,6 +167,14 @@ export const ChannelCatalogOperationsApiAxiosParamCreator = function (configurat
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
@@ -191,7 +215,7 @@ export const ChannelCatalogOperationsApiAxiosParamCreator = function (configurat
             if (componentName === null || componentName === undefined) {
                 throw new RequiredError('componentName','Required parameter componentName was null or undefined when calling getChannelCatalogGroupComponent.');
             }
-            const localVarPath = `/channels/{channel_id}/catalog/{group_name}/components/{component_name}`
+            const localVarPath = `/channels/{channel_id}/component_groups/{group_name}/components/{component_name}`
                 .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)))
                 .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)))
                 .replace(`{${"component_name"}}`, encodeURIComponent(String(componentName)));
@@ -204,6 +228,14 @@ export const ChannelCatalogOperationsApiAxiosParamCreator = function (configurat
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             if (inherited !== undefined) {
                 localVarQueryParameter['inherited'] = inherited;
@@ -242,7 +274,7 @@ export const ChannelCatalogOperationsApiAxiosParamCreator = function (configurat
             if (groupName === null || groupName === undefined) {
                 throw new RequiredError('groupName','Required parameter groupName was null or undefined when calling getChannelCatalogGroupComponents.');
             }
-            const localVarPath = `/channels/{channel_id}/catalog/{group_name}/components`
+            const localVarPath = `/channels/{channel_id}/component_groups/{group_name}/components`
                 .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)))
                 .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -254,6 +286,14 @@ export const ChannelCatalogOperationsApiAxiosParamCreator = function (configurat
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
@@ -283,7 +323,7 @@ export const ChannelCatalogOperationsApiAxiosParamCreator = function (configurat
             if (channelId === null || channelId === undefined) {
                 throw new RequiredError('channelId','Required parameter channelId was null or undefined when calling getChannelCatalogGroups.');
             }
-            const localVarPath = `/channels/{channel_id}/catalog`
+            const localVarPath = `/channels/{channel_id}/component_groups`
                 .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -294,6 +334,14 @@ export const ChannelCatalogOperationsApiAxiosParamCreator = function (configurat
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
@@ -330,7 +378,7 @@ export const ChannelCatalogOperationsApiAxiosParamCreator = function (configurat
             if (groupName === null || groupName === undefined) {
                 throw new RequiredError('groupName','Required parameter groupName was null or undefined when calling putChannelCatalogGroup.');
             }
-            const localVarPath = `/channels/{channel_id}/catalog/{group_name}`
+            const localVarPath = `/channels/{channel_id}/component_groups/{group_name}`
                 .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)))
                 .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -342,6 +390,14 @@ export const ChannelCatalogOperationsApiAxiosParamCreator = function (configurat
             const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             if (xResourceVersion !== undefined && xResourceVersion !== null) {
                 localVarHeaderParameter['X-Resource-Version'] = String(xResourceVersion);
@@ -391,7 +447,7 @@ export const ChannelCatalogOperationsApiAxiosParamCreator = function (configurat
             if (componentName === null || componentName === undefined) {
                 throw new RequiredError('componentName','Required parameter componentName was null or undefined when calling putChannelCatalogGroupComponent.');
             }
-            const localVarPath = `/channels/{channel_id}/catalog/{group_name}/components/{component_name}`
+            const localVarPath = `/channels/{channel_id}/component_groups/{group_name}/components/{component_name}`
                 .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)))
                 .replace(`{${"group_name"}}`, encodeURIComponent(String(groupName)))
                 .replace(`{${"component_name"}}`, encodeURIComponent(String(componentName)));
@@ -404,6 +460,14 @@ export const ChannelCatalogOperationsApiAxiosParamCreator = function (configurat
             const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             if (xResourceVersion !== undefined && xResourceVersion !== null) {
                 localVarHeaderParameter['X-Resource-Version'] = String(xResourceVersion);

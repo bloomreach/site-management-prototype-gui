@@ -51,9 +51,9 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
               scrollButtons="auto"
               value={tab} onChange={(event, nextTab) => this.onTabChange(nextTab)}>
               <Tab label="Channels"/>
-              <Tab label="Pages"/>
-              <Tab label="Catalog"/>
-              <Tab label="Sitemap"/>
+              <Tab label="Layouts"/>
+              <Tab label="Components"/>
+              <Tab label="Routes"/>
               <Tab label="Menus"/>
             </Tabs>
           </AppBar>

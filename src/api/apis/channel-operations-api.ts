@@ -101,6 +101,14 @@ export const ChannelOperationsApiAxiosParamCreator = function (configuration?: C
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
+
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
                 query.set(key, localVarQueryParameter[key]);
@@ -140,6 +148,14 @@ export const ChannelOperationsApiAxiosParamCreator = function (configuration?: C
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
@@ -187,6 +203,14 @@ export const ChannelOperationsApiAxiosParamCreator = function (configuration?: C
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
+
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
                 query.set(key, localVarQueryParameter[key]);
@@ -227,6 +251,14 @@ export const ChannelOperationsApiAxiosParamCreator = function (configuration?: C
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
+
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
                 query.set(key, localVarQueryParameter[key]);
@@ -260,6 +292,14 @@ export const ChannelOperationsApiAxiosParamCreator = function (configuration?: C
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
@@ -307,6 +347,14 @@ export const ChannelOperationsApiAxiosParamCreator = function (configuration?: C
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
+
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
                 query.set(key, localVarQueryParameter[key]);
@@ -346,6 +394,14 @@ export const ChannelOperationsApiAxiosParamCreator = function (configuration?: C
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
@@ -394,6 +450,14 @@ export const ChannelOperationsApiAxiosParamCreator = function (configuration?: C
             const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             if (xResourceVersion !== undefined && xResourceVersion !== null) {
                 localVarHeaderParameter['X-Resource-Version'] = String(xResourceVersion);
@@ -451,6 +515,14 @@ export const ChannelOperationsApiAxiosParamCreator = function (configuration?: C
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
+
             if (xResourceVersion !== undefined && xResourceVersion !== null) {
                 localVarHeaderParameter['X-Resource-Version'] = String(xResourceVersion);
             }
@@ -500,6 +572,14 @@ export const ChannelOperationsApiAxiosParamCreator = function (configuration?: C
             const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             if (xResourceVersion !== undefined && xResourceVersion !== null) {
                 localVarHeaderParameter['X-Resource-Version'] = String(xResourceVersion);

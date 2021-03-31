@@ -25,24 +25,24 @@ export const ChannelSitemapOperationsApiAxiosParamCreator = function (configurat
     return {
         /**
          * 
-         * @summary Delete a sitemap item
+         * @summary Delete a route
          * @param {string} channelId 
-         * @param {string} itemName 
+         * @param {string} routeName
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteChannelSitemapItem: async (channelId: string, itemName: string, options: any = {}): Promise<RequestArgs> => {
+        deleteChannelSitemapItem: async (channelId: string, routeName: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'channelId' is not null or undefined
             if (channelId === null || channelId === undefined) {
                 throw new RequiredError('channelId','Required parameter channelId was null or undefined when calling deleteChannelSitemapItem.');
             }
-            // verify required parameter 'itemName' is not null or undefined
-            if (itemName === null || itemName === undefined) {
-                throw new RequiredError('itemName','Required parameter itemName was null or undefined when calling deleteChannelSitemapItem.');
+            // verify required parameter 'routeName' is not null or undefined
+            if (routeName === null || routeName === undefined) {
+                throw new RequiredError('routeName','Required parameter routeName was null or undefined when calling deleteChannelSitemapItem.');
             }
-            const localVarPath = `/channels/{channel_id}/sitemap/{item_name}`
+            const localVarPath = `/channels/{channel_id}/routes/{route_name}`
                 .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)))
-                .replace(`{${"item_name"}}`, encodeURIComponent(String(itemName)));
+                .replace(`{${"route_name"}}`, encodeURIComponent(String(routeName)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -52,6 +52,14 @@ export const ChannelSitemapOperationsApiAxiosParamCreator = function (configurat
             const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
@@ -71,7 +79,7 @@ export const ChannelSitemapOperationsApiAxiosParamCreator = function (configurat
         },
         /**
          * 
-         * @summary Get the channel sitemap
+         * @summary Get the channel route
          * @param {string} channelId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -81,7 +89,7 @@ export const ChannelSitemapOperationsApiAxiosParamCreator = function (configurat
             if (channelId === null || channelId === undefined) {
                 throw new RequiredError('channelId','Required parameter channelId was null or undefined when calling getChannelSitemap.');
             }
-            const localVarPath = `/channels/{channel_id}/sitemap`
+            const localVarPath = `/channels/{channel_id}/routes`
                 .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -93,6 +101,14 @@ export const ChannelSitemapOperationsApiAxiosParamCreator = function (configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
+
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
                 query.set(key, localVarQueryParameter[key]);
@@ -111,24 +127,24 @@ export const ChannelSitemapOperationsApiAxiosParamCreator = function (configurat
         },
         /**
          * 
-         * @summary Get a sitemap item
+         * @summary Get a route
          * @param {string} channelId 
-         * @param {string} itemName 
+         * @param {string} routeName
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChannelSitemapItem: async (channelId: string, itemName: string, options: any = {}): Promise<RequestArgs> => {
+        getChannelSitemapItem: async (channelId: string, routeName: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'channelId' is not null or undefined
             if (channelId === null || channelId === undefined) {
                 throw new RequiredError('channelId','Required parameter channelId was null or undefined when calling getChannelSitemapItem.');
             }
-            // verify required parameter 'itemName' is not null or undefined
-            if (itemName === null || itemName === undefined) {
-                throw new RequiredError('itemName','Required parameter itemName was null or undefined when calling getChannelSitemapItem.');
+            // verify required parameter 'routeName' is not null or undefined
+            if (routeName === null || routeName === undefined) {
+                throw new RequiredError('routeName','Required parameter routeName was null or undefined when calling getChannelSitemapItem.');
             }
-            const localVarPath = `/channels/{channel_id}/sitemap/{item_name}`
+            const localVarPath = `/channels/{channel_id}/routes/{route_name}`
                 .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)))
-                .replace(`{${"item_name"}}`, encodeURIComponent(String(itemName)));
+                .replace(`{${"route_name"}}`, encodeURIComponent(String(routeName)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -139,6 +155,14 @@ export const ChannelSitemapOperationsApiAxiosParamCreator = function (configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
+
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
                 query.set(key, localVarQueryParameter[key]);
@@ -157,26 +181,26 @@ export const ChannelSitemapOperationsApiAxiosParamCreator = function (configurat
         },
         /**
          * 
-         * @summary Create or update a sitemap item
+         * @summary Create or update a route
          * @param {string} channelId 
-         * @param {string} itemName 
+         * @param {string} routeName
          * @param {SitemapItem} [body] 
          * @param {string} [xResourceVersion] Resource&#x27;s version
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        putChannelSitemapItem: async (channelId: string, itemName: string, body?: SitemapItem, xResourceVersion?: string, options: any = {}): Promise<RequestArgs> => {
+        putChannelSitemapItem: async (channelId: string, routeName: string, body?: SitemapItem, xResourceVersion?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'channelId' is not null or undefined
             if (channelId === null || channelId === undefined) {
                 throw new RequiredError('channelId','Required parameter channelId was null or undefined when calling putChannelSitemapItem.');
             }
-            // verify required parameter 'itemName' is not null or undefined
-            if (itemName === null || itemName === undefined) {
-                throw new RequiredError('itemName','Required parameter itemName was null or undefined when calling putChannelSitemapItem.');
+            // verify required parameter 'routeName' is not null or undefined
+            if (routeName === null || routeName === undefined) {
+                throw new RequiredError('routeName','Required parameter routeName was null or undefined when calling putChannelSitemapItem.');
             }
-            const localVarPath = `/channels/{channel_id}/sitemap/{item_name}`
+            const localVarPath = `/channels/{channel_id}/routes/{route_name}`
                 .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)))
-                .replace(`{${"item_name"}}`, encodeURIComponent(String(itemName)));
+                .replace(`{${"route_name"}}`, encodeURIComponent(String(routeName)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -186,6 +210,14 @@ export const ChannelSitemapOperationsApiAxiosParamCreator = function (configurat
             const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("x-auth-token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+            }
 
             if (xResourceVersion !== undefined && xResourceVersion !== null) {
                 localVarHeaderParameter['X-Resource-Version'] = String(xResourceVersion);
@@ -222,9 +254,9 @@ export const ChannelSitemapOperationsApiFp = function(configuration?: Configurat
     return {
         /**
          * 
-         * @summary Delete a sitemap item
+         * @summary Delete a route
          * @param {string} channelId 
-         * @param {string} itemName 
+         * @param {string} routeName
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -237,7 +269,7 @@ export const ChannelSitemapOperationsApiFp = function(configuration?: Configurat
         },
         /**
          * 
-         * @summary Get the channel sitemap
+         * @summary Get the channel route
          * @param {string} channelId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -251,9 +283,9 @@ export const ChannelSitemapOperationsApiFp = function(configuration?: Configurat
         },
         /**
          * 
-         * @summary Get a sitemap item
+         * @summary Get a route
          * @param {string} channelId 
-         * @param {string} itemName 
+         * @param {string} routeName
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -266,9 +298,9 @@ export const ChannelSitemapOperationsApiFp = function(configuration?: Configurat
         },
         /**
          * 
-         * @summary Create or update a sitemap item
+         * @summary Create or update a route
          * @param {string} channelId 
-         * @param {string} itemName 
+         * @param {string} routeName
          * @param {SitemapItem} [body] 
          * @param {string} [xResourceVersion] Resource&#x27;s version
          * @param {*} [options] Override http request option.
