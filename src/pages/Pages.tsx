@@ -50,7 +50,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
   }
 
   private onChannelChanged (channelId: string) {
-    this.updatePagesByChannel(channelId);
+    this.setState({pages: [], currentPageTrees: []}, () => this.updatePagesByChannel(channelId));
   }
 
   render () {
