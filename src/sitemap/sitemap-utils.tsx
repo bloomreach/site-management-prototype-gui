@@ -65,7 +65,7 @@ export const siteMapItemSchema = {
     pageTitle: {
       type: ["string", 'null']
     },
-    page: {
+    layout: {
       type: ["string", 'null']
     },
     relativeContentPath: {

@@ -28,7 +28,7 @@ export interface SitemapItem {
      * @type {string}
      * @memberof SitemapItem
      */
-    page?: string;
+    layout?: string;
     /**
      * default page (header) title
      * @type {string}
