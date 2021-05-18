@@ -80,7 +80,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
                   open={props.open}
                   autoHideDuration={props.timeOut}
                   onClose={props.onClose}>
-                  <Alert severity={'success'}>
+                  <Alert severity={props.severity}>
                     {props.message}
                   </Alert>
                 </Snackbar>
