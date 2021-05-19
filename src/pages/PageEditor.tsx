@@ -29,7 +29,7 @@ import {AbstractComponent, Page} from "../api/models";
 import {JSONSchema7} from "json-schema";
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Form from "@rjsf/material-ui";
-import {getNodeKey, logError, logSuccess} from "../common/common-utils";
+import {getNodeKey, logError} from "../common/common-utils";
 import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
 import {LogContext} from "../LogContext";
 
@@ -266,7 +266,6 @@ class PageEditor extends React.Component<PageEditorProps, PageEditorState> {
         // @ts-ignore
         const componentCopy = nodeToComponent(rowInfo.node);
         console.log('copy to clipboard', componentCopy);
-
         navigator.clipboard.writeText(JSON.stringify(componentCopy));
         if (callback) {
             callback();
