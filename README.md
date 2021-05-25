@@ -50,4 +50,4 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 # Push Docker Image 
 
-    `push bloomreach/brx-dev-ui`
+    `docker push bloomreach/brx-dev-ui`
