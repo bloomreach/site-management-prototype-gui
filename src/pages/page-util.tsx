@@ -194,6 +194,9 @@ export const addPageSchema = {
         name: {
             type: "string",
         },
+        label: {
+            type: "string"
+        },
         description: {
             type: "string"
         },
@@ -229,6 +232,9 @@ const pageSchema = {
         },
         name: {
             type: "string",
+        },
+        label: {
+            type: "string"
         },
         description: {
             type: "string"
