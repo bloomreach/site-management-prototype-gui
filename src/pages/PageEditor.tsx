@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     AppBar,
-    Container,
+    Container, Divider,
     Drawer,
     Icon,
     IconButton,
@@ -91,6 +91,7 @@ class PageEditor extends React.Component<PageEditorProps, PageEditorState> {
                             </ListItemIcon>
                             <Typography variant="inherit">Delete Component</Typography>
                         </MenuItem>
+                        <Divider/>
                         <MenuItem onClick={() => this.copyComponentToClipBoard(rowInfo, () => popupState.close())}>
                             <ListItemIcon>
                                 <FileCopyOutlinedIcon fontSize="small"/>
