@@ -21,12 +21,13 @@ import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
 import {ChannelSiteMenuOperationsApi} from "../api/apis/channel-site-menu-operations-api";
 import {channelSiteMenuOperationsApi} from "../ApiContext";
-import {isNotEmptyOrNull} from "../common/common-utils";
+import {isNotEmptyOrNull, logError} from "../common/common-utils";
 import MenuIcon from '@material-ui/icons/Menu';
 import {Channel} from "../api/models";
 import {Nullable} from "../api/models/nullable";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import ChannelSwitcher from "../common/ChannelSwitcher";
+import {LogContext} from "../LogContext";
 
 type MenusState = {
   channels: Array<Channel>
@@ -48,6 +49,9 @@ const uiSchema = {
 };
 
 class Menus extends React.Component<MenusProps, MenusState> {
+
+  static contextType = LogContext;
+  context!: React.ContextType<typeof LogContext>;
 
   constructor (props: MenusProps) {
     super(props);
@@ -71,7 +75,9 @@ class Menus extends React.Component<MenusProps, MenusState> {
         currentChannelId: channelId,
         menus: value.data
       }, () => console.log(value.data));
-    });
+    }).catch(error => {
+      logError(`error retrieving menus:  ${error?.response?.data}`, this.context); // error in the above string (in this case, yes)!
+    });;
   }
 
   render () {

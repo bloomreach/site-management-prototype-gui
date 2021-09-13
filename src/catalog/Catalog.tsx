@@ -83,7 +83,9 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
                         this.setState({catalogGroupComponents: catalogGroupComponents});
                     })
                 });
-            });
+            }).catch(error => {
+                logError(`error retrieving component groups:  ${error?.response?.data}`, this.context); // error in the above string (in this case, yes)!
+            });;
         }
     }
 

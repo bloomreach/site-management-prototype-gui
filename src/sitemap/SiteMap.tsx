@@ -83,7 +83,9 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
                 currentChannelId: channelId,
                 treeData: convertSiteMapToTreeData(value.data)
             }, () => console.log(this.state.treeData));
-        });
+        }).catch(error => {
+            logError(`error retrieving routes:  ${error?.response?.data}`, this.context); // error in the above string (in this case, yes)!
+        });;
     }
 
     getMenu(rowInfo: ExtendedNodeData) {

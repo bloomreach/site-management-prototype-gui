@@ -9,6 +9,8 @@ import Form from "@rjsf/material-ui";
 import PageAccordion from "./PageAccordion";
 import {channelPageOperationsApi} from "../ApiContext";
 import ChannelSwitcher from "../common/ChannelSwitcher";
+import {logError} from "../common/common-utils";
+import {LogContext} from "../LogContext";
 
 type PagesState = {
   channels: Array<Channel>
@@ -22,6 +24,8 @@ type PagesProps = {}
 class Pages extends React.Component<PagesProps, PagesState> {
 
   // static contextType: ApiContextType = ApiContext;
+  static contextType = LogContext;
+  context!: React.ContextType<typeof LogContext>;
 
   constructor (props: PagesProps) {
     super(props);
@@ -46,6 +50,8 @@ class Pages extends React.Component<PagesProps, PagesState> {
         pages: value.data,
         currentPageTrees: convertPagesToTreeModelArray(value.data)
       })
+    }).catch(error => {
+      logError(`error retrieving page layouts:  ${error?.response?.data}`, this.context); // error in the above string (in this case, yes)!
     });
   }
 
