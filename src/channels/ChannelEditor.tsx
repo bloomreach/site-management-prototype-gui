@@ -63,6 +63,7 @@ import {
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import {logError, logSuccess} from "../common/common-utils";
+import {LogContext} from "../LogContext";
 //todo a lot of copy paste from Catalog item, fix later
 type ChannelEditorState = {
   channel: Channel
@@ -80,6 +81,9 @@ type ChannelEditorProps = {
 
 class ChannelEditor extends React.Component<ChannelEditorProps, ChannelEditorState> {
 
+  static contextType = LogContext;
+  context!: React.ContextType<typeof LogContext>;
+
   constructor (props: ChannelEditorProps) {
     super(props);
 
@@ -95,8 +99,12 @@ class ChannelEditor extends React.Component<ChannelEditorProps, ChannelEditorSta
 
   componentDidMount (): void {
     const api: ChannelOperationsApi = channelOperationsApi;
-    api.getChannelParametersInfo(this.props.channel.id).then(response => this.setState({parameters: response.data}));
-    api.getFieldGroups(this.props.channel.id).then(response => this.setState({fieldGroups: response.data}));
+    api.getChannelParametersInfo(this.props.channel.id).then(response => this.setState({parameters: response.data})).catch(error => {
+      logError(`error retrieving channel param info:  ${error?.response?.data}`, this.context); // error in the above string (in this case, yes)!
+    });;
+    api.getFieldGroups(this.props.channel.id).then(response => this.setState({fieldGroups: response.data})).catch(error => {
+      logError(`error retrieving channel field groups  ${error?.response?.data}`, this.context); // error in the above string (in this case, yes)!
+    });;
   }
 
   render () {
