@@ -101,10 +101,10 @@ class ChannelEditor extends React.Component<ChannelEditorProps, ChannelEditorSta
     const api: ChannelOperationsApi = channelOperationsApi;
     api.getChannelParametersInfo(this.props.channel.id).then(response => this.setState({parameters: response.data})).catch(error => {
       logError(`error retrieving channel param info:  ${error?.response?.data}`, this.context); // error in the above string (in this case, yes)!
-    });;
+    });
     api.getFieldGroups(this.props.channel.id).then(response => this.setState({fieldGroups: response.data})).catch(error => {
       logError(`error retrieving channel field groups  ${error?.response?.data}`, this.context); // error in the above string (in this case, yes)!
-    });;
+    });
   }
 
   render () {
