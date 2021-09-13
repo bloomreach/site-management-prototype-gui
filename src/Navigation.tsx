@@ -12,6 +12,8 @@ import {endpoint} from "./ApiContext";
 import Catalog from "./catalog/Catalog";
 import LogProvider, {LogContext} from "./LogContext";
 import Alert from '@material-ui/lab/Alert';
+import axios, {AxiosResponse} from 'axios';
+import {logError} from "./common/common-utils";
 
 type NavigationState = {
   tab: number,
@@ -20,6 +22,9 @@ type NavigationState = {
 type NavigationProps = {}
 
 class Navigation extends React.Component<NavigationProps, NavigationState> {
+
+  static contextType = LogContext;
+  context!: React.ContextType<typeof LogContext>;
 
   constructor (props: NavigationProps) {
     super(props);

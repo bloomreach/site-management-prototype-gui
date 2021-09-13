@@ -56,6 +56,15 @@ export function convertSiteMapToTreeData (siteMapItems: Array<SitemapItem>): Tre
   return treeData;
 }
 
+export const simpleSiteMapItemSchema = {
+  type: "object",
+  properties: {
+    name: {
+      type: "string",
+    }
+  }
+};
+
 export const siteMapItemSchema = {
   type: "object",
   properties: {
@@ -75,6 +84,15 @@ export const siteMapItemSchema = {
       "type": "object",
       "additionalProperties": {
         "type": "string"
+      }
+    },
+    documentRequired:{
+      type: "boolean"
+    },
+    doctypePages:{
+      type: "array",
+      items: {
+        type: "string"
       }
     }
   }

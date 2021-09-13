@@ -22,7 +22,7 @@ export default class LogProvider extends React.Component<{}, LogProviderState> {
     this.state = {
       severity: 'error',
       message: "",
-      timeOut: 2000,
+      timeOut: 6000,
       open: false,
     };
     this.onClose = this.onClose.bind(this);
