@@ -76,8 +76,8 @@ class Settings extends React.Component<SettingProps, SettingState> {
 
     save({apiKey, namespace}: { apiKey: string | undefined; namespace: string | undefined }): void {
         this.setState({namespace: namespace, apiKey: apiKey}, () => {
-            cookies.set('namespace', namespace);
-            cookies.set('apiKey', apiKey);
+            cookies.set('namespace', namespace, {secure:true, sameSite:'strict'});
+            cookies.set('apiKey', apiKey, {secure:true, sameSite:'strict'});
             setEndpoint(`https://${namespace}.bloomreach.io/management/site/v1`, this.context);
         })
     }

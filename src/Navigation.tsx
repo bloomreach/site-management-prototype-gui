@@ -32,9 +32,9 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
         super(props);
 
         // @ts-ignore
-        window._env_.BRX_NAMESPACE && cookies.set('namespace', window._env_.BRX_NAMESPACE);
+        window._env_.BRX_NAMESPACE && cookies.set('namespace', window._env_.BRX_NAMESPACE,{secure:true, sameSite:'strict'});
         // @ts-ignore
-        window._env_.BRX_API_KEY && cookies.set('apiKey', window._env_.BRX_API_KEY);
+        window._env_.BRX_API_KEY && cookies.set('apiKey', window._env_.BRX_API_KEY, {secure:true, sameSite:'strict'});
 
         const namespace = cookies.get('namespace');
 
