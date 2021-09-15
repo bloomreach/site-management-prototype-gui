@@ -16,7 +16,7 @@ import AddOutlinedIcon from "@material-ui/icons/Add";
 import {Nullable} from "../api/models/nullable";
 import ChannelSwitcher from "../common/ChannelSwitcher";
 import {ChannelCatalogOperationsApi} from "../api/apis/channel-catalog-operations-api";
-import {channelCatalogOperationsApi} from "../ApiContext";
+import {getChannelCatalogOperationsApi} from "../ApiContext";
 import {CatalogGroup, ComponentDefinition} from "../api/models";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CatalogItem from "./CatalogItem";
@@ -71,7 +71,7 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
         if (this.state.currentChannelId !== null) {
             const catalogGroupComponents: Array<CatalogGroupComponents> = [];
 
-            const api: ChannelCatalogOperationsApi = channelCatalogOperationsApi;
+            const api: ChannelCatalogOperationsApi = getChannelCatalogOperationsApi();
             // @ts-ignore
             api.getChannelCatalogGroups(this.state.currentChannelId).then(value => {
                 const catalogGroups: Array<CatalogGroup> = value.data;
@@ -184,7 +184,7 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
     }
 
     private deleteComponentDefinition(componentDefinition: ComponentDefinition) {
-        const api: ChannelCatalogOperationsApi = channelCatalogOperationsApi;
+        const api: ChannelCatalogOperationsApi = getChannelCatalogOperationsApi();
         const group = componentDefinition.id.split('/')[0];
         const name = componentDefinition.id.split('/')[1];
         this.state.currentChannelId && api.deleteChannelCatalogGroupComponent(this.state.currentChannelId, group, name).then(value => {
@@ -194,7 +194,7 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
 
     private saveComponentDefinition(componentDefinition: ComponentDefinition) {
         console.log('saving..', componentDefinition)
-        const api: ChannelCatalogOperationsApi = channelCatalogOperationsApi;
+        const api: ChannelCatalogOperationsApi = getChannelCatalogOperationsApi();
         const group = componentDefinition.id.split('/')[0];
         const name = componentDefinition.id.split('/')[1];
         this.state.currentChannelId && api.getChannelCatalogGroupComponent(this.state.currentChannelId, group, name).then(response => {
@@ -211,7 +211,7 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
 
     private addCatalogGroup(catalogGroup: CatalogGroup, callback?: () => any) {
         console.log('add catalog group', catalogGroup)
-        const api: ChannelCatalogOperationsApi = channelCatalogOperationsApi;
+        const api: ChannelCatalogOperationsApi = getChannelCatalogOperationsApi();
         this.state.currentChannelId && api.putChannelCatalogGroup(this.state.currentChannelId, catalogGroup.name, catalogGroup).then(() => {
             this.updateCatalogs();
             callback && callback();
@@ -219,7 +219,7 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
     }
 
     private addComponentDefinition(componentDefinition: ComponentDefinition, group?: string, callback?: () => any) {
-        const api: ChannelCatalogOperationsApi = channelCatalogOperationsApi;
+        const api: ChannelCatalogOperationsApi = getChannelCatalogOperationsApi();
         if (componentDefinition.label) {
             let componentName = slugify(componentDefinition.label);
             const component = {...componentDefinition, id: `${group}/${componentName}`}
@@ -240,7 +240,7 @@ class Catalog extends React.Component<CatalogProps, CatalogState> {
     }
 
     private deleteCatalogGroup(catalogGroup: string) {
-        const api: ChannelCatalogOperationsApi = channelCatalogOperationsApi;
+        const api: ChannelCatalogOperationsApi = getChannelCatalogOperationsApi();
         this.state.currentChannelId && catalogGroup &&
         api.deleteChannelCatalogGroup(this.state.currentChannelId,
             catalogGroup).then(() => {

@@ -20,7 +20,7 @@ import AddOutlinedIcon from "@material-ui/icons/Add";
 import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
 import {ChannelSiteMenuOperationsApi} from "../api/apis/channel-site-menu-operations-api";
-import {channelSiteMenuOperationsApi} from "../ApiContext";
+import {getChannelSiteMenuOperationsApi} from "../ApiContext";
 import {isNotEmptyOrNull, logError} from "../common/common-utils";
 import MenuIcon from '@material-ui/icons/Menu';
 import {Channel} from "../api/models";
@@ -69,7 +69,7 @@ class Menus extends React.Component<MenusProps, MenusState> {
   }
 
   updateMenuByChannel (channelId: string) {
-    const api: ChannelSiteMenuOperationsApi = channelSiteMenuOperationsApi;
+    const api: ChannelSiteMenuOperationsApi = getChannelSiteMenuOperationsApi();
     api.getChannelSitemenus(channelId).then(value => {
       this.setState({
         currentChannelId: channelId,
@@ -132,7 +132,7 @@ class Menus extends React.Component<MenusProps, MenusState> {
   }
 
   private addMenu (menu: string, callback?: () => any) {
-    const api: ChannelSiteMenuOperationsApi = channelSiteMenuOperationsApi;
+    const api: ChannelSiteMenuOperationsApi = getChannelSiteMenuOperationsApi();
     // @ts-ignore
     api.putChannelSitemenu(this.state.currentChannelId, menu).then(() => {
       callback && callback();
@@ -141,7 +141,7 @@ class Menus extends React.Component<MenusProps, MenusState> {
   }
 
   private deleteMenu (menu: string, callback?: () => any) {
-    const api: ChannelSiteMenuOperationsApi = channelSiteMenuOperationsApi;
+    const api: ChannelSiteMenuOperationsApi = getChannelSiteMenuOperationsApi();
     // @ts-ignore
     api.getChannelSitemenu(this.state.currentChannelId, menu).then(value => {
       // @ts-ignore

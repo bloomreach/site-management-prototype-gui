@@ -1,6 +1,6 @@
 import React from 'react';
 import {FormControl, MenuItem, Select} from "@material-ui/core";
-import {channelOperationsApi} from "../ApiContext";
+import {getChannelOperationsApi} from "../ApiContext";
 import {ChannelOperationsApi} from "../api/apis/channel-operations-api";
 import {Channel} from "../api/models";
 import {Nullable} from "../api/models/nullable";
@@ -29,7 +29,7 @@ class ChannelSwitcher extends React.Component<ChannelSwitcherProps, ChannelSwitc
   }
 
   updateChannels () {
-    const api: ChannelOperationsApi = channelOperationsApi;
+    const api: ChannelOperationsApi = getChannelOperationsApi();
     api.getChannels().then(value => {
       const channels: Array<Channel> = value.data;
       const currentChannel = channels.find(channel => channel.branch !== null);

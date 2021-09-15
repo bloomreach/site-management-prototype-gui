@@ -5,12 +5,14 @@ type LogProviderState = {
   message: string
   timeOut: number
   open: boolean
+  endpoint: string | undefined
 }
 
 export interface LogContextType extends LogProviderState {
   logError: (message: string) => void;
   logSuccess: (message: string) => void;
   onClose: () => void;
+  setEndpoint: (endpoint: string) => void;
 }
 
 export const LogContext = React.createContext<Partial<LogContextType>>({});
@@ -24,10 +26,12 @@ export default class LogProvider extends React.Component<{}, LogProviderState> {
       message: "",
       timeOut: 6000,
       open: false,
+      endpoint: undefined
     };
     this.onClose = this.onClose.bind(this);
     this.logSuccess = this.logSuccess.bind(this);
     this.logError = this.logError.bind(this);
+    this.setEndpoint = this.setEndpoint.bind(this);
   }
 
   logError = (message: string) => {
@@ -42,13 +46,18 @@ export default class LogProvider extends React.Component<{}, LogProviderState> {
     this.setState({open: false})
   };
 
+  setEndpoint = (endpoint: string) => {
+    this.setState({endpoint: endpoint});
+  }
+
   render () {
     return (
       <LogContext.Provider value={{
         ...this.state,
         logError: this.logError,
         logSuccess: this.logSuccess,
-        onClose: this.onClose
+        onClose: this.onClose,
+        setEndpoint: this.setEndpoint
       }}>
         {this.props.children}
       </LogContext.Provider>

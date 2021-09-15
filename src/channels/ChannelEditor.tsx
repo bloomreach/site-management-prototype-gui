@@ -28,7 +28,7 @@ import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
 import {channelSchema, channelUiSchema} from "./channel-utils";
 import {Channel, FieldGroup, ParameterType} from "../api/models";
-import {baseUrl, channelOperationsApi} from "../ApiContext";
+import {getBaseUrl, getChannelOperationsApi} from "../ApiContext";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 import {ChannelOperationsApi} from "../api/apis/channel-operations-api";
@@ -98,7 +98,7 @@ class ChannelEditor extends React.Component<ChannelEditorProps, ChannelEditorSta
   }
 
   componentDidMount (): void {
-    const api: ChannelOperationsApi = channelOperationsApi;
+    const api: ChannelOperationsApi = getChannelOperationsApi();
     api.getChannelParametersInfo(this.props.channel.id).then(response => this.setState({parameters: response.data})).catch(error => {
       logError(`error retrieving channel param info:  ${error?.response?.data}`, this.context); // error in the above string (in this case, yes)!
     });
@@ -341,7 +341,7 @@ class ChannelEditor extends React.Component<ChannelEditorProps, ChannelEditorSta
       };
     });
 
-    const api: ChannelOperationsApi = channelOperationsApi;
+    const api: ChannelOperationsApi = getChannelOperationsApi();
     api.deleteChannelParameterInfo(this.state.channel.id, parameter.name).then();
   }
 
@@ -371,7 +371,7 @@ class ChannelEditor extends React.Component<ChannelEditorProps, ChannelEditorSta
                 fieldGroups
               };
             })
-            const api: ChannelOperationsApi = channelOperationsApi;
+            const api: ChannelOperationsApi = getChannelOperationsApi();
             api.deleteFieldGroup(this.state.channel.id, fieldGroup.name).then();
           }}>
           <DeleteOutlinedIcon/>
@@ -388,7 +388,7 @@ class ChannelEditor extends React.Component<ChannelEditorProps, ChannelEditorSta
           edge="start"
           color="inherit"
           aria-label="Delete Channel"
-          onClick={() => window.open(`${baseUrl}/cms/projects/${channel.id?.split(':')[1]}/channels`, 'new')}>
+          onClick={() => window.open(`${getBaseUrl()}/cms/projects/${channel.id?.split(':')[1]}/channels`, 'new')}>
           <DeleteOutlinedIcon/>
         </IconButton>
         <IconButton
@@ -585,14 +585,14 @@ class ChannelEditor extends React.Component<ChannelEditorProps, ChannelEditorSta
       });
 
       //updating by removing and adding...
-      const api: ChannelOperationsApi = channelOperationsApi;
+      const api: ChannelOperationsApi = getChannelOperationsApi();
       api.deleteChannelParameterInfo(this.state.channel.id, selectedParameter.name).then();
       api.putChannelParameterInfo(this.state.channel.id, currentParameter.name, currentParameter).then();
     }
   }
 
   private saveChannel (channel: Channel) {
-    const api: ChannelOperationsApi = channelOperationsApi;
+    const api: ChannelOperationsApi = getChannelOperationsApi();
 
     this.state.fieldGroups.forEach(fieldGroup => {
       api.getFieldGroup(channel.id, fieldGroup.name).then(response => {
@@ -620,7 +620,7 @@ class ChannelEditor extends React.Component<ChannelEditorProps, ChannelEditorSta
   }
 
   updateChannel () {
-    const api: ChannelOperationsApi = channelOperationsApi;
+    const api: ChannelOperationsApi = getChannelOperationsApi();
     api.getChannel(this.state.channel.id).then(value => {
       let channel: Channel = value.data;
       if (channel.responseHeaders === null) {

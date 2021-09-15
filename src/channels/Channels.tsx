@@ -4,7 +4,7 @@ import {Channel} from "../api/models";
 import AddOutlinedIcon from "@material-ui/icons/Add";
 import Icon from "@material-ui/core/Icon";
 import {ChannelOperationsApi} from "../api/apis/channel-operations-api";
-import {baseUrl, channelOperationsApi} from "../ApiContext";
+import {getBaseUrl, getChannelOperationsApi} from "../ApiContext";
 import {LogContext} from "../LogContext";
 import {logError, logSuccess} from "../common/common-utils";
 import ChannelEditor from "./ChannelEditor";
@@ -52,7 +52,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
   }
 
   updateChannels () {
-    const api: ChannelOperationsApi = channelOperationsApi;
+    const api: ChannelOperationsApi = getChannelOperationsApi();
     api.getChannels().then(value => {
       let data: Array<Channel> = value.data;
       data.map(channel => {
@@ -76,7 +76,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
             color="primary"
             style={{marginRight: '10px'}}
             startIcon={<AddOutlinedIcon/>}
-            onClick={() => window.open(`${baseUrl}/cms/experience-manager`, 'new')}>
+            onClick={() => window.open(`${getBaseUrl()}/cms/experience-manager`, 'new')}>
             Add Channel
           </Button>
           <Button
@@ -84,7 +84,7 @@ class Channels extends React.Component<ChannelsProps, ChannelsState> {
             color="primary"
             style={{marginRight: '10px'}}
             startIcon={<Icon className="fas fa-code-branch"/>}
-            onClick={() => window.open(`${baseUrl}/cms/projects`, 'new')}>
+            onClick={() => window.open(`${getBaseUrl()}/cms/projects`, 'new')}>
             Branch Channel
           </Button>
         </Toolbar>

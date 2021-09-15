@@ -19,7 +19,7 @@ import {
 import 'react-sortable-tree/style.css';
 import {Channel, SitemapItem} from "../api/models";
 import AddOutlinedIcon from "@material-ui/icons/Add";
-import {channelSiteMapOperationsApi} from "../ApiContext";
+import {getChannelSiteMapOperationsApi} from "../ApiContext";
 import {Nullable} from "../api/models/nullable";
 import {ChannelSitemapOperationsApi} from "../api/apis/channel-sitemap-operations-api";
 import SortableTree, {addNodeUnderParent, ExtendedNodeData, removeNode, TreeItem} from "react-sortable-tree";
@@ -27,7 +27,8 @@ import {
     convertSiteMapToTreeData,
     hasWildCardOrReserved,
     nodeToSiteMapItems,
-    replaceWildCards, simpleSiteMapItemSchema,
+    replaceWildCards,
+    simpleSiteMapItemSchema,
     siteMapItemSchema,
     siteMapItemToTreeItem,
     siteMapItemUiSchema
@@ -77,7 +78,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
     }
 
     updateSiteMapByChannel(channelId: string) {
-        const api: ChannelSitemapOperationsApi = channelSiteMapOperationsApi;
+        const api: ChannelSitemapOperationsApi = getChannelSiteMapOperationsApi();
         api.getChannelSitemap(channelId).then(value => {
             this.setState({
                 currentChannelId: channelId,
@@ -228,7 +229,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
 
     saveSiteMap() {
         const siteMap: SitemapItem[] = nodeToSiteMapItems(this.state.treeData);
-        const api: ChannelSitemapOperationsApi = channelSiteMapOperationsApi;
+        const api: ChannelSitemapOperationsApi = getChannelSiteMapOperationsApi();
 
         this.state.currentChannelId &&
 
@@ -311,7 +312,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
             if (callback) {
                 callback();
                 if (rowInfo.parentNode === null) {
-                    const api: ChannelSitemapOperationsApi = channelSiteMapOperationsApi;
+                    const api: ChannelSitemapOperationsApi = getChannelSiteMapOperationsApi();
                     const siteMapItem = rowInfo.node.siteMapItem;
                     // @ts-ignore
                     api.deleteChannelSitemapItem(this.state.currentChannelId, siteMapItem.name).then(() => {

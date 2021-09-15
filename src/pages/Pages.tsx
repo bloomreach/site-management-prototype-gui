@@ -7,7 +7,7 @@ import {convertPagesToTreeModelArray, getPageSchema, TreeModel} from "./page-uti
 import {ChannelPageOperationsApi} from "../api";
 import Form from "@rjsf/material-ui";
 import PageAccordion from "./PageAccordion";
-import {channelPageOperationsApi} from "../ApiContext";
+import {getChannelPageOperationsApi} from "../ApiContext";
 import ChannelSwitcher from "../common/ChannelSwitcher";
 import {logError} from "../common/common-utils";
 import {LogContext} from "../LogContext";
@@ -43,7 +43,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
   }
 
   updatePagesByChannel (channelId: string) {
-    const api: ChannelPageOperationsApi = channelPageOperationsApi;
+    const api: ChannelPageOperationsApi = getChannelPageOperationsApi();
     api.getChannelPages(channelId).then(value => {
       this.setState({
         currentChannelId: channelId,
@@ -101,7 +101,7 @@ class Pages extends React.Component<PagesProps, PagesState> {
   }
 
   addPage (addPage: Page) {
-    const api: ChannelPageOperationsApi = channelPageOperationsApi;
+    const api: ChannelPageOperationsApi = getChannelPageOperationsApi();
     api.putChannelPage(this.state.currentChannelId, addPage.name, addPage).then(value => {
       this.updatePagesByChannel(this.state.currentChannelId);
       this.closeAddDialog();
@@ -113,14 +113,14 @@ class Pages extends React.Component<PagesProps, PagesState> {
   }
 
   deletePage (page: Page) {
-    const api: ChannelPageOperationsApi = channelPageOperationsApi;
+    const api: ChannelPageOperationsApi = getChannelPageOperationsApi();
     api.deleteChannelPage(this.state.currentChannelId, page.name).then(value => {
       this.updatePagesByChannel(this.state.currentChannelId);
     });
   }
 
   savePage (page: Page) {
-    const api: ChannelPageOperationsApi = channelPageOperationsApi;
+    const api: ChannelPageOperationsApi = getChannelPageOperationsApi();
     api.getChannelPage(this.state.currentChannelId, page.name).then(value => {
       api.putChannelPage(this.state.currentChannelId, page.name, page, value.headers['x-resource-version'])
         .then(() => {

@@ -19,5 +19,9 @@ export function logSuccess (message: string, context?: LogContextType | Partial<
   context && context.logSuccess && context.logSuccess(message);
 }
 
+export function setEndpoint (endpoint: string, context?: LogContextType | Partial<LogContextType>) {
+  context && context.setEndpoint && context.setEndpoint(endpoint);
+}
+
 export const getNodeKey = ({node}: any) => node.id;
 
