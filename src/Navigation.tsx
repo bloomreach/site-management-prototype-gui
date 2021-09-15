@@ -38,11 +38,13 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
 
         const namespace = cookies.get('namespace');
 
-        setEndpoint(`https://${namespace}.bloomreach.io/management/site/v1`, this.context);
+        const endpoint = namespace ? `https://${namespace}.bloomreach.io/management/site/v1` : 'https://<namespace>.bloomreach.io/management/site/v1'
+
+        namespace && setEndpoint(`https://${namespace}.bloomreach.io/management/site/v1`, this.context);
 
         this.state = {
             tab: namespace ? 0 : 5,
-            endpoint: `https://${namespace}.bloomreach.io/management/site/v1`
+            endpoint: endpoint
         }
 
     }
