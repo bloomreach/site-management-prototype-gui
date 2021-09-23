@@ -42,7 +42,7 @@ export function getChannelOperationsApi(): ChannelOperationsApi {
 }
 
 export function getPlugins(): GenericPluginApi {
-    return new GenericPluginApi({}, `http://localhost:3000`);
+    return new GenericPluginApi({}, `https://bloomreach-content-tools.netlify.app`);
 }
 
 export function getGenericSiteApi(): GenericPluginApi {
