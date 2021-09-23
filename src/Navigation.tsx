@@ -5,7 +5,7 @@ import Tab from "@material-ui/core/Tab";
 import TabPanel from "./TabPanel";
 import Channels from "./channels/Channels";
 import Pages from "./pages/Pages";
-import {Snackbar, Typography} from "@material-ui/core";
+import {Badge, Snackbar, Typography} from "@material-ui/core";
 import SiteMap from "./sitemap/SiteMap";
 import Menus from "./menu/Menus";
 import Catalog from "./catalog/Catalog";
@@ -14,6 +14,8 @@ import Alert from '@material-ui/lab/Alert';
 import Settings from "./settings/Settings";
 import {Cookies} from "react-cookie";
 import {setEndpoint} from "./common/common-utils";
+import SettingsApplicationsOutlinedIcon from '@material-ui/icons/SettingsApplicationsOutlined';
+import Plugins from "./plugins/Plugins";
 
 type NavigationState = {
     tab: number,
@@ -69,7 +71,38 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
                             <Tab label="Components"/>
                             <Tab label="Routes"/>
                             <Tab label="Menus"/>
-                            <Tab label="Settings"/>
+                            <Tab label="Settings" icon={
+                                <Badge
+                                    style={{
+                                        right: '30px',
+                                        position: 'absolute',
+                                        top: '15px'
+                                    }}
+                                    badgeContent={<SettingsApplicationsOutlinedIcon />}>
+                                </Badge>
+
+                            }/>
+                            <Tab label="MarketPlace"  icon={
+                                <Badge
+                                    style={{
+                                        right: '30px',
+                                        position: 'absolute',
+                                        top: '15px'
+                                    }}
+                                    badgeContent={'U/C'} color="primary">
+                                </Badge>
+                            }/>
+                            <Tab label="Content Types" disabled icon={
+                                <Badge
+                                    style={{
+                                        right: '30px',
+                                        position: 'absolute',
+                                        top: '15px'
+                                    }}
+                                    badgeContent={'C/S'} color="primary">
+                                </Badge>
+                            }/>
+
                         </Tabs>
                     </AppBar>
                     <TabPanel value={tab} index={0}>
@@ -89,6 +122,9 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
                     </TabPanel>
                     <TabPanel value={tab} index={5}>
                         <Settings/>
+                    </TabPanel>
+                    <TabPanel value={tab} index={6}>
+                        <Plugins/>
                     </TabPanel>
                     <LogContext.Consumer>
                         {(props) => {

@@ -1,0 +1,275 @@
+[
+  {
+    "id": "vsf",
+    "name": "Vue Storefront",
+    "icon": "https://uploads-ssl.webflow.com/5e7cf661c23ac9df156d9c3d/5eef851c469315fbace32cf6_FavIcon_32x32.png",
+    "description": "<p>This plugin will install all required components to integrate with Vue StoreFront <a target=\"_blank\" href=\"https://docs.storefrontui.io/?path=/story/components-organisms-hero--common/\">Preview Components</a></p>",
+    "installationVerification": {
+      "type": "site",
+      "description": "check creation of component group: vsf",
+      "path": "/channels/{channel_id}/component_groups/vsf",
+      "method": "GET",
+      "responseCode": 200
+    },
+    "installationActionSet": [
+      {
+        "description": "create component group: vsf",
+        "type": "site",
+        "path": "/channels/{channel_id}/component_groups/vsf",
+        "method": "PUT",
+        "body": {
+          "name": "vsf",
+          "hidden": false,
+          "system": false
+        },
+        "responseCode": 201
+      },
+      {
+        "description": "create banner component",
+        "type": "site",
+        "path": "/channels/{channel_id}/component_groups/vsf/components/vsfbanner",
+        "method": "PUT",
+        "body": {
+          "id": "vsf/vsfbanner",
+          "extends": "base/component",
+          "hidden": false,
+          "system": false,
+          "xtype": null,
+          "ctype": "VsfBanner",
+          "contentType": null,
+          "label": "Vsf Banner",
+          "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNDBweCIgaGVpZ2h0PSI0MHB4IiB2aWV3Qm94PSIwIDAgNDAgNDAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgc3R5bGU9ImJhY2tncm91bmQ6ICNGRkZGRkY7Ij4KICAgIDx0aXRsZT5pY29uL2Jhbm5lci1jdGE8L3RpdGxlPgogICAgPGRlZnM+CiAgICAgICAgPHJlY3QgaWQ9InBhdGgtMSIgeD0iMSIgeT0iMSIgd2lkdGg9IjM4IiBoZWlnaHQ9IjM4IiByeD0iMiI+PC9yZWN0PgogICAgPC9kZWZzPgogICAgPGcgaWQ9Imljb24vYmFubmVyLWN0YSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPHJlY3QgZmlsbD0iI0ZGRkZGRiIgeD0iMCIgeT0iMCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIj48L3JlY3Q+CiAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZSIgZmlsbC1vcGFjaXR5PSIwLjA3MzI4OTk5MTMiIGZpbGw9IiMwMDAwMDAiIHg9IjUiIHk9IjUiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgcng9IjIiPjwvcmVjdD4KICAgICAgICA8bWFzayBpZD0ibWFzay0yIiBmaWxsPSJ3aGl0ZSI+CiAgICAgICAgICAgIDx1c2UgeGxpbms6aHJlZj0iI3BhdGgtMSI+PC91c2U+CiAgICAgICAgPC9tYXNrPgogICAgICAgIDxyZWN0IHN0cm9rZT0iI0U4RThFQSIgeD0iMC41IiB5PSIwLjUiIHdpZHRoPSIzOSIgaGVpZ2h0PSIzOSIgcng9IjIiPjwvcmVjdD4KICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlLUNvcHkiIGZpbGwtb3BhY2l0eT0iMC4yNSIgZmlsbD0iIzAwMDAwMCIgbWFzaz0idXJsKCNtYXNrLTIpIiB4PSI5LjkwNjI1IiB5PSIxMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjQiPjwvcmVjdD4KICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlLUNvcHktNSIgZmlsbD0iIzlFOUU5RSIgbWFzaz0idXJsKCNtYXNrLTIpIiB4PSI5LjkwNjI1IiB5PSIxNyIgd2lkdGg9IjIwIiBoZWlnaHQ9IjEiPjwvcmVjdD4KICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlLUNvcHktNiIgZmlsbD0iIzlFOUU5RSIgbWFzaz0idXJsKCNtYXNrLTIpIiB4PSIxNC45MDYyNSIgeT0iMjAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxIj48L3JlY3Q+CiAgICAgICAgPGcgaWQ9Ikdyb3VwIiBtYXNrPSJ1cmwoI21hc2stMikiPgogICAgICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMS4wMDAwMDAsIDI0LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZSIgZmlsbD0iIzAwQjVFMiIgeD0iMCIgeT0iMCIgd2lkdGg9IjE4IiBoZWlnaHQ9IjciIHJ4PSIxIj48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlLUNvcHktMiIgZmlsbD0iI0ZGRkZGRiIgeD0iNCIgeT0iMi41IiB3aWR0aD0iMTAiIGhlaWdodD0iMiI+PC9yZWN0PgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=",
+          "parameters": [
+            {
+              "name": "document",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": null,
+              "system": false,
+              "config": {
+                "pickerConfiguration": "cms-pickers/documents-only",
+                "pickerInitialPath": "",
+                "pickerRememberLastVisited": false,
+                "pickerSelectableNodeTypes": [],
+                "relative": true,
+                "pickerRootPath": null,
+                "type": "contentpath"
+              }
+            },
+            {
+              "name": "root",
+              "valueType": "string",
+              "required": false,
+              "hidden": true,
+              "overlay": false,
+              "defaultValue": "banners",
+              "displayName": null,
+              "system": false,
+              "config": null
+            },
+            {
+              "name": "document-template-query",
+              "valueType": "string",
+              "required": false,
+              "hidden": true,
+              "overlay": false,
+              "defaultValue": "new-VsfBanner-document",
+              "displayName": null,
+              "system": false,
+              "config": null
+            },
+            {
+              "name": "folder-template-query",
+              "valueType": "string",
+              "required": false,
+              "hidden": true,
+              "overlay": false,
+              "defaultValue": "new-VsfBanner-folder",
+              "displayName": null,
+              "system": false,
+              "config": null
+            }
+          ],
+          "fieldGroups": []
+        },
+        "responseCode": 201
+      },
+      {
+        "description": "create hero component",
+        "type": "site",
+        "path": "/channels/{channel_id}/component_groups/vsf/components/vsfhero",
+        "method": "PUT",
+        "body": {
+          "id": "vsf/vsfhero",
+          "extends": "base/component",
+          "hidden": false,
+          "system": false,
+          "xtype": null,
+          "ctype": "VsfHero",
+          "contentType": null,
+          "label": "Vsf Hero",
+          "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNDBweCIgaGVpZ2h0PSI0MHB4IiB2aWV3Qm94PSIwIDAgNDAgNDAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgc3R5bGU9ImJhY2tncm91bmQ6ICNGRkZGRkY7Ij4KICAgIDx0aXRsZT5pY29uL2Jhbm5lci1jdGE8L3RpdGxlPgogICAgPGRlZnM+CiAgICAgICAgPHJlY3QgaWQ9InBhdGgtMSIgeD0iMSIgeT0iMSIgd2lkdGg9IjM4IiBoZWlnaHQ9IjM4IiByeD0iMiI+PC9yZWN0PgogICAgPC9kZWZzPgogICAgPGcgaWQ9Imljb24vYmFubmVyLWN0YSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPHJlY3QgZmlsbD0iI0ZGRkZGRiIgeD0iMCIgeT0iMCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIj48L3JlY3Q+CiAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZSIgZmlsbC1vcGFjaXR5PSIwLjA3MzI4OTk5MTMiIGZpbGw9IiMwMDAwMDAiIHg9IjUiIHk9IjUiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgcng9IjIiPjwvcmVjdD4KICAgICAgICA8bWFzayBpZD0ibWFzay0yIiBmaWxsPSJ3aGl0ZSI+CiAgICAgICAgICAgIDx1c2UgeGxpbms6aHJlZj0iI3BhdGgtMSI+PC91c2U+CiAgICAgICAgPC9tYXNrPgogICAgICAgIDxyZWN0IHN0cm9rZT0iI0U4RThFQSIgeD0iMC41IiB5PSIwLjUiIHdpZHRoPSIzOSIgaGVpZ2h0PSIzOSIgcng9IjIiPjwvcmVjdD4KICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlLUNvcHkiIGZpbGwtb3BhY2l0eT0iMC4yNSIgZmlsbD0iIzAwMDAwMCIgbWFzaz0idXJsKCNtYXNrLTIpIiB4PSI5LjkwNjI1IiB5PSIxMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjQiPjwvcmVjdD4KICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlLUNvcHktNSIgZmlsbD0iIzlFOUU5RSIgbWFzaz0idXJsKCNtYXNrLTIpIiB4PSI5LjkwNjI1IiB5PSIxNyIgd2lkdGg9IjIwIiBoZWlnaHQ9IjEiPjwvcmVjdD4KICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlLUNvcHktNiIgZmlsbD0iIzlFOUU5RSIgbWFzaz0idXJsKCNtYXNrLTIpIiB4PSIxNC45MDYyNSIgeT0iMjAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxIj48L3JlY3Q+CiAgICAgICAgPGcgaWQ9Ikdyb3VwIiBtYXNrPSJ1cmwoI21hc2stMikiPgogICAgICAgICAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMS4wMDAwMDAsIDI0LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZSIgZmlsbD0iIzAwQjVFMiIgeD0iMCIgeT0iMCIgd2lkdGg9IjE4IiBoZWlnaHQ9IjciIHJ4PSIxIj48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlLUNvcHktMiIgZmlsbD0iI0ZGRkZGRiIgeD0iNCIgeT0iMi41IiB3aWR0aD0iMTAiIGhlaWdodD0iMiI+PC9yZWN0PgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=",
+          "parameters": [
+            {
+              "name": "document",
+              "valueType": "string",
+              "required": true,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": null,
+              "system": false,
+              "config": {
+                "pickerConfiguration": "cms-pickers/documents-only",
+                "pickerInitialPath": "",
+                "pickerRememberLastVisited": false,
+                "pickerSelectableNodeTypes": [],
+                "relative": true,
+                "pickerRootPath": null,
+                "type": "contentpath"
+              }
+            },
+            {
+              "name": "root",
+              "valueType": "string",
+              "required": false,
+              "hidden": true,
+              "overlay": false,
+              "defaultValue": "hero",
+              "displayName": null,
+              "system": false,
+              "config": null
+            },
+            {
+              "name": "document-template-query",
+              "valueType": "string",
+              "required": false,
+              "hidden": true,
+              "overlay": false,
+              "defaultValue": "new-VsfHero-document",
+              "displayName": null,
+              "system": false,
+              "config": null
+            },
+            {
+              "name": "folder-template-query",
+              "valueType": "string",
+              "required": false,
+              "hidden": true,
+              "overlay": false,
+              "defaultValue": "new-VsfHero-folder",
+              "displayName": null,
+              "system": false,
+              "config": null
+            }
+          ],
+          "fieldGroups": []
+        },
+        "responseCode": 201
+      },
+      {
+        "description": "create carousel component",
+        "type": "site",
+        "path": "/channels/{channel_id}/component_groups/vsf/components/vsfcarousel",
+        "method": "PUT",
+        "body": {
+          "id": "vsf/vsfcarousel",
+          "extends": "base/component",
+          "hidden": false,
+          "system": false,
+          "xtype": null,
+          "ctype": "VsfCarousel",
+          "contentType": null,
+          "label": "Vsf Carousel",
+          "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNDBweCIgaGVpZ2h0PSI0MHB4IiB2aWV3Qm94PSIwIDAgNDAgNDAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgc3R5bGU9ImJhY2tncm91bmQ6ICNGRkZGRkY7Ij4KICAgIDx0aXRsZT5pY29uL2Jhbm5lci1jYXJvdXNlbDwvdGl0bGU+CiAgICA8ZGVmcz4KICAgICAgICA8cmVjdCBpZD0icGF0aC0xIiB4PSIxIiB5PSIxIiB3aWR0aD0iMzgiIGhlaWdodD0iMzgiIHJ4PSIyIj48L3JlY3Q+CiAgICA8L2RlZnM+CiAgICA8ZyBpZD0iaWNvbi9iYW5uZXItY2Fyb3VzZWwiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxyZWN0IGZpbGw9IiNGRkZGRkYiIHg9IjAiIHk9IjAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PC9yZWN0PgogICAgICAgIDxtYXNrIGlkPSJtYXNrLTIiIGZpbGw9IndoaXRlIj4KICAgICAgICAgICAgPHVzZSB4bGluazpocmVmPSIjcGF0aC0xIj48L3VzZT4KICAgICAgICA8L21hc2s+CiAgICAgICAgPHJlY3Qgc3Ryb2tlPSIjRThFOEVBIiB4PSIwLjUiIHk9IjAuNSIgd2lkdGg9IjM5IiBoZWlnaHQ9IjM5IiByeD0iMiI+PC9yZWN0PgogICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUiIGZpbGw9IiMwMEI1RTIiIG1hc2s9InVybCgjbWFzay0yKSIgeD0iNSIgeT0iNSIgd2lkdGg9IjMwIiBoZWlnaHQ9IjMwIiByeD0iMiI+PC9yZWN0PgogICAgICAgIDxwb2x5bGluZSBpZD0iUGF0aC00IiBzdHJva2U9IiNGRkZGRkYiIG1hc2s9InVybCgjbWFzay0yKSIgcG9pbnRzPSIxMS41IDE3IDkgMTkuNSAxMS41IDIyIj48L3BvbHlsaW5lPgogICAgICAgIDxwb2x5bGluZSBpZD0iUGF0aC00LUNvcHkiIHN0cm9rZT0iI0ZGRkZGRiIgbWFzaz0idXJsKCNtYXNrLTIpIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgzMC4yNTAwMDAsIDE5LjUwMDAwMCkgc2NhbGUoLTEsIDEpIHRyYW5zbGF0ZSgtMzAuMjUwMDAwLCAtMTkuNTAwMDAwKSAiIHBvaW50cz0iMzEuNSAxNyAyOSAxOS41IDMxLjUgMjIiPjwvcG9seWxpbmU+CiAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTYiIGZpbGw9IiNGRkZGRkYiIG1hc2s9InVybCgjbWFzay0yKSIgeD0iMTQiIHk9IjMwIiB3aWR0aD0iMTIiIGhlaWdodD0iMSI+PC9yZWN0PgogICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS03IiBmaWxsPSIjRkZGRkZGIiBtYXNrPSJ1cmwoI21hc2stMikiIHg9IjE0IiB5PSIyNiIgd2lkdGg9IjEyIiBoZWlnaHQ9IjEiPjwvcmVjdD4KICAgIDwvZz4KPC9zdmc+",
+          "parameters": [
+            {
+              "name": "document",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": null,
+              "system": false,
+              "config": {
+                "pickerConfiguration": "cms-pickers/documents-only",
+                "pickerInitialPath": "",
+                "pickerRememberLastVisited": false,
+                "pickerSelectableNodeTypes": [],
+                "relative": true,
+                "pickerRootPath": null,
+                "type": "contentpath"
+              }
+            },
+            {
+              "name": "root",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "steps",
+              "displayName": null,
+              "system": false,
+              "config": null
+            },
+            {
+              "name": "document-template-query",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "new-VsfCarousel-document",
+              "displayName": null,
+              "system": false,
+              "config": null
+            },
+            {
+              "name": "folder-template-query",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "new-VsfCarousel-folder",
+              "displayName": null,
+              "system": false,
+              "config": null
+            }
+          ],
+          "fieldGroups": []
+        },
+        "responseCode": 201
+      }
+    ]
+  },
+  {
+    "id": "rsf",
+    "name": "React Storefront ( example of second installation item)",
+    "icon": "https://d9hhrg4mnvzow.cloudfront.net/www.reactstorefront.io/8fb62885-logo-transparent-back-1.svg",
+    "description": "<p>tbd...</p> ",
+    "installationVerification": {
+      "type": "site",
+      "description": "check creation of component group: rsf",
+      "path": "/channels/{channel_id}/component_groups/rsf",
+      "method": "GET",
+      "responseCode": 200
+    },
+    "installationActionSet": [
+      {
+        "description": "create component group: rsf",
+        "type": "site",
+        "path": "/channels/{channel_id}/component_groups/rsf",
+        "method": "PUT",
+        "body": {
+          "name": "vsf",
+          "hidden": false,
+          "system": false
+        },
+        "responseCode": 201
+      }
+    ]
+  }
+]
