@@ -82,7 +82,7 @@ class Plugins extends React.Component<PluginProps, PluginState> {
 
     componentDidMount(): void {
         const pluginApi = getPlugins();
-        pluginApi.get('/plugins.json').then(value => {
+        pluginApi.get('https://bloomreach-content-tools.netlify.app/plugins.json').then(value => {
             this.setState({plugins: value.data});
         });
     }
