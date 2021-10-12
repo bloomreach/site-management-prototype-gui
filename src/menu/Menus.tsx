@@ -23,8 +23,8 @@ import {ChannelSiteMenuOperationsApi} from "../api/apis/channel-site-menu-operat
 import {getChannelSiteMenuOperationsApi} from "../ApiContext";
 import {isNotEmptyOrNull, logError} from "../common/common-utils";
 import MenuIcon from '@material-ui/icons/Menu';
-import {Channel} from "../api/models";
-import {Nullable} from "../api/models/nullable";
+import {Channel} from "../api/models/site";
+import {Nullable} from "../api/models/site/nullable";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import ChannelSwitcher from "../common/ChannelSwitcher";
 import {LogContext} from "../LogContext";

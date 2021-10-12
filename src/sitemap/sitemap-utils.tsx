@@ -1,4 +1,4 @@
-import {SitemapItem} from "../api/models";
+import {SitemapItem} from "../api/models/site";
 import {getId, isNotEmptyOrNull} from "../common/common-utils";
 import {TreeItem} from "react-sortable-tree";
 
@@ -39,11 +39,13 @@ export function siteMapItemToTreeItem (siteMapItem: SitemapItem): TreeItem {
 export function replaceWildCards (name: string) {
   return name.replace('_any_', '**')
     .replace('_default_', '*')
-    .replace('root', '').replace('_index_', './')
+    .replace('root', '')
+    .replace('home', '')
+      .replace('_index_', './')
 }
 
 export function hasWildCardOrReserved (name: string) {
-  return name.includes('_any_') || name.includes('_default_') || name.includes('root') || name.includes('_index_');
+  return name.includes('_any_') || name.includes('_default_') || name === 'root' || name ==='home' || name.includes('_index_');
 }
 
 export function convertSiteMapToTreeData (siteMapItems: Array<SitemapItem>): TreeItem[] {

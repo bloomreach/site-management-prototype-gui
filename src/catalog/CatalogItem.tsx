@@ -44,7 +44,7 @@ import {
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 import PostAddOutlinedIcon from '@material-ui/icons/PostAddOutlined';
-import {ComponentDefinition, FieldGroup, ParameterType} from "../api/models";
+import {ComponentDefinition, FieldGroup, ParameterType} from "../api/models/site";
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import {

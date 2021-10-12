@@ -16,8 +16,8 @@ import { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
-import { CatalogGroup } from '../models';
-import { ComponentDefinition } from '../models';
+import { CatalogGroup } from '../models/site';
+import { ComponentDefinition } from '../models/site';
 /**
  * ChannelCatalogOperationsApi - axios parameter creator
  * @export

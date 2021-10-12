@@ -14,7 +14,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 import {TreeModel} from "./page-util";
-import {Page} from "../api/models";
+import {Page} from "../api/models/site";
 import PageEditor from "./PageEditor";
 
 type PageAccordionState = {

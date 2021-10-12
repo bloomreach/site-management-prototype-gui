@@ -1,4 +1,4 @@
-import {ParameterType, ParameterTypeValueTypeEnum} from "../api/models";
+import {ParameterType, ParameterTypeValueTypeEnum} from "../api/models/site";
 import TextFieldsIcon from "@material-ui/icons/TextFields";
 import React from "react";
 import {JSONSchema7} from "json-schema";

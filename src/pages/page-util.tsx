@@ -1,8 +1,8 @@
 import {TreeItem} from "react-sortable-tree";
-import {AbstractComponent, ManagedComponent, Page, StaticComponent} from "../api/models";
+import {AbstractComponent, ManagedComponent, Page, StaticComponent} from "../api/models/site";
 import {getId, isNotEmptyOrNull} from "../common/common-utils";
 import {JSONSchema7} from "json-schema";
-import {Nullable} from "../api/models/nullable";
+import {Nullable} from "../api/models/site/nullable";
 
 const validate = require('jsonschema').validate;
 

@@ -2,8 +2,8 @@ import React from 'react';
 import {FormControl, MenuItem, Select} from "@material-ui/core";
 import {getChannelOperationsApi} from "../ApiContext";
 import {ChannelOperationsApi} from "../api/apis/channel-operations-api";
-import {Channel} from "../api/models";
-import {Nullable} from "../api/models/nullable";
+import {Channel} from "../api/models/site";
+import {Nullable} from "../api/models/site/nullable";
 
 type ChannelSwitcherState = {
   channels: Array<Channel>

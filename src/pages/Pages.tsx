@@ -1,7 +1,7 @@
 import React from 'react';
 import {AppBar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Toolbar} from "@material-ui/core";
 import 'react-sortable-tree/style.css';
-import {Channel, Page} from "../api/models";
+import {Channel, Page} from "../api/models/site";
 import AddOutlinedIcon from "@material-ui/icons/Add";
 import {convertPagesToTreeModelArray, getPageSchema, TreeModel} from "./page-util";
 import {ChannelPageOperationsApi} from "../api";

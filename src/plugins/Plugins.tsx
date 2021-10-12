@@ -1,6 +1,6 @@
 import React from 'react';
 import 'react-sortable-tree/style.css';
-import {Nullable} from "../api/models/nullable";
+import {Nullable} from "../api/models/site/nullable";
 import {LogContext} from "../LogContext";
 import {
     Accordion,

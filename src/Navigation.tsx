@@ -16,6 +16,7 @@ import {Cookies} from "react-cookie";
 import {setEndpoint} from "./common/common-utils";
 import SettingsApplicationsOutlinedIcon from '@material-ui/icons/SettingsApplicationsOutlined';
 import Plugins from "./plugins/Plugins";
+import ContentTypes from "./contenttype/ContentTypes";
 
 type NavigationState = {
     tab: number,
@@ -40,9 +41,9 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
 
         const namespace = cookies.get('namespace');
 
-        const endpoint = namespace ? `https://${namespace}.bloomreach.io/management/site/v1` : 'https://<namespace>.bloomreach.io/management/site/v1'
+        const endpoint = namespace ? `https://${namespace}.bloomreach.io/management/*/v1` : 'https://<namespace>.bloomreach.io/management/*/v1'
 
-        namespace && setEndpoint(`https://${namespace}.bloomreach.io/management/site/v1`, this.context);
+        namespace && setEndpoint(`https://${namespace}.bloomreach.io/management/*/v1`, this.context);
 
         this.state = {
             tab: namespace ? 0 : 5,
@@ -71,6 +72,16 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
                             <Tab label="Components"/>
                             <Tab label="Routes"/>
                             <Tab label="Menus"/>
+                            <Tab label="Content Types"  icon={
+                                <Badge
+                                    style={{
+                                        right: '30px',
+                                        position: 'absolute',
+                                        top: '15px'
+                                    }}
+                                    badgeContent={'U/C'} color="primary">
+                                </Badge>
+                            }/>
                             <Tab label="Settings" icon={
                                 <Badge
                                     style={{
@@ -82,6 +93,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
                                 </Badge>
 
                             }/>
+
                             <Tab label="MarketPlace"  icon={
                                 <Badge
                                     style={{
@@ -92,16 +104,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
                                     badgeContent={'U/C'} color="primary">
                                 </Badge>
                             }/>
-                            <Tab label="Content Types" disabled icon={
-                                <Badge
-                                    style={{
-                                        right: '30px',
-                                        position: 'absolute',
-                                        top: '15px'
-                                    }}
-                                    badgeContent={'C/S'} color="primary">
-                                </Badge>
-                            }/>
+
 
                         </Tabs>
                     </AppBar>
@@ -121,9 +124,12 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
                         <Menus/>
                     </TabPanel>
                     <TabPanel value={tab} index={5}>
-                        <Settings/>
+                        <ContentTypes/>
                     </TabPanel>
                     <TabPanel value={tab} index={6}>
+                        <Settings/>
+                    </TabPanel>
+                    <TabPanel value={tab} index={7}>
                         <Plugins/>
                     </TabPanel>
                     <LogContext.Consumer>

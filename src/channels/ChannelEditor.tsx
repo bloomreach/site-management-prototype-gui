@@ -27,7 +27,7 @@ import {
 import Form from "@rjsf/material-ui";
 import {JSONSchema7} from "json-schema";
 import {channelSchema, channelUiSchema} from "./channel-utils";
-import {Channel, FieldGroup, ParameterType} from "../api/models";
+import {Channel, FieldGroup, ParameterType} from "../api/models/site";
 import {getBaseUrl, getChannelOperationsApi} from "../ApiContext";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";

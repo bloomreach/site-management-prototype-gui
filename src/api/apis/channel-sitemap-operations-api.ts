@@ -16,7 +16,7 @@ import { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
-import { SitemapItem } from '../models';
+import { SitemapItem } from '../models/site';
 /**
  * ChannelSitemapOperationsApi - axios parameter creator
  * @export

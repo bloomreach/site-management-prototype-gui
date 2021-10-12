@@ -17,10 +17,10 @@ import {
     Typography
 } from "@material-ui/core";
 import 'react-sortable-tree/style.css';
-import {Channel, SitemapItem} from "../api/models";
+import {Channel, SitemapItem} from "../api/models/site";
 import AddOutlinedIcon from "@material-ui/icons/Add";
 import {getChannelSiteMapOperationsApi} from "../ApiContext";
-import {Nullable} from "../api/models/nullable";
+import {Nullable} from "../api/models/site/nullable";
 import {ChannelSitemapOperationsApi} from "../api/apis/channel-sitemap-operations-api";
 import SortableTree, {addNodeUnderParent, ExtendedNodeData, removeNode, TreeItem} from "react-sortable-tree";
 import {
@@ -91,7 +91,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
 
     getMenu(rowInfo: ExtendedNodeData) {
         const siteMapItem: SitemapItem = rowInfo.node.siteMapItem;
-        return <PopupState variant="popover" popupId="component-popup-menu">
+        return rowInfo.node.siteMapItem.name !== 'home' && <PopupState variant="popover" popupId="component-popup-menu">
             {(popupState) => (
                 <React.Fragment>
                     <MoreHorizOutlinedIcon {...bindTrigger(popupState)}/>
@@ -121,7 +121,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
                             </ListItemIcon>
                             <Typography variant="inherit">Add * Matcher (_default_)</Typography>
                         </MenuItem>
-                        <MenuItem disabled={siteMapItem.name === 'root'}
+                        <MenuItem disabled={(siteMapItem.name === 'home') || (siteMapItem.name === 'root')}
                                   onClick={() => this.deleteSiteMapItem(rowInfo, () => popupState.close())}>
                             <ListItemIcon>
                                 <Delete fontSize="small"/>
@@ -187,12 +187,14 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
                               onChange={treeData => {
                                   this.setState({treeData: treeData});
                               }}
-                              canNodeHaveChildren={node => (node.siteMapItem.name !== 'root' && !node.siteMapItem.name.includes('_any_'))}
+                              canNodeHaveChildren={node => (node.siteMapItem.name !== 'root' && node.siteMapItem.name !== 'home' && !node.siteMapItem.name.includes('_any_'))}
                     // @ts-ignore
                               nodeContentRenderer={SiteMapItemNodeRendererDefault}
                               generateNodeProps={rowInfo => ({
+
+
                                   buttons: [
-                                      this.getMenu(rowInfo)
+                                       this.getMenu(rowInfo)
                                   ],
                                   rowLabelClickEventHandler: () =>
                                       this.onNodeSelected(rowInfo.node)

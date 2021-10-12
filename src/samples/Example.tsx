@@ -1,4 +1,4 @@
-import {Channel, Page} from "../api/models";
+import {Channel, Page} from "../api/models/site";
 import {TreeItem} from "react-sortable-tree";
 
 export const exampleSiteMapTreeData: TreeItem[] = [

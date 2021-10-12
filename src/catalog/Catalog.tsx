@@ -13,11 +13,11 @@ import {
 } from "@material-ui/core";
 import 'react-sortable-tree/style.css';
 import AddOutlinedIcon from "@material-ui/icons/Add";
-import {Nullable} from "../api/models/nullable";
+import {Nullable} from "../api/models/site/nullable";
 import ChannelSwitcher from "../common/ChannelSwitcher";
 import {ChannelCatalogOperationsApi} from "../api/apis/channel-catalog-operations-api";
 import {getChannelCatalogOperationsApi} from "../ApiContext";
-import {CatalogGroup, ComponentDefinition} from "../api/models";
+import {CatalogGroup, ComponentDefinition} from "../api/models/site";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CatalogItem from "./CatalogItem";
 import Form from "@rjsf/material-ui";

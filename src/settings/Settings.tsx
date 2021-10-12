@@ -4,7 +4,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import 'react-sortable-tree/style.css';
-import {Channel} from "../api/models";
+import {Channel} from "../api/models/site";
 import {LogContext} from "../LogContext";
 import {JSONSchema7} from "json-schema";
 import Form from "@rjsf/material-ui";

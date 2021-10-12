@@ -1,6 +1,6 @@
 import React from 'react';
 import {Accordion, AccordionSummary, AppBar, Button, Toolbar, Typography, withStyles} from "@material-ui/core";
-import {Channel} from "../api/models";
+import {Channel} from "../api/models/site";
 import AddOutlinedIcon from "@material-ui/icons/Add";
 import Icon from "@material-ui/core/Icon";
 import {ChannelOperationsApi} from "../api/apis/channel-operations-api";

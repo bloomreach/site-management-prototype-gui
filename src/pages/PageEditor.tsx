@@ -25,7 +25,7 @@ import {
 } from "./page-util";
 import NodeRendererDefault from "./NodeRendererDefault";
 import {Delete} from "@material-ui/icons";
-import {AbstractComponent, Page} from "../api/models";
+import {AbstractComponent, Page} from "../api/models/site";
 import {JSONSchema7} from "json-schema";
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Form from "@rjsf/material-ui";
