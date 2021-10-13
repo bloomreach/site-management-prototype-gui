@@ -1,10 +1,13 @@
 import React from 'react';
+import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
+import GetAppOutlinedIcon from '@material-ui/icons/GetAppOutlined';
 import {
     Accordion,
     AccordionSummary,
     AppBar,
     Button,
     Container,
+    SvgIcon,
     Toolbar,
     Typography,
     withStyles
@@ -17,8 +20,8 @@ import {logError, logSuccess} from "../common/common-utils";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import {ContentType} from "../api/models/contenttype";
 import {ContentTypeOperationsApi} from "../api/apis/content-type-operations-api";
-import {SvgIcon} from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
+import {createInterfacesFromContentTypes} from "./content-type-utils";
 
 var nomnoml = require('nomnoml');
 
@@ -26,8 +29,10 @@ var nomnoml = require('nomnoml');
 type ContentTypesState = {
     types: Array<ContentType>,
     noDevelopmentProject: boolean
-    dialogOpen: boolean
+    diagramDialogOpen: boolean
+    intfcsDialogOpen: boolean
     diagram: string
+    intfcs: string
 }
 type ContentTypesProps = {
     classes: any,
@@ -58,9 +63,11 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
 
         this.state = {
             diagram: '',
+            intfcs: '',
             types: [],
             noDevelopmentProject: true,
-            dialogOpen: false
+            diagramDialogOpen: false,
+            intfcsDialogOpen: false
         }
     }
 
@@ -72,7 +79,13 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
         const api: ContentTypeOperationsApi = getContentTypeOperationsApi();
         api.getContentTypes('development').then(value => {
             const types: Array<ContentType> = value.data;
-            this.setState({types: types, noDevelopmentProject: false, diagram: this.generateDiagram(types)});
+            // console.log(createInterfacesFromContentTypes( types));
+            this.setState({
+                types: types,
+                noDevelopmentProject: false,
+                diagram: this.generateDiagram(types),
+                intfcs: createInterfacesFromContentTypes(types)
+            });
             logSuccess('retrieved content types..', this.context);
         }).catch(reason => logError("error trying to get the content types, reason:", reason?.data));
     }
@@ -84,7 +97,7 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
             const fields = type?.fields?.map(field => {
                 return `${field.name}${field.required ? '*' : ''}: ${field.type === 'FieldGroup' ? field.fieldGroupType : field.type}${field.multiple ? '\\[\\]' : ''}`
             }).join(';');
-            return `[${type.type==='Document'?'<document>':'<fieldgroup>'}${type.name}|${fields}]`
+            return `[${type.type === 'Document' ? '<document>' : '<fieldgroup>'}${type.name}|${fields}]`
         }).join('\n');
         const relations = types.map(type => {
             const fields = type?.fields?.map(field => {
@@ -94,13 +107,16 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
             return `${fields}`
         }).join('');
         const diagram = heading.concat('\n').concat(umlDiagram).concat('\n').concat(relations).trim();
-        console.log(diagram);
+        // console.log(diagram);
         return diagram;
     }
 
+
     render() {
         const {classes} = this.props;
-        const {types, noDevelopmentProject, dialogOpen, diagram} = this.state;
+        const {types, noDevelopmentProject, diagramDialogOpen, intfcsDialogOpen, diagram, intfcs} = this.state;
+        const blob = new Blob([intfcs], {type: 'text/x.typescript'});
+        const fileDownloadUrl = URL.createObjectURL(blob);
         return <>
             <AppBar position="sticky" variant={'outlined'} color={'default'}>
                 <Toolbar>
@@ -125,10 +141,10 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
                         Create Development Project
                     </Button>
                     <Button
-                        disabled
                         variant="outlined"
                         color="primary"
                         style={{marginRight: '10px'}}
+                        onClick={() => this.setState({intfcsDialogOpen: true})}
                         startIcon={<SvgIcon>
                             <path
                                 d="M3,3H21V21H3V3M13.71,17.86C14.21,18.84 15.22,19.59 16.8,19.59C18.4,19.59 19.6,18.76 19.6,17.23C19.6,15.82 18.79,15.19 17.35,14.57L16.93,14.39C16.2,14.08 15.89,13.87 15.89,13.37C15.89,12.96 16.2,12.64 16.7,12.64C17.18,12.64 17.5,12.85 17.79,13.37L19.1,12.5C18.55,11.54 17.77,11.17 16.7,11.17C15.19,11.17 14.22,12.13 14.22,13.4C14.22,14.78 15.03,15.43 16.25,15.95L16.67,16.13C17.45,16.47 17.91,16.68 17.91,17.26C17.91,17.74 17.46,18.09 16.76,18.09C15.93,18.09 15.45,17.66 15.09,17.06L13.71,17.86M13,11.25H8V12.75H9.5V20H11.25V12.75H13V11.25Z"></path>
@@ -141,7 +157,7 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
                         color="primary"
                         style={{marginRight: '10px'}}
                         startIcon={<Icon className="fas fa-project-diagram"/>}
-                        onClick={() => this.setState({dialogOpen: true})}
+                        onClick={() => this.setState({diagramDialogOpen: true})}
                     >
                         Generate Diagram
                     </Button>
@@ -161,9 +177,36 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
                     </Accordion>
                 )
             })}
-            <Drawer anchor={'right'} open={dialogOpen} onClose={() => this.setState({dialogOpen: false})}>
+            <Drawer anchor={'right'} open={diagramDialogOpen} onClose={() => this.setState({diagramDialogOpen: false})}>
                 <Container>
                     {diagram && <div dangerouslySetInnerHTML={{__html: nomnoml.renderSvg(this.state.diagram)}}/>}
+                    {/*{intfcs && <div dangerouslySetInnerHTML={{__html: `<pre>${JSON.stringify(JSON.parse(intfcs), undefined, 2)}</pre>`}}/>}*/}
+                </Container>
+            </Drawer>
+            <Drawer anchor={'right'} open={intfcsDialogOpen} onClose={() => this.setState({intfcsDialogOpen: false})}>
+                <AppBar position="static" color={"default"}>
+                    <Toolbar>
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            style={{marginRight: '10px'}}
+                            startIcon={<FileCopyOutlinedIcon/>}
+                            onClick={() => navigator.clipboard.writeText(intfcs)}
+                        >
+                            Copy to clipboard
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            style={{marginRight: '10px'}}
+                            startIcon={<GetAppOutlinedIcon/>}
+                        >
+                            <a style={{textDecoration:'none', color:'inherit'}} href={fileDownloadUrl} download={'ctypes.ts'}> Download as file</a>
+                        </Button>
+                    </Toolbar>
+                </AppBar>
+                <Container>
+                    {intfcs && <div dangerouslySetInnerHTML={{__html: `<pre>${intfcs}</pre>`}}/>}
                 </Container>
             </Drawer>
         </>

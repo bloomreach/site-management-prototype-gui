@@ -32,4 +32,5 @@ export interface ContentTypeField {
     required: boolean,
     multiple: boolean,
     fieldGroupType:string
+    [x: string]: any
 }
