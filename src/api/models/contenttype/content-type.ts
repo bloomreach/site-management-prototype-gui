@@ -11,6 +11,8 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import {ContentTypeField} from "./content-type-field";
+
 /**
  * 
  * @export
@@ -40,7 +42,7 @@ export interface ContentType {
      * @type {Array&lt;ContentTypeField&gt;}
      * @memberof ContentType
      */
-    fields?: any;
+    fields?: Array<ContentTypeField>;
     /**
      * 
      * @type {System}

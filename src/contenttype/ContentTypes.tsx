@@ -17,11 +17,17 @@ import {logError, logSuccess} from "../common/common-utils";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import {ContentType} from "../api/models/contenttype";
 import {ContentTypeOperationsApi} from "../api/apis/content-type-operations-api";
+import {SvgIcon} from '@material-ui/core';
+import Drawer from '@material-ui/core/Drawer';
+
+var nomnoml = require('nomnoml');
+
 
 type ContentTypesState = {
     types: Array<ContentType>,
     noDevelopmentProject: boolean
     dialogOpen: boolean
+    diagram: string
 }
 type ContentTypesProps = {
     classes: any,
@@ -51,6 +57,7 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
         super(props);
 
         this.state = {
+            diagram: '',
             types: [],
             noDevelopmentProject: true,
             dialogOpen: false
@@ -64,15 +71,32 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
     updateContentTypes() {
         const api: ContentTypeOperationsApi = getContentTypeOperationsApi();
         api.getContentTypes('development').then(value => {
-            const data: Array<ContentType> = value.data;
-            this.setState({types: data, noDevelopmentProject: false});
+            const types: Array<ContentType> = value.data;
+            this.setState({types: types, noDevelopmentProject: false, diagram: this.generateDiagram(types)});
             logSuccess('retrieved content types..', this.context);
         }).catch(reason => logError("error trying to get the content types, reason:", reason?.data));
     }
 
+    generateDiagram(types: Array<ContentType>): string {
+        const umlDiagram = types.map(type => {
+            const fields = type?.fields?.map(field => {
+                return `${field.name}: ${field.type === 'FieldGroup' ? field.fieldGroupType : field.type}`
+            }).join(';');
+            return `[${type.name}|${fields}]`
+        }).join('\n');
+        const relations = types.map(type => {
+            const fields = type?.fields?.map(field => {
+                const relation = (field.type === 'FieldGroup' && types.some((element) => element.name === field.fieldGroupType)) ? field.fieldGroupType : undefined;
+                return relation ? `[${type.name}]-> [${relation}]\n` : '';
+            }).join('');
+            return `${fields}`
+        }).join('');
+        return umlDiagram.concat('\n').concat(relations).trim();
+    }
+
     render() {
         const {classes} = this.props;
-        const {types, noDevelopmentProject} = this.state;
+        const {types, noDevelopmentProject, dialogOpen, diagram} = this.state;
         return <>
             <AppBar position="sticky" variant={'outlined'} color={'default'}>
                 <Toolbar>
@@ -94,7 +118,28 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
                         startIcon={<Icon className="fas fa-code-branch"/>}
                         onClick={() => window.open(`${getBaseUrl()}/cms/projects`, 'new')}
                     >
-                        Development project (with content type changes)
+                        Create Development Project
+                    </Button>
+                    <Button
+                        disabled
+                        variant="outlined"
+                        color="primary"
+                        style={{marginRight: '10px'}}
+                        startIcon={<SvgIcon>
+                            <path
+                                d="M3,3H21V21H3V3M13.71,17.86C14.21,18.84 15.22,19.59 16.8,19.59C18.4,19.59 19.6,18.76 19.6,17.23C19.6,15.82 18.79,15.19 17.35,14.57L16.93,14.39C16.2,14.08 15.89,13.87 15.89,13.37C15.89,12.96 16.2,12.64 16.7,12.64C17.18,12.64 17.5,12.85 17.79,13.37L19.1,12.5C18.55,11.54 17.77,11.17 16.7,11.17C15.19,11.17 14.22,12.13 14.22,13.4C14.22,14.78 15.03,15.43 16.25,15.95L16.67,16.13C17.45,16.47 17.91,16.68 17.91,17.26C17.91,17.74 17.46,18.09 16.76,18.09C15.93,18.09 15.45,17.66 15.09,17.06L13.71,17.86M13,11.25H8V12.75H9.5V20H11.25V12.75H13V11.25Z"></path>
+                        </SvgIcon>}
+                    >
+                        Generate Types
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        style={{marginRight: '10px'}}
+                        startIcon={<Icon className="fas fa-project-diagram"/>}
+                        onClick={() => this.setState({dialogOpen: true})}
+                    >
+                        Generate Diagram
                     </Button>
                 </Toolbar>
             </AppBar>
@@ -109,12 +154,14 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
                         <Container>
                             <pre>{JSON.stringify(type, undefined, 2)}</pre>
                         </Container>
-
-
-                        {/*<ChannelEditor channel={channel}/>*/}
                     </Accordion>
                 )
             })}
+            <Drawer anchor={'right'} open={dialogOpen} onClose={() => this.setState({dialogOpen: false})}>
+                <Container>
+                    {diagram && <div dangerouslySetInnerHTML={{__html: nomnoml.renderSvg(this.state.diagram)}}/>}
+                </Container>
+            </Drawer>
         </>
     }
 
