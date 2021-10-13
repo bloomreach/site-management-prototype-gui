@@ -184,7 +184,7 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
                 </Container>
             </Drawer>
             <Drawer anchor={'right'} open={intfcsDialogOpen} onClose={() => this.setState({intfcsDialogOpen: false})}>
-                <AppBar position="static" color={"default"}>
+                <AppBar position="sticky" color={"default"}>
                     <Toolbar>
                         <Button
                             variant="outlined"
