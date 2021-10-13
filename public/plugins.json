@@ -246,25 +246,25 @@
     ]
   },
   {
-    "id": "rsf",
-    "name": "React Storefront ( example of second installation item)",
-    "icon": "https://d9hhrg4mnvzow.cloudfront.net/www.reactstorefront.io/8fb62885-logo-transparent-back-1.svg",
-    "description": "<p>tbd...</p> ",
+    "id": "brxsf",
+    "name": "Bloomreach X Storefront (Coming Soon)",
+    "icon": "https://documentation.bloomreach.com/webfiles/1613471033205/org/images/favicon.png",
+    "description": "<p>Coming Soon! Bloomreach X Storefront Components and Content Types</p> ",
     "installationVerification": {
       "type": "site",
-      "description": "check creation of component group: rsf",
-      "path": "/channels/{channel_id}/component_groups/rsf",
+      "description": "check creation of component group: brxsf",
+      "path": "/channels/{channel_id}/component_groups/brxsf",
       "method": "GET",
       "responseCode": 200
     },
     "installationActionSet": [
       {
-        "description": "create component group: rsf",
+        "description": "create component group: brxsf",
         "type": "site",
-        "path": "/channels/{channel_id}/component_groups/rsf",
+        "path": "/channels/{channel_id}/component_groups/brxsf",
         "method": "PUT",
         "body": {
-          "name": "vsf",
+          "name": "brxsf",
           "hidden": false,
           "system": false
         },
