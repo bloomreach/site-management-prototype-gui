@@ -78,11 +78,13 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
     }
 
     generateDiagram(types: Array<ContentType>): string {
+        const heading = '#.document: title=bold fill=lightgrey \n' +
+            '#.fieldgroup: title=bold';
         const umlDiagram = types.map(type => {
             const fields = type?.fields?.map(field => {
                 return `${field.name}${field.required ? '*' : ''}: ${field.type === 'FieldGroup' ? field.fieldGroupType : field.type}${field.multiple ? '\\[\\]' : ''}`
             }).join(';');
-            return `[${type.name}|${fields}]`
+            return `[${type.type==='Document'?'<document>':'<fieldgroup>'}${type.name}|${fields}]`
         }).join('\n');
         const relations = types.map(type => {
             const fields = type?.fields?.map(field => {
@@ -91,7 +93,9 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
             }).join('');
             return `${fields}`
         }).join('');
-        return umlDiagram.concat('\n').concat(relations).trim();
+        const diagram = heading.concat('\n').concat(umlDiagram).concat('\n').concat(relations).trim();
+        console.log(diagram);
+        return diagram;
     }
 
     render() {
