@@ -80,7 +80,7 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
     generateDiagram(types: Array<ContentType>): string {
         const umlDiagram = types.map(type => {
             const fields = type?.fields?.map(field => {
-                return `${field.name}: ${field.type === 'FieldGroup' ? field.fieldGroupType : field.type}`
+                return `${field.name}${field.required ? '*' : ''}: ${field.type === 'FieldGroup' ? field.fieldGroupType : field.type}${field.multiple ? '\\[\\]' : ''}`
             }).join(';');
             return `[${type.name}|${fields}]`
         }).join('\n');
