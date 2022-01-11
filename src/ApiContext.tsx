@@ -52,7 +52,7 @@ export function getContentTypeOperationsApi(): ContentTypeOperationsApi {
 }
 
 export function getPlugins(): GenericPluginApi {
-    return new GenericPluginApi({}, `https://bloomreach-content-tools.netlify.app`);
+    return new GenericPluginApi({}, ``);
 }
 
 export function getGenericSiteApi(): GenericPluginApi {
@@ -62,6 +62,15 @@ export function getGenericSiteApi(): GenericPluginApi {
         // @ts-ignore
         apiKey: apiKey
     }, `https://${namespace}.bloomreach.io/management/site/v1`);
+}
+
+export function getGenericContentTypesApi(): GenericPluginApi {
+    const namespace = cookies.get('namespace');
+    const apiKey = cookies.get('apiKey');
+    return new GenericPluginApi({
+        // @ts-ignore
+        apiKey: apiKey
+    }, `https://${namespace}.bloomreach.io/management/contenttypes/v1`);
 }
 
 export function getChannelSiteMapOperationsApi(): ChannelSitemapOperationsApi {

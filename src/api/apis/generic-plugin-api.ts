@@ -24,6 +24,43 @@ import {BASE_PATH, BaseAPI, COLLECTION_FORMATS, RequestArgs, RequiredError} from
 export const GenericPluginApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
 
+        // exec: async (method: string, path: string, channelId?: string, body?: any, xResourceVersion?: string, options: any = {}): Promise<RequestArgs> => {
+        //     const localVarPath = path;
+        //     // use dummy base URL string because the URL constructor only accepts absolute URLs.
+        //     const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+        //     let baseOptions;
+        //     if (configuration) {
+        //         baseOptions = configuration.baseOptions;
+        //     }
+        //     const localVarRequestOptions = {method: method, ...baseOptions, ...options};
+        //     const localVarHeaderParameter = {} as any;
+        //     const localVarQueryParameter = {} as any;
+        //
+        //     // authentication bearerAuth required
+        //     if (configuration && configuration.apiKey) {
+        //         const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+        //             ? await configuration.apiKey("x-auth-token")
+        //             : await configuration.apiKey;
+        //         localVarHeaderParameter["x-auth-token"] = localVarApiKeyValue;
+        //     }
+        //
+        //     const query = new URLSearchParams(localVarUrlObj.search);
+        //     for (const key in localVarQueryParameter) {
+        //         query.set(key, localVarQueryParameter[key]);
+        //     }
+        //     for (const key in options.query) {
+        //         query.set(key, options.query[key]);
+        //     }
+        //     localVarUrlObj.search = (new URLSearchParams(query)).toString();
+        //     let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+        //     localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+        //
+        //     return {
+        //         url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+        //         options: localVarRequestOptions,
+        //     };
+        // },
+
         delete: async (path: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = path;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -107,9 +144,9 @@ export const GenericPluginApiAxiosParamCreator = function (configuration?: Confi
         put: async (path: string, channelId?: string, body?: any, xResourceVersion?: string, options: any = {}): Promise<RequestArgs> => {
 
             // verify required parameter 'layoutName' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('layoutName', 'Required parameter layoutName was null or undefined when calling putChannelPage.');
-            }
+            // if (body === null || body === undefined) {
+            //     throw new RequiredError('body', 'Required parameter layoutName was null or undefined when calling putChannelPage.');
+            // }
             const localVarPath = path
                 .replace(`{${"channel_id"}}`, encodeURIComponent(String(channelId)));
 
@@ -165,6 +202,7 @@ export const GenericPluginApiAxiosParamCreator = function (configuration?: Confi
 export const GenericPluginApiFp = function (configuration?: Configuration) {
     return {
 
+
         async delete(path: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await GenericPluginApiAxiosParamCreator(configuration).delete(path, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -174,7 +212,7 @@ export const GenericPluginApiFp = function (configuration?: Configuration) {
         },
 
         async get(path: string, channelId?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise> {
-            const localVarAxiosArgs = await GenericPluginApiAxiosParamCreator(configuration).get(path, channelId,options);
+            const localVarAxiosArgs = await GenericPluginApiAxiosParamCreator(configuration).get(path, channelId, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);

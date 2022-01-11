@@ -246,29 +246,2663 @@
     ]
   },
   {
-    "id": "brxsf",
-    "name": "Bloomreach X Storefront (Coming Soon)",
+    "id": "bsfv1",
+    "name": "Bloomreach Storefront v1",
     "icon": "https://documentation.bloomreach.com/webfiles/1613471033205/org/images/favicon.png",
     "description": "<p>Coming Soon! Bloomreach X Storefront Components and Content Types</p> ",
-    "installationVerification": {
-      "type": "site",
-      "description": "check creation of component group: brxsf",
-      "path": "/channels/{channel_id}/component_groups/brxsf",
-      "method": "GET",
-      "responseCode": 200
-    },
     "installationActionSet": [
       {
-        "description": "create component group: brxsf",
-        "type": "site",
-        "path": "/channels/{channel_id}/component_groups/brxsf",
+        "type": "contenttypes",
+        "path": "/development/bsfBasepage",
         "method": "PUT",
         "body": {
-          "name": "brxsf",
+          "name": "bsfBasepage",
+          "type": "Document",
+          "presentation": {
+            "layout": "one-column"
+          },
+          "fields": [
+            {
+              "name": "title",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Title",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "description",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Description",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Text"
+              },
+              "validations": {
+                "maxRow": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create content type: bsfBasepage"
+      },
+      {
+        "type": "contenttypes",
+        "path": "/development/bsfExternalLink",
+        "method": "PUT",
+        "body": {
+          "name": "bsfExternalLink",
+          "type": "FieldGroup",
+          "presentation": {
+            "layout": "one-column"
+          },
+          "fields": [
+            {
+              "name": "link",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Link",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "target",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Target",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create content type: bsfExternalLink"
+      },
+      {
+        "type": "contenttypes",
+        "path": "/development/bsfCta",
+        "method": "PUT",
+        "body": {
+          "name": "bsfCta",
+          "type": "FieldGroup",
+          "presentation": {
+            "layout": "one-column"
+          },
+          "fields": [
+            {
+              "name": "link",
+              "type": "SelectableFieldGroup",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Link",
+                "hint": "",
+                "layoutColumn": 1,
+                "contentPickerType": "links",
+                "showFieldGroupNames": true
+              },
+              "validations": {
+                "maxItem": 1
+              },
+              "defaultValue": [],
+              "fieldGroupTypes": [
+                "link",
+                "bsfExternalLink"
+              ]
+            },
+            {
+              "name": "text",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Text",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "type",
+              "type": "SelectableString",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Type",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "RadioGroup",
+                "orientation": null,
+                "sortOrder": null,
+                "sortBy": null
+              },
+              "validations": {
+                "inResourceBundle": "link.type"
+              },
+              "defaultValue": [
+                "link"
+              ]
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create content type: bsfCta"
+      },
+      {
+        "type": "contenttypes",
+        "path": "/development/bsfBanner",
+        "method": "PUT",
+        "body": {
+          "name": "bsfBanner",
+          "type": "FieldGroup",
+          "presentation": {
+            "layout": "two-column"
+          },
+          "fields": [
+            {
+              "name": "image",
+              "type": "Link",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Image",
+                "hint": "",
+                "layoutColumn": 1,
+                "uploadEnabled": true,
+                "displayType": "ImageLink",
+                "lookupFolderTypes": null,
+                "lastVisitedKey": "gallerypicker-imagelink",
+                "lastVisitedEnabled": true
+              },
+              "validations": {},
+              "defaultValue": [
+                "/"
+              ]
+            },
+            {
+              "name": "subtitle",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Subtitle",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "style",
+              "type": "SelectableString",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Style",
+                "hint": "",
+                "layoutColumn": 2,
+                "displayType": "Dropdown",
+                "sortOrder": null,
+                "sortBy": null,
+                "showDefault": null
+              },
+              "validations": {
+                "inResourceBundle": null,
+                "inValues": [
+                  {
+                    "key": "light",
+                    "label": "light"
+                  },
+                  {
+                    "key": "dark",
+                    "label": "dark"
+                  }
+                ]
+              },
+              "defaultValue": [
+                "light"
+              ]
+            },
+            {
+              "name": "cta",
+              "type": "FieldGroup",
+              "required": false,
+              "multiple": true,
+              "presentation": {
+                "caption": "CTA",
+                "hint": "",
+                "layoutColumn": 2
+              },
+              "validations": {},
+              "defaultValue": [
+                {
+                  "fields": {
+                    "link": [],
+                    "text": [
+                      ""
+                    ],
+                    "type": [
+                      ""
+                    ]
+                  }
+                }
+              ],
+              "fieldGroupType": "bsfCta"
+            },
+            {
+              "name": "text",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Title",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Text"
+              },
+              "validations": {
+                "maxRow": 2
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "content",
+              "type": "RichText",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Content",
+                "hint": "",
+                "layoutColumn": 1,
+                "ckEditorAppendedJson": null,
+                "ckEditorOverlayedJson": null,
+                "imagepickerBasePath": null,
+                "imagepickerType": "images",
+                "imagepickerNodetypes": null,
+                "imagepickerLastVisitedEnabled": null,
+                "imagepickerLastVisitedGroupKey": "ckeditor-imagepicker",
+                "imagepickerLastVisitedNodetypes": [
+                  "gallery"
+                ],
+                "imagepickerPreferredImageVariant": "original",
+                "linkpickerBasePath": null,
+                "linkpickerType": "documents",
+                "linkpickerNodetypes": null,
+                "linkpickerLastVisitedEnabled": null,
+                "linkpickerLastVisitedGroupKey": "ckeditor-linkpicker",
+                "linkpickerLastVisitedNodetypes": [
+                  "folder"
+                ],
+                "linkPickerLanguageContextAware": null,
+                "linkPickerOpenInNewWindowEnabled": true,
+                "includeImageVariants": null,
+                "excludeImageVariants": null
+              },
+              "validations": {},
+              "defaultValue": [
+                ""
+              ]
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create content type: bsfBanner"
+      },
+      {
+        "type": "contenttypes",
+        "path": "/development/bsfBannerCollection",
+        "method": "PUT",
+        "body": {
+          "name": "bsfBannerCollection",
+          "type": "FieldGroup",
+          "presentation": {
+            "layout": "one-column"
+          },
+          "fields": [
+            {
+              "name": "title",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Title",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "banners",
+              "type": "FieldGroup",
+              "required": false,
+              "multiple": true,
+              "presentation": {
+                "caption": "Banners",
+                "hint": "",
+                "layoutColumn": 1
+              },
+              "validations": {},
+              "defaultValue": [
+                {
+                  "fields": {
+                    "image": [
+                      "/"
+                    ],
+                    "cta": [],
+                    "optimizedImage": [],
+                    "subtitle": [
+                      ""
+                    ],
+                    "style": [
+                      ""
+                    ],
+                    "text": [
+                      ""
+                    ],
+                    "content": [
+                      ""
+                    ]
+                  }
+                }
+              ],
+              "fieldGroupType": "bsfBanner"
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create content type: bsfBannerCollection"
+      },
+      {
+        "type": "contenttypes",
+        "path": "/development/bsfFindItemsByKeyword",
+        "method": "PUT",
+        "body": {
+          "name": "bsfFindItemsByKeyword",
+          "type": "FieldGroup",
+          "presentation": {
+            "layout": "one-column"
+          },
+          "fields": [
+            {
+              "name": "query",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Query",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "pattern",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Pattern",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "offset",
+              "type": "Integer",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Offset",
+                "hint": "",
+                "layoutColumn": 1
+              },
+              "validations": {},
+              "defaultValue": [
+                0
+              ]
+            },
+            {
+              "name": "limit",
+              "type": "Integer",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Limit",
+                "hint": "",
+                "layoutColumn": 1
+              },
+              "validations": {},
+              "defaultValue": [
+                10
+              ]
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create content type: bsfFindItemsByKeyword"
+      },
+      {
+        "type": "contenttypes",
+        "path": "/development/bsfFindItemsByCategory",
+        "method": "PUT",
+        "body": {
+          "name": "bsfFindItemsByCategory",
+          "type": "FieldGroup",
+          "presentation": {
+            "layout": "one-column"
+          },
+          "fields": [
+            {
+              "name": "category",
+              "type": "FieldGroup",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Category Search",
+                "hint": "",
+                "layoutColumn": 1
+              },
+              "validations": {},
+              "defaultValue": [
+                {
+                  "fields": {
+                    "categoryid": [
+                      ""
+                    ]
+                  }
+                }
+              ],
+              "fieldGroupType": "CommerceCategoryCompound"
+            },
+            {
+              "name": "pattern",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Pattern",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "offset",
+              "type": "Integer",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Offset",
+                "hint": "",
+                "layoutColumn": 1
+              },
+              "validations": {},
+              "defaultValue": [
+                0
+              ]
+            },
+            {
+              "name": "limit",
+              "type": "Integer",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Limit",
+                "hint": "",
+                "layoutColumn": 1
+              },
+              "validations": {},
+              "defaultValue": [
+                10
+              ]
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create content type: bsfFindItemsByCategory"
+      },
+      {
+        "type": "contenttypes",
+        "path": "/development/bsfFindItemsMoreLikeThis",
+        "method": "PUT",
+        "body": {
+          "name": "bsfFindItemsMoreLikeThis",
+          "type": "FieldGroup",
+          "presentation": {
+            "layout": "one-column"
+          },
+          "fields": [
+            {
+              "name": "product",
+              "type": "FieldGroup",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Product Search",
+                "hint": "",
+                "layoutColumn": 1
+              },
+              "validations": {},
+              "defaultValue": [
+                {
+                  "fields": {
+                    "productid": [
+                      ""
+                    ],
+                    "variantid": [
+                      ""
+                    ]
+                  }
+                }
+              ],
+              "fieldGroupType": "CommerceProductCompound"
+            },
+            {
+              "name": "pattern",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Pattern",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "offset",
+              "type": "Integer",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Offset",
+                "hint": "",
+                "layoutColumn": 1
+              },
+              "validations": {},
+              "defaultValue": [
+                0
+              ]
+            },
+            {
+              "name": "limit",
+              "type": "Integer",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Limit",
+                "hint": "",
+                "layoutColumn": 1
+              },
+              "validations": {},
+              "defaultValue": [
+                10
+              ]
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create content type: bsfFindItemsMoreLikeThis"
+      },
+      {
+        "type": "contenttypes",
+        "path": "/development/bsfFindItemsByProductID",
+        "method": "PUT",
+        "body": {
+          "name": "bsfFindItemsByProductID",
+          "type": "FieldGroup",
+          "presentation": {
+            "layout": "one-column"
+          },
+          "fields": [
+            {
+              "name": "products",
+              "type": "FieldGroup",
+              "required": false,
+              "multiple": true,
+              "presentation": {
+                "caption": "Products",
+                "hint": "",
+                "layoutColumn": 1
+              },
+              "validations": {},
+              "defaultValue": [],
+              "fieldGroupType": "CommerceProductCompound"
+            },
+            {
+              "name": "pattern",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Pattern",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "offset",
+              "type": "Integer",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Offset",
+                "hint": "",
+                "layoutColumn": 1
+              },
+              "validations": {},
+              "defaultValue": [
+                0
+              ]
+            },
+            {
+              "name": "limit",
+              "type": "Integer",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Limit",
+                "hint": "",
+                "layoutColumn": 1
+              },
+              "validations": {},
+              "defaultValue": [
+                10
+              ]
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create content type: bsfFindItemsByProductID"
+      },
+      {
+        "type": "contenttypes",
+        "path": "/development/bsfCustomItem",
+        "method": "PUT",
+        "body": {
+          "name": "bsfCustomItem",
+          "type": "FieldGroup",
+          "presentation": {
+            "layout": "one-column"
+          },
+          "fields": [
+            {
+              "name": "label",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Label",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "image",
+              "type": "Link",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Image",
+                "hint": "",
+                "layoutColumn": 1,
+                "uploadEnabled": true,
+                "displayType": "ImageLink",
+                "lookupFolderTypes": null,
+                "lastVisitedKey": "gallerypicker-imagelink",
+                "lastVisitedEnabled": true
+              },
+              "validations": {},
+              "defaultValue": [
+                "/"
+              ]
+            },
+            {
+              "name": "displayname",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Display Name",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "price",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Price",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "cta",
+              "type": "FieldGroup",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "CTA",
+                "hint": "",
+                "layoutColumn": 1
+              },
+              "validations": {},
+              "defaultValue": [
+                {
+                  "fields": {
+                    "link": [],
+                    "text": [
+                      ""
+                    ],
+                    "type": [
+                      "link"
+                    ]
+                  }
+                }
+              ],
+              "fieldGroupType": "bsfCta"
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create content type: bsfCustomItem"
+      },
+      {
+        "type": "contenttypes",
+        "path": "/development/bsfCustomItems",
+        "method": "PUT",
+        "body": {
+          "name": "bsfCustomItems",
+          "type": "FieldGroup",
+          "presentation": {
+            "layout": "one-column"
+          },
+          "fields": [
+            {
+              "name": "items",
+              "type": "FieldGroup",
+              "required": false,
+              "multiple": true,
+              "presentation": {
+                "caption": "Products",
+                "hint": "",
+                "layoutColumn": 1
+              },
+              "validations": {},
+              "defaultValue": [
+                {
+                  "fields": {
+                    "image": [
+                      "/"
+                    ],
+                    "cta": [
+                      {
+                        "fields": {
+                          "link": [],
+                          "text": [
+                            ""
+                          ],
+                          "type": [
+                            "link"
+                          ]
+                        }
+                      }
+                    ],
+                    "price": [
+                      ""
+                    ],
+                    "displayname": [
+                      ""
+                    ],
+                    "label": [
+                      ""
+                    ]
+                  }
+                }
+              ],
+              "fieldGroupType": "bsfCustomItem"
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create content type: bsfCustomItems"
+      },
+      {
+        "type": "contenttypes",
+        "path": "/development/bsfVideo",
+        "method": "PUT",
+        "body": {
+          "name": "bsfVideo",
+          "type": "FieldGroup",
+          "presentation": {
+            "layout": "one-column"
+          },
+          "fields": [
+            {
+              "name": "videourl",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Video URL",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "poster",
+              "type": "Link",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Poster",
+                "hint": "",
+                "layoutColumn": 1,
+                "uploadEnabled": true,
+                "displayType": "ImageLink",
+                "lookupFolderTypes": null,
+                "lastVisitedKey": "gallerypicker-imagelink",
+                "lastVisitedEnabled": true
+              },
+              "validations": {},
+              "defaultValue": [
+                "/"
+              ]
+            },
+            {
+              "name": "banner",
+              "type": "FieldGroup",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Content",
+                "hint": "",
+                "layoutColumn": 1
+              },
+              "validations": {},
+              "defaultValue": [
+                {
+                  "fields": {
+                    "image": [
+                      "/"
+                    ],
+                    "cta": [
+                      {
+                        "fields": {
+                          "link": [],
+                          "text": [
+                            ""
+                          ],
+                          "type": [
+                            ""
+                          ]
+                        }
+                      }
+                    ],
+                    "optimizedImage": [],
+                    "subtitle": [
+                      ""
+                    ],
+                    "style": [
+                      ""
+                    ],
+                    "text": [
+                      ""
+                    ],
+                    "content": [
+                      ""
+                    ]
+                  }
+                }
+              ],
+              "fieldGroupType": "bsfBanner"
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create content type: bsfVideo"
+      },
+      {
+        "type": "contenttypes",
+        "path": "/development/bsfBrandSlider",
+        "method": "PUT",
+        "body": {
+          "name": "bsfBrandSlider",
+          "type": "FieldGroup",
+          "presentation": {
+            "layout": "one-column"
+          },
+          "fields": [
+            {
+              "name": "title",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Title",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create content type: bsfBrandSlider"
+      },
+      {
+        "type": "contenttypes",
+        "path": "/development/bsfBrand",
+        "method": "PUT",
+        "body": {
+          "name": "bsfBrand",
+          "type": "FieldGroup",
+          "presentation": {
+            "layout": "one-column"
+          },
+          "fields": [
+            {
+              "name": "name",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Name",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "image",
+              "type": "Link",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Image",
+                "hint": "",
+                "layoutColumn": 1,
+                "uploadEnabled": true,
+                "displayType": "ImageLink",
+                "lookupFolderTypes": null,
+                "lastVisitedKey": "gallerypicker-imagelink",
+                "lastVisitedEnabled": true
+              },
+              "validations": {},
+              "defaultValue": [
+                "/"
+              ]
+            },
+            {
+              "name": "link",
+              "type": "SelectableFieldGroup",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Link",
+                "hint": "",
+                "layoutColumn": 1,
+                "contentPickerType": "links",
+                "showFieldGroupNames": false
+              },
+              "validations": {
+                "maxItem": 1
+              },
+              "defaultValue": [],
+              "fieldGroupTypes": [
+                "link",
+                "bsfExternalLink"
+              ]
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create content type: bsfBrand"
+      },
+      {
+        "type": "contenttypes",
+        "path": "/development/bsfIntroSlider",
+        "method": "PUT",
+        "body": {
+          "name": "bsfIntroSlider",
+          "type": "FieldGroup",
+          "presentation": {
+            "layout": "one-column"
+          },
+          "fields": [
+            {
+              "name": "slides",
+              "type": "FieldGroup",
+              "required": false,
+              "multiple": true,
+              "presentation": {
+                "caption": "Slides",
+                "hint": "",
+                "layoutColumn": 1
+              },
+              "validations": {},
+              "defaultValue": [
+                {
+                  "fields": {
+                    "image": [
+                      "/"
+                    ],
+                    "cta": [
+                      {
+                        "fields": {
+                          "link": [],
+                          "text": [
+                            ""
+                          ],
+                          "type": [
+                            ""
+                          ]
+                        }
+                      }
+                    ],
+                    "optimizedImage": [],
+                    "subtitle": [
+                      ""
+                    ],
+                    "style": [
+                      ""
+                    ],
+                    "text": [
+                      ""
+                    ],
+                    "content": [
+                      ""
+                    ]
+                  }
+                }
+              ],
+              "fieldGroupType": "bsfBanner"
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create content type: bsfIntroSlider"
+      },
+      {
+        "type": "contenttypes",
+        "path": "/development/bsfProductSearch",
+        "method": "PUT",
+        "body": {
+          "name": "bsfProductSearch",
+          "type": "FieldGroup",
+          "presentation": {
+            "layout": "one-column"
+          },
+          "fields": [
+            {
+              "name": "title",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Title",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "algorithm",
+              "type": "SelectableFieldGroup",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Search Algorithm",
+                "hint": "",
+                "layoutColumn": 1,
+                "contentPickerType": "links",
+                "showFieldGroupNames": false
+              },
+              "validations": {
+                "maxItem": 1
+              },
+              "defaultValue": [
+                {
+                  "fields": {
+                    "offset": [
+                      0
+                    ],
+                    "query": [
+                      ""
+                    ],
+                    "pattern": [
+                      ""
+                    ],
+                    "limit": [
+                      10
+                    ]
+                  },
+                  "fieldGroupType": "bsfFindItemsByKeyword"
+                }
+              ],
+              "fieldGroupTypes": [
+                "bsfFindItemsByKeyword",
+                "bsfFindItemsByCategory",
+                "bsfFindItemsMoreLikeThis",
+                "bsfFindItemsByProductID",
+                "bsfCustomItems"
+              ]
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create content type: bsfProductSearch"
+      },
+      {
+        "type": "contenttypes",
+        "path": "/development/bsfBrandCollection",
+        "method": "PUT",
+        "body": {
+          "name": "bsfBrandCollection",
+          "type": "FieldGroup",
+          "presentation": {
+            "layout": "one-column"
+          },
+          "fields": [
+            {
+              "name": "title",
+              "type": "String",
+              "required": false,
+              "multiple": false,
+              "presentation": {
+                "caption": "Title",
+                "hint": "",
+                "layoutColumn": 1,
+                "displayType": "Simple"
+              },
+              "validations": {
+                "maxLength": null
+              },
+              "defaultValue": [
+                ""
+              ]
+            },
+            {
+              "name": "brands",
+              "type": "FieldGroup",
+              "required": false,
+              "multiple": true,
+              "presentation": {
+                "caption": "Brands",
+                "hint": "",
+                "layoutColumn": 1
+              },
+              "validations": {},
+              "defaultValue": [
+                {
+                  "fields": {
+                    "image": [
+                      "/"
+                    ],
+                    "name": [
+                      ""
+                    ],
+                    "link": []
+                  }
+                }
+              ],
+              "fieldGroupType": "bsfBrand"
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create content type: bsfBrandCollection"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/component_groups/bsf",
+        "method": "PUT",
+        "body": {
+          "name": "bsf",
           "hidden": false,
           "system": false
         },
-        "responseCode": 201
+        "responseCode": 201,
+        "description": "create group: bsf"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/component_groups/bsf/components/banner-grid",
+        "method": "PUT",
+        "body": {
+          "id": "bsf/banner-grid",
+          "extends": "base/component",
+          "hidden": false,
+          "system": false,
+          "xtype": null,
+          "ctype": "BannerGrid",
+          "contentType": null,
+          "label": "Banner Grid",
+          "icon": "data:image/png;base64,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",
+          "parameters": [
+            {
+              "name": "layout",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "1-2-1",
+              "displayName": "Layout",
+              "system": false,
+              "config": {
+                "value": [
+                  "1-2-1",
+                  "2-1-1"
+                ],
+                "valueListProvider": null,
+                "sourceId": null,
+                "type": "dropdown"
+              }
+            },
+            {
+              "name": "fullWidth",
+              "valueType": "boolean",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": false,
+              "displayName": "fullWidth",
+              "system": false,
+              "config": null
+            }
+          ],
+          "fieldGroups": []
+        },
+        "responseCode": 201,
+        "description": "create component: Banner Grid"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/component_groups/bsf/components/video",
+        "method": "PUT",
+        "body": {
+          "id": "bsf/video",
+          "extends": "base/component",
+          "hidden": false,
+          "system": false,
+          "xtype": null,
+          "ctype": "Video",
+          "contentType": "brxsaas:bsfVideo",
+          "label": "Video",
+          "icon": "data:image/png;base64,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",
+          "parameters": [
+            {
+              "name": "layout",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": null,
+              "system": false,
+              "config": {
+                "value": [
+                  "Video with Description",
+                  "Fullwidth Banner",
+                  "Video with Background",
+                  "Deal Video Banner"
+                ],
+                "valueListProvider": null,
+                "sourceId": null,
+                "type": "dropdown"
+              }
+            }
+          ],
+          "fieldGroups": []
+        },
+        "responseCode": 201,
+        "description": "create component: Video"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/component_groups/bsf/components/intro-slider",
+        "method": "PUT",
+        "body": {
+          "id": "bsf/intro-slider",
+          "extends": "base/component",
+          "hidden": false,
+          "system": false,
+          "xtype": null,
+          "ctype": "IntroSlider",
+          "contentType": "brxsaas:bsfIntroSlider",
+          "label": "Intro Slider",
+          "icon": "data:image/png;base64,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",
+          "parameters": [],
+          "fieldGroups": []
+        },
+        "responseCode": 201,
+        "description": "create component: Intro Slider"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/component_groups/bsf/components/intro-banner-collection",
+        "method": "PUT",
+        "body": {
+          "id": "bsf/intro-banner-collection",
+          "extends": "base/component",
+          "hidden": false,
+          "system": false,
+          "xtype": null,
+          "ctype": "IntroBannerCollection",
+          "contentType": "brxsaas:bsfBannerCollection",
+          "label": "Intro Banner Collection",
+          "icon": "data:image/png;base64,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",
+          "parameters": [],
+          "fieldGroups": []
+        },
+        "responseCode": 201,
+        "description": "create component: Intro Banner Collection"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/component_groups/bsf/components/banner",
+        "method": "PUT",
+        "body": {
+          "id": "bsf/banner",
+          "extends": "base/component",
+          "hidden": false,
+          "system": false,
+          "xtype": null,
+          "ctype": "Banner",
+          "contentType": "brxsaas:bsfBanner",
+          "label": "Banner",
+          "icon": "data:image/png;base64,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",
+          "parameters": [
+            {
+              "name": "fullWidth",
+              "valueType": "boolean",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": false,
+              "displayName": "Full Width",
+              "system": false,
+              "config": null
+            },
+            {
+              "name": "layout",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "big",
+              "displayName": "Layout",
+              "system": false,
+              "config": {
+                "value": [
+                  "big",
+                  "small"
+                ],
+                "valueListProvider": null,
+                "sourceId": null,
+                "type": "dropdown"
+              }
+            }
+          ],
+          "fieldGroups": []
+        },
+        "responseCode": 201,
+        "description": "create component: Banner"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/component_groups/bsf/components/product-collection",
+        "method": "PUT",
+        "body": {
+          "id": "bsf/product-collection",
+          "extends": "base/component",
+          "hidden": false,
+          "system": false,
+          "xtype": null,
+          "ctype": "ProductCollection",
+          "contentType": "brxsaas:bsfProductSearch",
+          "label": "Product Collection",
+          "icon": "data:image/png;base64,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",
+          "parameters": [
+            {
+              "name": "mt",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": "Margin Top",
+              "system": false,
+              "config": {
+                "value": [
+                  "0",
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "5",
+                  "auto"
+                ],
+                "valueListProvider": null,
+                "sourceId": null,
+                "type": "dropdown"
+              }
+            },
+            {
+              "name": "mb",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": "Margin Bottom",
+              "system": false,
+              "config": {
+                "value": [
+                  "0",
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "5",
+                  "auto"
+                ],
+                "valueListProvider": null,
+                "sourceId": null,
+                "type": "dropdown"
+              }
+            },
+            {
+              "name": "xs",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": "Extra Small <576px",
+              "system": false,
+              "config": {
+                "value": [
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "auto"
+                ],
+                "valueListProvider": null,
+                "sourceId": null,
+                "type": "dropdown"
+              }
+            },
+            {
+              "name": "sm",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": "Small ≥576px",
+              "system": false,
+              "config": {
+                "value": [
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "auto"
+                ],
+                "valueListProvider": null,
+                "sourceId": null,
+                "type": "dropdown"
+              }
+            },
+            {
+              "name": "md",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": "Medium ≥768px",
+              "system": false,
+              "config": {
+                "value": [
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "auto"
+                ],
+                "valueListProvider": null,
+                "sourceId": null,
+                "type": "dropdown"
+              }
+            },
+            {
+              "name": "lg",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": "Large ≥992px",
+              "system": false,
+              "config": {
+                "value": [
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "auto"
+                ],
+                "valueListProvider": null,
+                "sourceId": null,
+                "type": "dropdown"
+              }
+            },
+            {
+              "name": "xl",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": "Extra large ≥1200px",
+              "system": false,
+              "config": {
+                "value": [
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "auto"
+                ],
+                "valueListProvider": null,
+                "sourceId": null,
+                "type": "dropdown"
+              }
+            }
+          ],
+          "fieldGroups": [
+            {
+              "name": "Items in Viewport",
+              "parameters": [
+                "xs",
+                "sm",
+                "md",
+                "lg",
+                "xl"
+              ]
+            },
+            {
+              "name": "Component Margin Settings",
+              "parameters": [
+                "mt",
+                "mb"
+              ]
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create component: Product Collection"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/component_groups/bsf/components/banner-collection",
+        "method": "PUT",
+        "body": {
+          "id": "bsf/banner-collection",
+          "extends": "base/component",
+          "hidden": false,
+          "system": false,
+          "xtype": null,
+          "ctype": "BannerCollection",
+          "contentType": "brxsaas:bsfBannerCollection",
+          "label": "Banner Collection",
+          "icon": "data:image/png;base64,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",
+          "parameters": [
+            {
+              "name": "fullWidth",
+              "valueType": "boolean",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": false,
+              "displayName": "Full Width",
+              "system": false,
+              "config": null
+            },
+            {
+              "name": "mt",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": "Margin Top",
+              "system": false,
+              "config": {
+                "value": [
+                  "0",
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "5",
+                  "auto"
+                ],
+                "valueListProvider": null,
+                "sourceId": null,
+                "type": "dropdown"
+              }
+            },
+            {
+              "name": "mb",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": "Margin Bottom",
+              "system": false,
+              "config": {
+                "value": [
+                  "0",
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "5",
+                  "auto"
+                ],
+                "valueListProvider": null,
+                "sourceId": null,
+                "type": "dropdown"
+              }
+            },
+            {
+              "name": "xs",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": "Extra Small <576px",
+              "system": false,
+              "config": {
+                "value": [
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "auto"
+                ],
+                "valueListProvider": null,
+                "sourceId": null,
+                "type": "dropdown"
+              }
+            },
+            {
+              "name": "sm",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": "Small ≥576px",
+              "system": false,
+              "config": {
+                "value": [
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "auto"
+                ],
+                "valueListProvider": null,
+                "sourceId": null,
+                "type": "dropdown"
+              }
+            },
+            {
+              "name": "md",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": "Medium ≥768px",
+              "system": false,
+              "config": {
+                "value": [
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "auto"
+                ],
+                "valueListProvider": null,
+                "sourceId": null,
+                "type": "dropdown"
+              }
+            },
+            {
+              "name": "lg",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": "Large ≥992px",
+              "system": false,
+              "config": {
+                "value": [
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "auto"
+                ],
+                "valueListProvider": null,
+                "sourceId": null,
+                "type": "dropdown"
+              }
+            },
+            {
+              "name": "xl",
+              "valueType": "string",
+              "required": false,
+              "hidden": false,
+              "overlay": false,
+              "defaultValue": "",
+              "displayName": "Extra large ≥1200px",
+              "system": false,
+              "config": {
+                "value": [
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "6",
+                  "auto"
+                ],
+                "valueListProvider": null,
+                "sourceId": null,
+                "type": "dropdown"
+              }
+            }
+          ],
+          "fieldGroups": [
+            {
+              "name": "Items in Viewport",
+              "parameters": [
+                "xs",
+                "sm",
+                "md",
+                "lg",
+                "xl"
+              ]
+            },
+            {
+              "name": "Component Margin Settings",
+              "parameters": [
+                "mt",
+                "mb"
+              ]
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create component: Banner Collection"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/component_groups/bsf/components/product-carousel",
+        "method": "PUT",
+        "body": {
+          "id": "bsf/product-carousel",
+          "extends": "base/component",
+          "hidden": false,
+          "system": false,
+          "xtype": null,
+          "ctype": "ProductCarousel",
+          "contentType": "brxsaas:bsfProductSearch",
+          "label": "Product Carousel",
+          "icon": "data:image/png;base64,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",
+          "parameters": [
+            {
+              "name": "pid",
+              "valueType": "string",
+              "required": false,
+              "hidden": true,
+              "overlay": false,
+              "defaultValue": "${pid}",
+              "displayName": null,
+              "system": false,
+              "config": null
+            }
+          ],
+          "fieldGroups": []
+        },
+        "responseCode": 201,
+        "description": "create component: Product Carousel"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/component_groups/bsf/components/product-detail",
+        "method": "PUT",
+        "body": {
+          "id": "bsf/product-detail",
+          "extends": "base/component",
+          "hidden": false,
+          "system": false,
+          "xtype": null,
+          "ctype": "ProductDetail",
+          "contentType": null,
+          "label": "Product Detail",
+          "icon": "data:image/png;base64,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",
+          "parameters": [],
+          "fieldGroups": []
+        },
+        "responseCode": 201,
+        "description": "create component: Product Detail"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/component_groups/bsf/components/product-grid",
+        "method": "PUT",
+        "body": {
+          "id": "bsf/product-grid",
+          "extends": "base/component",
+          "hidden": false,
+          "system": false,
+          "xtype": null,
+          "ctype": "ProductGrid",
+          "contentType": null,
+          "label": "Product Grid",
+          "icon": "data:image/png;base64,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",
+          "parameters": [],
+          "fieldGroups": []
+        },
+        "responseCode": 201,
+        "description": "create component: Product Grid"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/component_groups/bsf/components/brand-slider",
+        "method": "PUT",
+        "body": {
+          "id": "bsf/brand-slider",
+          "extends": "base/component",
+          "hidden": false,
+          "system": false,
+          "xtype": null,
+          "ctype": "BrandSlider",
+          "contentType": "brxsaas:bsfBrandCollection",
+          "label": "Brand Slider",
+          "icon": "data:image/png;base64,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",
+          "parameters": [],
+          "fieldGroups": []
+        },
+        "responseCode": 201,
+        "description": "create component: Brand Slider"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/layouts/base",
+        "method": "PUT",
+        "body": {
+          "name": "base",
+          "label": null,
+          "description": null,
+          "parameters": {},
+          "type": "abstract",
+          "extends": null,
+          "components": [
+            {
+              "name": "menu",
+              "label": null,
+              "description": null,
+              "parameters": {
+                "selectedMenu": "on",
+                "menu": "main",
+                "level": "2"
+              },
+              "xtype": null,
+              "definition": "base/menu",
+              "components": [],
+              "type": "static"
+            },
+            {
+              "name": "main",
+              "label": null,
+              "description": null,
+              "parameters": {},
+              "xtype": null,
+              "definition": null,
+              "components": [],
+              "type": "static"
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create page: base"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/layouts/one-column",
+        "method": "PUT",
+        "body": {
+          "name": "one-column",
+          "label": "One-Column Layout",
+          "description": null,
+          "parameters": {},
+          "type": "xpage",
+          "extends": "base",
+          "components": [
+            {
+              "name": "main",
+              "label": null,
+              "description": null,
+              "parameters": {},
+              "xtype": null,
+              "definition": null,
+              "components": [
+                {
+                  "name": "container",
+                  "label": "Main",
+                  "description": null,
+                  "parameters": {},
+                  "xtype": "hst.nomarkup",
+                  "type": "managed"
+                }
+              ],
+              "type": "static"
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create page: one-column"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/layouts/two-8-4-one-column",
+        "method": "PUT",
+        "body": {
+          "name": "two-8-4-one-column",
+          "label": "Two (8/4) One (12) Column",
+          "description": null,
+          "parameters": {},
+          "type": "xpage",
+          "extends": "base",
+          "components": [
+            {
+              "name": "intro",
+              "label": null,
+              "description": null,
+              "parameters": {},
+              "xtype": null,
+              "definition": null,
+              "components": [
+                {
+                  "name": "right",
+                  "label": null,
+                  "description": null,
+                  "parameters": {},
+                  "xtype": "hst.nomarkup",
+                  "type": "managed"
+                },
+                {
+                  "name": "left",
+                  "label": null,
+                  "description": null,
+                  "parameters": {},
+                  "xtype": "hst.nomarkup",
+                  "type": "managed"
+                }
+              ],
+              "type": "static"
+            },
+            {
+              "name": "main",
+              "label": null,
+              "description": null,
+              "parameters": {},
+              "xtype": null,
+              "definition": null,
+              "components": [
+                {
+                  "name": "container",
+                  "label": "Main",
+                  "description": null,
+                  "parameters": {},
+                  "xtype": "hst.nomarkup",
+                  "type": "managed"
+                }
+              ],
+              "type": "static"
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create page: two-8-4-one-column"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/layouts/default-product-detail",
+        "method": "PUT",
+        "body": {
+          "name": "default-product-detail",
+          "label": "Default Product Detail Page",
+          "description": null,
+          "parameters": {
+            "pid": "${pid}",
+            "slug": "${slug}"
+          },
+          "type": "page",
+          "extends": "base",
+          "components": [
+            {
+              "name": "top",
+              "label": null,
+              "description": null,
+              "parameters": {},
+              "xtype": null,
+              "definition": null,
+              "components": [
+                {
+                  "name": "container",
+                  "label": "Top",
+                  "description": null,
+                  "parameters": {},
+                  "xtype": "hst.nomarkup",
+                  "type": "managed"
+                }
+              ],
+              "type": "static"
+            },
+            {
+              "name": "main",
+              "label": null,
+              "description": null,
+              "parameters": {},
+              "xtype": null,
+              "definition": null,
+              "components": [
+                {
+                  "name": "container",
+                  "label": "Main",
+                  "description": null,
+                  "parameters": {},
+                  "xtype": "hst.nomarkup",
+                  "type": "managed"
+                }
+              ],
+              "type": "static"
+            },
+            {
+              "name": "bottom",
+              "label": null,
+              "description": null,
+              "parameters": {},
+              "xtype": null,
+              "definition": null,
+              "components": [
+                {
+                  "name": "container",
+                  "label": "Bottom",
+                  "description": null,
+                  "parameters": {},
+                  "xtype": "hst.nomarkup",
+                  "type": "managed"
+                }
+              ],
+              "type": "static"
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create page: default-product-detail"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/layouts/x-product-detail",
+        "method": "PUT",
+        "body": {
+          "name": "x-product-detail",
+          "label": "Product Detail Page",
+          "description": null,
+          "parameters": {
+            "pid": "${pid}",
+            "slug": "${slug}"
+          },
+          "type": "xpage",
+          "extends": "base",
+          "components": [
+            {
+              "name": "bottom",
+              "label": null,
+              "description": null,
+              "parameters": {},
+              "xtype": null,
+              "definition": null,
+              "components": [
+                {
+                  "name": "container",
+                  "label": "Bottom",
+                  "description": null,
+                  "parameters": {},
+                  "xtype": "hst.nomarkup",
+                  "type": "managed"
+                }
+              ],
+              "type": "static"
+            },
+            {
+              "name": "main",
+              "label": null,
+              "description": null,
+              "parameters": {},
+              "xtype": null,
+              "definition": null,
+              "components": [
+                {
+                  "name": "container",
+                  "label": "Main",
+                  "description": null,
+                  "parameters": {},
+                  "xtype": "hst.nomarkup",
+                  "type": "managed"
+                }
+              ],
+              "type": "static"
+            },
+            {
+              "name": "top",
+              "label": null,
+              "description": null,
+              "parameters": {},
+              "xtype": null,
+              "definition": null,
+              "components": [
+                {
+                  "name": "container",
+                  "label": "Top",
+                  "description": null,
+                  "parameters": {},
+                  "xtype": "hst.nomarkup",
+                  "type": "managed"
+                }
+              ],
+              "type": "static"
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create page: x-product-detail"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/layouts/default-product-listing",
+        "method": "PUT",
+        "body": {
+          "name": "default-product-listing",
+          "label": "Product Listing Page",
+          "description": null,
+          "parameters": {
+            "slug": "${slug}",
+            "cid": "${cid}"
+          },
+          "type": "page",
+          "extends": "base",
+          "components": [
+            {
+              "name": "main",
+              "label": null,
+              "description": null,
+              "parameters": {},
+              "xtype": null,
+              "definition": null,
+              "components": [
+                {
+                  "name": "container",
+                  "label": "Main",
+                  "description": null,
+                  "parameters": {},
+                  "xtype": "hst.nomarkup",
+                  "type": "managed"
+                }
+              ],
+              "type": "static"
+            },
+            {
+              "name": "bottom",
+              "label": null,
+              "description": null,
+              "parameters": {},
+              "xtype": null,
+              "definition": null,
+              "components": [
+                {
+                  "name": "container",
+                  "label": "Bottom",
+                  "description": null,
+                  "parameters": {},
+                  "xtype": "hst.nomarkup",
+                  "type": "managed"
+                }
+              ],
+              "type": "static"
+            },
+            {
+              "name": "top",
+              "label": null,
+              "description": null,
+              "parameters": {},
+              "xtype": null,
+              "definition": null,
+              "components": [
+                {
+                  "name": "container",
+                  "label": "Top",
+                  "description": null,
+                  "parameters": {},
+                  "xtype": "hst.nomarkup",
+                  "type": "managed"
+                }
+              ],
+              "type": "static"
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create page: default-product-listing"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/layouts/x-product-listing",
+        "method": "PUT",
+        "body": {
+          "name": "x-product-listing",
+          "label": "Product Listing Page",
+          "description": null,
+          "parameters": {
+            "slug": "${slug}",
+            "cid": "${cid}"
+          },
+          "type": "xpage",
+          "extends": "base",
+          "components": [
+            {
+              "name": "top",
+              "label": null,
+              "description": null,
+              "parameters": {},
+              "xtype": null,
+              "definition": null,
+              "components": [
+                {
+                  "name": "container",
+                  "label": "Top",
+                  "description": null,
+                  "parameters": {},
+                  "xtype": "hst.nomarkup",
+                  "type": "managed"
+                }
+              ],
+              "type": "static"
+            },
+            {
+              "name": "main",
+              "label": null,
+              "description": null,
+              "parameters": {},
+              "xtype": null,
+              "definition": null,
+              "components": [
+                {
+                  "name": "container",
+                  "label": "Main",
+                  "description": null,
+                  "parameters": {},
+                  "xtype": "hst.nomarkup",
+                  "type": "managed"
+                }
+              ],
+              "type": "static"
+            },
+            {
+              "name": "bottom",
+              "label": null,
+              "description": null,
+              "parameters": {},
+              "xtype": null,
+              "definition": null,
+              "components": [
+                {
+                  "name": "container",
+                  "label": "Bottom",
+                  "description": null,
+                  "parameters": {},
+                  "xtype": "hst.nomarkup",
+                  "type": "managed"
+                }
+              ],
+              "type": "static"
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create page: x-product-listing"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/routes/_any_",
+        "method": "PUT",
+        "body": {
+          "name": "_any_",
+          "layout": null,
+          "pageTitle": null,
+          "relativeContentPath": "pages/${1}",
+          "referenceId": null,
+          "parameters": {},
+          "documentRequired": true,
+          "doctypePages": {},
+          "items": []
+        },
+        "responseCode": 201,
+        "description": "create route: _any_"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/routes/p",
+        "method": "PUT",
+        "body": {
+          "name": "p",
+          "layout": null,
+          "pageTitle": null,
+          "relativeContentPath": null,
+          "referenceId": null,
+          "parameters": {},
+          "documentRequired": false,
+          "doctypePages": {},
+          "items": [
+            {
+              "name": "_default_",
+              "layout": null,
+              "pageTitle": null,
+              "relativeContentPath": null,
+              "referenceId": null,
+              "parameters": {},
+              "documentRequired": false,
+              "doctypePages": {},
+              "items": [
+                {
+                  "name": "_default_",
+                  "layout": "default-product-detail",
+                  "pageTitle": null,
+                  "relativeContentPath": "xtemplates/product-detail-page-template",
+                  "referenceId": null,
+                  "parameters": {
+                    "pid": "${2}",
+                    "slug": "${1}"
+                  },
+                  "documentRequired": false,
+                  "doctypePages": {},
+                  "items": [
+                    {
+                      "name": "_index_",
+                      "layout": null,
+                      "pageTitle": null,
+                      "relativeContentPath": "pages/p/${1}/${2}",
+                      "referenceId": null,
+                      "parameters": {
+                        "pid": "${2}",
+                        "slug": "${1}"
+                      },
+                      "documentRequired": false,
+                      "doctypePages": {},
+                      "items": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create route: p"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/routes/home",
+        "method": "PUT",
+        "body": {
+          "name": "home",
+          "layout": null,
+          "pageTitle": null,
+          "relativeContentPath": "pages/home",
+          "referenceId": null,
+          "parameters": {},
+          "documentRequired": true,
+          "doctypePages": {},
+          "items": []
+        },
+        "responseCode": 201,
+        "description": "create route: home"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/routes/c",
+        "method": "PUT",
+        "body": {
+          "name": "c",
+          "layout": null,
+          "pageTitle": null,
+          "relativeContentPath": null,
+          "referenceId": null,
+          "parameters": {},
+          "documentRequired": false,
+          "doctypePages": {},
+          "items": [
+            {
+              "name": "_default_",
+              "layout": null,
+              "pageTitle": null,
+              "relativeContentPath": null,
+              "referenceId": null,
+              "parameters": {},
+              "documentRequired": false,
+              "doctypePages": {},
+              "items": [
+                {
+                  "name": "_default_",
+                  "layout": "default-product-listing",
+                  "pageTitle": null,
+                  "relativeContentPath": "xtemplates/product-listing-page-template",
+                  "referenceId": null,
+                  "parameters": {
+                    "slug": "${1}",
+                    "cid": "${2}"
+                  },
+                  "documentRequired": false,
+                  "doctypePages": {},
+                  "items": [
+                    {
+                      "name": "_index_",
+                      "layout": null,
+                      "pageTitle": null,
+                      "relativeContentPath": "pages/c/${1}/${2}",
+                      "referenceId": null,
+                      "parameters": {
+                        "slug": "${1}",
+                        "cid": "${2}"
+                      },
+                      "documentRequired": false,
+                      "doctypePages": {},
+                      "items": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "responseCode": 201,
+        "description": "create route: c"
+      },
+      {
+        "type": "site",
+        "path": "/channels/{channel_id}/menus/footer-menu",
+        "method": "PUT",
+        "responseCode": 201,
+        "description": "create menu: footer-menu"
       }
     ]
   }

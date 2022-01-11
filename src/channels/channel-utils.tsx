@@ -4,9 +4,6 @@ export const channelUiSchema = {
   id: {
     "ui:disabled": true
   },
-  name: {
-    "ui:disabled": true
-  },
   branch: {
     "ui:disabled": true
   },
@@ -15,6 +12,14 @@ export const channelUiSchema = {
   },
   contentRootPath: {
     "ui:disabled": true
+  },
+  parameters:{
+    "ui:disabled": true,
+    'ui:description': 'editable in channel settings in the CMS UI',
+    "ui:options":  {
+      addable: false,
+      removable: false
+    }
   }
 }
 

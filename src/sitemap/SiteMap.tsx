@@ -19,7 +19,7 @@ import {
 import 'react-sortable-tree/style.css';
 import {Channel, SitemapItem} from "../api/models/site";
 import AddOutlinedIcon from "@material-ui/icons/Add";
-import {getChannelSiteMapOperationsApi} from "../ApiContext";
+import {getChannelSiteMapOperationsApi, getGenericSiteApi} from "../ApiContext";
 import {Nullable} from "../api/models/site/nullable";
 import {ChannelSitemapOperationsApi} from "../api/apis/channel-sitemap-operations-api";
 import SortableTree, {addNodeUnderParent, ExtendedNodeData, removeNode, TreeItem} from "react-sortable-tree";
@@ -44,10 +44,13 @@ import MoreHorizOutlinedIcon from "@material-ui/icons/MoreHorizOutlined";
 import {Delete} from "@material-ui/icons";
 import ChannelSwitcher from "../common/ChannelSwitcher";
 import {LogContext} from "../LogContext";
+import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
+import {InstallationAction} from "../plugins/Plugins";
+import {slugify} from "../catalog/catalog-utils";
 
 type SiteMapState = {
     channels: Array<Channel>
-    currentChannelId: Nullable<string>,
+    currentChannelId: string,
     dialogOpen: boolean
     treeData: TreeItem[]
     drawerOpen: boolean
@@ -65,7 +68,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
 
         this.state = {
             channels: [],
-            currentChannelId: null,
+            currentChannelId: '',
             treeData: [],
             drawerOpen: false,
             selectedNode: undefined,
@@ -86,7 +89,8 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
             }, () => console.log(this.state.treeData));
         }).catch(error => {
             logError(`error retrieving routes:  ${error?.response?.data}`, this.context); // error in the above string (in this case, yes)!
-        });;
+        });
+        ;
     }
 
     getMenu(rowInfo: ExtendedNodeData) {
@@ -160,6 +164,29 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
                     >
                         Save Routes
                     </Button>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        style={{marginRight: '10px'}}
+                        startIcon={<FileCopyOutlinedIcon/>}
+                        onClick={() => {
+                            const installationActions = this.createSitemapExport();
+                            navigator.clipboard.writeText(JSON.stringify(installationActions))
+                            const event = new CustomEvent('record', { detail: installationActions });
+                            document.dispatchEvent(event);
+                        }}
+                    >
+                        export routes
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        style={{marginRight: '10px'}}
+                        startIcon={<Icon className="fas fa-paste"/>}
+                        onClick={() => this.importFromClipBoard()}
+                    >
+                        import
+                    </Button>
                 </Toolbar>
             </AppBar>
             <Dialog open={this.state.dialogOpen} aria-labelledby="form-dialog-title">
@@ -194,7 +221,7 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
 
 
                                   buttons: [
-                                       this.getMenu(rowInfo)
+                                      this.getMenu(rowInfo)
                                   ],
                                   rowLabelClickEventHandler: () =>
                                       this.onNodeSelected(rowInfo.node)
@@ -327,6 +354,62 @@ class SiteMap extends React.Component<SiteMapProps, SiteMapState> {
 
     private onChannelChanged(channelId: string) {
         this.updateSiteMapByChannel(channelId);
+    }
+
+    private createSitemapExport() {
+        const siteMap: SitemapItem[] = nodeToSiteMapItems(this.state.treeData);
+
+        const installationActions: Array<InstallationAction> = siteMap.map(route => {
+            const body = {...route}
+            return {
+                type: 'site',
+                path: `/channels/{channel_id}/routes/${route.name}`,
+                method: 'PUT',
+                body: body,
+                responseCode: 201,
+                description: `create route: ${route.name}`
+            } as InstallationAction
+        })
+
+        return installationActions;
+    }
+
+    private importFromClipBoard() {
+        navigator.clipboard.readText().then(value => {
+            const installationActions: Array<InstallationAction> = JSON.parse(value);
+            const isArray = Array.isArray(installationActions);
+            const channelId = this.state.currentChannelId;
+            const that = this;
+            if (isArray) {
+                (async function () {
+                    const genericSiteApi = getGenericSiteApi();
+                    let success = true;
+                    let errors = []
+                    for (const installationAction of installationActions) {
+                        try {
+                            const result = await genericSiteApi.put(installationAction.path, channelId, installationAction.body)
+                            if (result.status !== installationAction.responseCode) {
+                                success = false;
+                                errors.push(`${result.data?.reason} ${installationAction.path}`)
+                            }
+                        } catch (error) {
+                            success = false;
+                            errors.push(`${error.toString()} ${installationAction.path}`)
+                        }
+                    }
+                    if (!success) {
+                        throw new Error(errors.join("\n"));
+                    }
+                })().then(() => {
+                    that.updateSiteMapByChannel(channelId)
+                }).catch(reason => {
+                    logError(reason.toString(), this.context);
+                    that.updateSiteMapByChannel(channelId)
+                })
+            }
+        });
+
+
     }
 }
 

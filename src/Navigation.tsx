@@ -35,9 +35,12 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
         super(props);
 
         // @ts-ignore
-        window._env_.BRX_NAMESPACE && cookies.set('namespace', window._env_.BRX_NAMESPACE,{secure:true, sameSite:'strict'});
+        window._env_.BRX_NAMESPACE && cookies.set('namespace', window._env_.BRX_NAMESPACE, {
+            secure: true,
+            sameSite: 'strict'
+        });
         // @ts-ignore
-        window._env_.BRX_API_KEY && cookies.set('apiKey', window._env_.BRX_API_KEY, {secure:true, sameSite:'strict'});
+        window._env_.BRX_API_KEY && cookies.set('apiKey', window._env_.BRX_API_KEY, {secure: true, sameSite: 'strict'});
 
         const namespace = cookies.get('namespace');
 
@@ -49,6 +52,8 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
             tab: namespace ? 0 : 5,
             endpoint: endpoint
         }
+
+
 
     }
 
@@ -72,7 +77,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
                             <Tab label="Components"/>
                             <Tab label="Routes"/>
                             <Tab label="Menus"/>
-                            <Tab label="Content Types"  icon={
+                            <Tab label="Content Types" icon={
                                 <Badge
                                     style={{
                                         right: '30px',
@@ -89,12 +94,12 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
                                         position: 'absolute',
                                         top: '15px'
                                     }}
-                                    badgeContent={<SettingsApplicationsOutlinedIcon />}>
+                                    badgeContent={<SettingsApplicationsOutlinedIcon/>}>
                                 </Badge>
 
                             }/>
 
-                            <Tab label="MarketPlace"  icon={
+                            <Tab label="MarketPlace" icon={
                                 <Badge
                                     style={{
                                         right: '30px',

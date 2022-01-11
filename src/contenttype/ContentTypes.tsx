@@ -6,7 +6,12 @@ import {
     AccordionSummary,
     AppBar,
     Button,
+    Checkbox,
     Container,
+    FormControlLabel,
+    FormGroup,
+    List,
+    ListItem,
     SvgIcon,
     Toolbar,
     Typography,
@@ -14,7 +19,7 @@ import {
 } from "@material-ui/core";
 import AddOutlinedIcon from "@material-ui/icons/Add";
 import Icon from "@material-ui/core/Icon";
-import {getBaseUrl, getContentTypeOperationsApi} from "../ApiContext";
+import {getBaseUrl, getContentTypeOperationsApi, getGenericContentTypesApi} from "../ApiContext";
 import {LogContext} from "../LogContext";
 import {logError, logSuccess} from "../common/common-utils";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -22,14 +27,19 @@ import {ContentType} from "../api/models/contenttype";
 import {ContentTypeOperationsApi} from "../api/apis/content-type-operations-api";
 import Drawer from '@material-ui/core/Drawer';
 import {createInterfacesFromContentTypes} from "./content-type-utils";
+import {InstallationAction} from "../plugins/Plugins";
 
 var nomnoml = require('nomnoml');
+
+const dependencyTypes: Array<string> = ['FieldGroup', 'SelectableFieldGroup'];
 
 
 type ContentTypesState = {
     types: Array<ContentType>,
+    selectedTypesForExport: Array<ContentType>,
     noDevelopmentProject: boolean
     diagramDialogOpen: boolean
+    exportTypesDialogOpen: boolean
     intfcsDialogOpen: boolean
     diagram: string
     intfcs: string
@@ -53,6 +63,18 @@ const styles = theme => {
     });
 };
 
+const hasDependencies = function (ctype: ContentType) {
+    let hasDependency = false;
+    if (ctype.fields) {
+        for (const field of ctype.fields) {
+            hasDependency = dependencyTypes.includes(field.type);
+            if (hasDependency)
+                break;
+        }
+    }
+    return hasDependency;
+}
+
 class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState> {
 
     static contextType = LogContext;
@@ -67,7 +89,9 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
             types: [],
             noDevelopmentProject: true,
             diagramDialogOpen: false,
-            intfcsDialogOpen: false
+            exportTypesDialogOpen: false,
+            intfcsDialogOpen: false,
+            selectedTypesForExport: []
         }
     }
 
@@ -87,7 +111,20 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
                 intfcs: createInterfacesFromContentTypes(types)
             });
             logSuccess('retrieved content types..', this.context);
-        }).catch(reason => logError("error trying to get the content types, reason:", reason?.data));
+        }).catch(reason => {
+            logError("error trying to get the content types from development, reason:", reason?.data)
+            api.getContentTypes('core').then(value => {
+                const types: Array<ContentType> = value.data;
+                // console.log(createInterfacesFromContentTypes( types));
+                this.setState({
+                    types: types,
+                    noDevelopmentProject: true,
+                    diagram: this.generateDiagram(types),
+                    intfcs: createInterfacesFromContentTypes(types)
+                });
+                logSuccess('fallback.. retrieved content types from core', this.context);
+            });
+        });
     }
 
     generateDiagram(types: Array<ContentType>): string {
@@ -111,12 +148,72 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
         return diagram;
     }
 
+    importFromClipBoard() {
+        navigator.clipboard.readText().then(value => {
+            const installationActions: Array<InstallationAction> = JSON.parse(value);
+            const isArray = Array.isArray(installationActions);
+            if (isArray) {
+                (async function () {
+                    const genericContentTypesApi = getGenericContentTypesApi();
+                    let success = true;
+                    let errors = []
+                    for (const installationAction of installationActions) {
+                        try {
+                            const result = await genericContentTypesApi.put(installationAction.path, undefined, installationAction.body)
+                            if (result.status !== installationAction.responseCode) {
+                                success = false;
+                                errors.push(`${result.data?.reason} ${installationAction.path}`)
+                            }
+                        } catch (error) {
+                            success = false;
+                            errors.push(`${error.toString()} ${installationAction.path}`)
+                        }
+                    }
+                    if (!success) {
+                        throw new Error(errors.join("\n"));
+                    }
+                })().then(() => {
+                    this.updateContentTypes();
+                }).catch(reason => {
+                    logError(reason.toString(), this.context);
+                })
+            }
+        });
+    }
+
+    createPluginJs() {
+        const installationActions: Array<InstallationAction> = this.state.selectedTypesForExport.map(type => {
+            const body = {...type}
+            //@ts-ignore
+            delete body.enabled;
+            delete body.system
+            return {
+                type: 'contenttypes',
+                path: `/development/${type.name}`,
+                method: 'PUT',
+                body: body,
+                responseCode: 201,
+                description: `create content type: ${type.name}`
+            } as InstallationAction
+        })
+        return installationActions;
+    }
+
 
     render() {
         const {classes} = this.props;
-        const {types, noDevelopmentProject, diagramDialogOpen, intfcsDialogOpen, diagram, intfcs} = this.state;
+        const {
+            types,
+            noDevelopmentProject,
+            diagramDialogOpen,
+            exportTypesDialogOpen,
+            intfcsDialogOpen,
+            diagram,
+            intfcs
+        } = this.state;
         const blob = new Blob([intfcs], {type: 'text/x.typescript'});
         const fileDownloadUrl = URL.createObjectURL(blob);
+
         return <>
             <AppBar position="sticky" variant={'outlined'} color={'default'}>
                 <Toolbar>
@@ -161,6 +258,26 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
                     >
                         Generate Diagram
                     </Button>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        style={{marginRight: '10px'}}
+                        startIcon={<FileCopyOutlinedIcon/>}
+                        onClick={() => {
+                            this.setState({exportTypesDialogOpen: true})
+                        }}
+                    >
+                        Export
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        style={{marginRight: '10px'}}
+                        startIcon={<Icon className="fas fa-paste"/>}
+                        onClick={() => this.importFromClipBoard()}
+                    >
+                        Import
+                    </Button>
                 </Toolbar>
             </AppBar>
             {types.map((type, index) => {
@@ -183,6 +300,55 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
                     {/*{intfcs && <div dangerouslySetInnerHTML={{__html: `<pre>${JSON.stringify(JSON.parse(intfcs), undefined, 2)}</pre>`}}/>}*/}
                 </Container>
             </Drawer>
+            <Drawer anchor={'right'} open={exportTypesDialogOpen}
+                    onClose={() => this.setState({exportTypesDialogOpen: false, selectedTypesForExport: []})}>
+                <AppBar position="sticky" color={"default"}>
+                    <Toolbar>
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            style={{marginRight: '10px'}}
+                            startIcon={<FileCopyOutlinedIcon/>}
+                            onClick={() => {
+                                const installationActions = this.createPluginJs();
+                                navigator.clipboard.writeText(JSON.stringify(installationActions))
+                                const event = new CustomEvent('record', {detail: installationActions});
+                                document.dispatchEvent(event);
+                            }}
+                        >
+                            Export to plugin format
+                        </Button>
+                    </Toolbar>
+                </AppBar>
+                <Container>
+
+                    <FormGroup row>
+                        <List>
+                            {types.map(ctype => {
+                                return (
+                                    <ListItem key={ctype.name} dense button>
+                                        <FormControlLabel
+                                            control={<Checkbox
+                                                onChange={(event, checked) => {
+                                                    this.setState(state => {
+                                                        const selectedTypesForExport = checked ?
+                                                            state.selectedTypesForExport.concat(ctype) :
+                                                            state.selectedTypesForExport.filter((item) => ctype.name !== item.name);
+                                                        return {
+                                                            selectedTypesForExport
+                                                        };
+                                                    }, () => console.log(this.state.selectedTypesForExport));
+                                                }} name={ctype.name}/>}
+                                            label={ctype.name + (hasDependencies(ctype) ? '*' : '')}
+                                        />
+                                    </ListItem>
+                                )
+                            })}
+                        </List>
+                    </FormGroup>
+
+                </Container>
+            </Drawer>
             <Drawer anchor={'right'} open={intfcsDialogOpen} onClose={() => this.setState({intfcsDialogOpen: false})}>
                 <AppBar position="sticky" color={"default"}>
                     <Toolbar>
@@ -201,7 +367,8 @@ class ContentTypes extends React.Component<ContentTypesProps, ContentTypesState>
                             style={{marginRight: '10px'}}
                             startIcon={<GetAppOutlinedIcon/>}
                         >
-                            <a style={{textDecoration:'none', color:'inherit'}} href={fileDownloadUrl} download={'ctypes.ts'}> Download as file</a>
+                            <a style={{textDecoration: 'none', color: 'inherit'}} href={fileDownloadUrl}
+                               download={'ctypes.ts'}> Download as file</a>
                         </Button>
                     </Toolbar>
                 </AppBar>
